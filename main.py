@@ -1,14 +1,9 @@
 from nicegui import ui
-
-
-def header():
-    with ui.header():
-        ui.label('Pristine Pools')
-        ui.input(placeholder='Search customers...')
+from layout import page_layout
 
 @ui.page('/')
 def home():
-    header()
+    page_layout()
     ui.button('Customers Page',on_click=lambda: ui.navigate.to('/customers'))
     with ui.card():
         ui.label('Quick Actions')
@@ -20,7 +15,7 @@ def home():
 
 @ui.page('/customers')
 def customers():
-    header()
+    page_layout()
     ui.label('Customers')
     ui.button('Back to home',on_click=lambda: ui.navigate.to('/'))
 

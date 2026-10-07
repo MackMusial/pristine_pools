@@ -12,7 +12,7 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 - This file is committed on purpose so context carries between Mack's desktop and laptop. **Claude keeps it up to date as we go without being asked**: mark steps done and move the current-step marker, record new decisions, preferences, setup changes, and answered open questions.
 
 ## Build plan (NiceGUI)
-1. `layout.py`: shared `page_layout()` with `ui.header` + `ui.left_drawer`, used by every page. **← current step (Mack is doing it)**
+1. `layout.py`: shared `page_layout()` with `ui.header` + `ui.left_drawer`, used by every page. **← current step.** Part A (move `header()` into `layout.py` as `page_layout()`) done; next Part B (`ui.left_drawer` nav, remove per-page nav buttons), then Part C (hamburger `drawer.toggle()`).
 2. Split pages into `pages/*.py`, import them in `main.py`
 3. Customers page: `ui.table` of fake data, wire up the search box
 4. Add Customer: `ui.dialog` form
