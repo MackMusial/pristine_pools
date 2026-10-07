@@ -25,4 +25,4 @@ def customers():
     ui.button('Back to home',on_click=lambda: ui.navigate.to('/'))
 
 
-ui.run(show=False)
+ui.run()
