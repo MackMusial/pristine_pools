@@ -4,6 +4,7 @@ from nicegui import ui
 def header():
     with ui.header():
         ui.label('Pristine Pools')
+        ui.input(placeholder='Search customers...')
 
 @ui.page('/')
 def home():
@@ -22,5 +23,6 @@ def customers():
     header()
     ui.label('Customers')
     ui.button('Back to home',on_click=lambda: ui.navigate.to('/'))
+
 
 ui.run(show=False)
