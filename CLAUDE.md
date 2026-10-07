@@ -12,7 +12,7 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 - This file is committed on purpose so context carries between Mack's desktop and laptop. **Claude keeps it up to date as we go without being asked**: mark steps done and move the current-step marker, record new decisions, preferences, setup changes, and answered open questions.
 
 ## Build plan (NiceGUI)
-1. `layout.py`: shared `page_layout()` with `ui.header` + `ui.left_drawer`, used by every page. **← current step.** Part A (move `header()` into `layout.py` as `page_layout()`) done; next Part B (`ui.left_drawer` nav, remove per-page nav buttons), then Part C (hamburger `drawer.toggle()`).
+1. `layout.py`: shared `page_layout()` with `ui.header` + `ui.left_drawer`, used by every page. **← current step.** Part A (move `header()` into `layout.py` as `page_layout()`) done; Part B (`ui.left_drawer` nav in `page_layout()`, per-page nav buttons removed) done; next Part C (hamburger: `ui.left_drawer() as drawer`, `ui.button(icon='menu', on_click=drawer.toggle)`). An older laptop attempt at B + C is in `git stash` for reference only.
 2. Split pages into `pages/*.py`, import them in `main.py`
 3. Customers page: `ui.table` of fake data, wire up the search box
 4. Add Customer: `ui.dialog` form
@@ -20,12 +20,20 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 6. Pool detail: info, gallons calc, water-test form with out-of-range flags (range checks in `rules.py`)
 7. Swap fake data for SQLite
 8. Ask AI page UI, Ollama later
+9. Maintenance screen (product lists, water-test ranges, backup). Tentative: Mack may drop it later.
 
 ## Dev setup (per machine)
 - `py -3.12 -m venv .venv`, then `.venv\Scripts\Activate.ps1`, then `pip install nicegui`
 - In VS Code: Python: Select Interpreter, pick `.venv`
 - Run: `python main.py`, open http://localhost:8080
 - `.venv/` and `__pycache__/` are gitignored
+- Laptop: only Python 3.13 is installed, so the venv there was made with `python -m venv .venv`. The first activation needed `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- Optional: view the app in VS Code's Simple Browser (Ctrl+Shift+P, "Simple Browser: Show"). `ui.left_drawer` auto-hides when the window is narrow.
+
+## Decisions
+- **This semester (Fall 2026) = GUI only:** a semi-functional front end to present to the professor. Navigation, dialogs and forms work on hard-coded fake data. The AI shows canned answers. The real database and AI come in Spring 2027.
+- **Mobile:** the GUI must *look* right on a phone (responsive layout, ☰ menu for the drawer). The app still runs on the store PC; no field or remote use.
+- Everything employees need should be reachable from Home in 2–3 clicks (quick-action buttons that open a `ui.dialog`, plus search in the header).
 
 ## Client & context
 - **Client:** Kara Nominay, owner of Pristine Pools, a new above-ground pool store (not open yet).
