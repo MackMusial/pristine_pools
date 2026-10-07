@@ -18,8 +18,8 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 **Decision (2026-10-07): GUI first, functionality later.** Mack wants the whole GUI looking presentable and polished before wiring anything up. Pages use hardcoded placeholder content (a few sample rows written inline) just so layouts can be judged; buttons can be no-ops. Don't steer back toward the database until the GUI phase is done.
 
 ### Phase 1: GUI (looks only)
-3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing. **← current step.** Decided: **light mode**. Colors: Mack is trying 3 candidates side by side before picking: Pool blue + teal (`#0369a1` / `#0d9488` / `#38bdf8`), Aqua + navy (`#1e3a8a` / `#06b6d4` / `#f59e0b`), Ocean dark (`#0f172a` / `#22d3ee` / `#a78bfa`) as primary / secondary / accent.
-4. Home dashboard: Quick Actions cards with icons, summary stat cards (placeholder numbers)
+3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing. Decided: **light mode**. Theme switcher is built in `layout.py` (`THEMES` dict: `pool` / `aqua` / `ocean`, `CURRENT_THEME`, `ui.colors(**THEMES[CURRENT_THEME])`). **Color pick deferred** until more of the GUI exists to judge against; header/drawer polish also comes back later.
+4. Home dashboard: Quick Actions cards with icons, summary stat cards (placeholder numbers). **← current step.**
 5. Customers page: `ui.table` with placeholder rows, search box, Add/Edit/Delete buttons (no-op)
 6. Add/Edit Customer `ui.dialog` form (layout only)
 7. Customer detail page (`/customer/{id}`): info card + list of their pools
