@@ -9,6 +9,7 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 - Keep responses concise and structured: method names and architecture reasoning over long prose.
 - Don't dump unsolicited code; Mack prefers to iterate in the IDE.
 - One NiceGUI concept per step. Mack commits small steps.
+- **When Claude needs Mack to decide something, ask with the question popup (AskUserQuestion)**, never a question buried in a reply. It's much more obvious that way.
 - This file is committed on purpose so context carries between Mack's desktop and laptop. **Claude keeps it up to date as we go without being asked**: mark steps done and move the current-step marker, record new decisions, preferences, setup changes, and answered open questions.
 
 ## Build plan (NiceGUI)
@@ -17,7 +18,7 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 **Decision (2026-10-07): GUI first, functionality later.** Mack wants the whole GUI looking presentable and polished before wiring anything up. Pages use hardcoded placeholder content (a few sample rows written inline) just so layouts can be judged; buttons can be no-ops. Don't steer back toward the database until the GUI phase is done.
 
 ### Phase 1: GUI (looks only)
-3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing, dark mode decision. **← current step.**
+3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing. **← current step.** Decided: **light mode**. Colors: Mack is trying 3 candidates side by side before picking: Pool blue + teal (`#0369a1` / `#0d9488` / `#38bdf8`), Aqua + navy (`#1e3a8a` / `#06b6d4` / `#f59e0b`), Ocean dark (`#0f172a` / `#22d3ee` / `#a78bfa`) as primary / secondary / accent.
 4. Home dashboard: Quick Actions cards with icons, summary stat cards (placeholder numbers)
 5. Customers page: `ui.table` with placeholder rows, search box, Add/Edit/Delete buttons (no-op)
 6. Add/Edit Customer `ui.dialog` form (layout only)
