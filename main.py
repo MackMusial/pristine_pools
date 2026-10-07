@@ -10,6 +10,7 @@ def home():
             ui.button('New Water Test')
             ui.button('Log Problem')
             ui.button('Add Customer')
+            
 @ui.page('/customers')
 def customers():
     ui.label('Customers')
