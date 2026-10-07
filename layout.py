@@ -8,3 +8,4 @@ def page_layout():
         ui.button(icon='menu',on_click=drawer.toggle)
         ui.label('Pristine Pools')
         ui.input(placeholder='Search customers...')
+        
