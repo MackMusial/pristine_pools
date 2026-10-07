@@ -9,7 +9,7 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 - Keep responses concise and structured: method names and architecture reasoning over long prose.
 - Don't dump unsolicited code; Mack prefers to iterate in the IDE.
 - One NiceGUI concept per step. Mack commits small steps.
-- This file is committed on purpose so context carries between Mack's desktop and laptop. Update the build progress below when a step is finished.
+- This file is committed on purpose so context carries between Mack's desktop and laptop. **Claude keeps it up to date as we go without being asked**: mark steps done and move the current-step marker, record new decisions, preferences, setup changes, and answered open questions.
 
 ## Build plan (NiceGUI)
 1. `layout.py`: shared `page_layout()` with `ui.header` + `ui.left_drawer`, used by every page. **← current step (Mack is doing it)**
