@@ -13,14 +13,25 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 
 ## Build plan (NiceGUI)
 1. `layout.py`: shared `page_layout()` with `ui.header` (☰ `drawer.toggle`, title, search) + `ui.left_drawer` nav, used by every page. **Done.**
-2. Split pages into `pages/*.py`, import them in `main.py`. **← current step.** Start with `home()` → `pages/home.py`.
-3. Customers page: `ui.table` of fake data, wire up the search box
-4. Add Customer: `ui.dialog` form
-5. Customer detail via `/customer/{id}`
-6. Pool detail: info, gallons calc, water-test form with out-of-range flags (range checks in `rules.py`)
-7. Swap fake data for SQLite
-8. Ask AI page UI, Ollama later
-9. Maintenance screen (product lists, water-test ranges, backup). Tentative: Mack may drop it later.
+2. Split pages into `pages/*.py`, import them in `main.py`. **Done.**
+**Decision (2026-10-07): GUI first, functionality later.** Mack wants the whole GUI looking presentable and polished before wiring anything up. Pages use hardcoded placeholder content (a few sample rows written inline) just so layouts can be judged; buttons can be no-ops. Don't steer back toward the database until the GUI phase is done.
+
+### Phase 1: GUI (looks only)
+3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing, dark mode decision. **← current step.**
+4. Home dashboard: Quick Actions cards with icons, summary stat cards (placeholder numbers)
+5. Customers page: `ui.table` with placeholder rows, search box, Add/Edit/Delete buttons (no-op)
+6. Add/Edit Customer `ui.dialog` form (layout only)
+7. Customer detail page (`/customer/{id}`): info card + list of their pools
+8. Pool detail page: pool/equipment info, water-test entry form, test history, out-of-range highlight styling
+9. Problems & AI Suggestions page (layout for problem entry, suggestion list, chosen solution)
+10. Chemical purchases page
+11. Maintenance screen (product lists, water-test ranges, backup). Tentative: Mack may drop it later.
+
+### Phase 2: Make it work (later)
+- SQLite via built-in `sqlite3`, all data code in `models.py` (pages never write SQL). `init_db()` with `CREATE TABLE IF NOT EXISTS`; CRUD functions (`add_/get_/update_/delete_customer`) with `?` placeholders, `commit()` on writes, `WHERE id = ?` on update/delete; `row_factory = sqlite3.Row` → dicts for `ui.table`. Gitignore `*.db` (customer personal data).
+- Swap placeholder rows for DB calls, wire buttons/dialogs/search, gallons calc, range checks in `rules.py`
+- Extend DB to pools, water tests, problems, chemical purchases
+- Ask AI via local Ollama
 
 ## Dev setup (per machine)
 - `py -3.12 -m venv .venv`, then `.venv\Scripts\Activate.ps1`, then `pip install nicegui`
