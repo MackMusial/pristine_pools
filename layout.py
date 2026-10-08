@@ -11,12 +11,15 @@ CURRENT_THEME = 'pool'#current theme selection... Hardcoded because only one wil
 def page_layout():
     ui.query('body').classes('bg-slate-100')
     ui.colors(**THEMES[CURRENT_THEME])
+
     with ui.left_drawer() as drawer:
-        ui.button('Home',on_click=lambda: ui.navigate.to('/')).props('flat align=left').classes('w-full')#button to navigate to home page
-        ui.button('Customers Page',on_click=lambda: ui.navigate.to('/customers')).props('flat align=left').classes('w-full')#button to navigate to customers page
+        ui.button('Home',icon='home',on_click=lambda: ui.navigate.to('/')).props('flat align=left').classes('w-full')#button to navigate to home page
+        ui.button('Customers',icon='people',on_click=lambda: ui.navigate.to('/customers')).props('flat align=left').classes('w-full')#button to navigate to customers page
+
     with ui.header().classes('items-center justify-between'):#spreads header out 
-        ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
-        ui.label('Pristine Pools').classes('text-xl font-bold')
-        ui.icon('pool')
-        ui.input(placeholder='Search customers...')
+        with ui.row().classes('items-center'):
+            ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
+            ui.icon('pool')
+            ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters
+        ui.input(placeholder='Search customers...').props('dense dark standout')#makes the searchbar standout better and improves readability
         
