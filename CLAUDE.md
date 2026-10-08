@@ -25,12 +25,14 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
    - **Done:** page container (`w-full max-w-6xl mx-auto p-6 gap-6`), `bg-slate-100` body, `flex-1` stat cards; header grouped (☰ + pool icon + title | search), drawer buttons with icons, drawer starts closed; big search bar at the top of the column (`outlined clearable autofocus`, 🔍 via `.add_slot('prepend')`); Log Problem removed from Quick Actions (now New Water Test + Add Customer).
    - **Left to do, in order (pick up here):**
      1. ~~Stat cards → "Tests today" + "Open problems" with icons~~ **Done** (icons `science` text-accent / `warning` text-orange-500). Optional: stack label over number with `ui.column().classes('gap-0')`.
-     2. **Still pending:** Quick Action buttons: swap fixed `w-48` for `flex-1` (and `w-full` on their row) so the two buttons share the card width.
-     3. "Recent customers" card: **built** (one card, `ui.list().props('separator')`, 4 copy-pasted `ui.item`s; name + details `item_label`s). Pending cleanups: `.props('caption')` on the details lines, fix extra indent on the Keith Ho item. Placeholder copy-paste becomes a `for` loop in Phase 2.
-   - Once 2 + cleanups are in, Home is done → move to step 5 (Customers page).
+     2. ~~Quick Action buttons: `flex-1` on buttons + `w-full` on their row~~ **Done.**
+     3. "Recent customers" card: **built** (one card, `ui.list().props('separator')`, 4 copy-pasted `ui.item`s; name + details `item_label`s). `.props('caption')` on the details lines **done**. Pending: fix extra indent on the Keith Ho item. Placeholder copy-paste becomes a `for` loop in Phase 2.
+   - Section header comments added in `home.py` (SEARCH / Today's stats / QUICK ACTIONS / RECENT CUSTOMERS).
+   - **Paused here (2026-10-08). Pick up:** fix the Keith Ho indent (Shift+Tab ×2) → commit → Home is done → step 5. (Optional: check that the stat-row comment no longer says "quick actions".)
    - Concepts Mack has learned so far: `with` nesting/indentation (siblings vs children), `.classes()` (Tailwind) vs `.props()` (Quasar), `flex-1` + `w-full`, slots, `ui.list`/`ui.item`/`item_section`/`item_label`, nested dicts + `**` unpacking.
    - Run tip: always launch from `main.py` (running a page file directly gives `No module named 'layout'`); a launch.json pointing at `${workspaceFolder}/main.py` fixes F5.
 5. Customers page: `ui.table` with placeholder rows + search; row click → customer page. Add Customer `ui.dialog` form (layout only).
+   - Started: centered column + title row (`justify-between`) with an "Add Customer" button. Put the icon on the button (`icon='person_add'`); never assign `ui.icon = ...`, because that overwrites NiceGUI's function.
 6. Customer page (`/customer/{id}`): contact info card, their **pools as cards**, **Purchases** tab (subsystem 3: log what they bought; Square does the sale).
 7. Pool page (`/pool/{id}`), the main working screen: pool/equipment info + gallons; tabs **Water Tests** | **Problems**.
    - Water Tests: latest result + history, out-of-range values color-coded (low / ok / high), **New Test** form, **Print Report**.
