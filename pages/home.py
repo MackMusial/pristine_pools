@@ -8,19 +8,47 @@ def home():
         with ui.input(placeholder='Search by name or phone...').classes('w-full').props('outlined clearable autofocus').add_slot('prepend'):
             ui.icon('search')
         with ui.row().classes('w-full'):#creates a row for the cards to be displayed in
-            with ui.card().classes('flex-1'):#creates a card that takes up equal space in the row
-                ui.label('Customers').classes('text-sm text-gray-500')# adds a label with smaller text and gray color
-                ui.label('42').classes('text-4xl font-bold')# adds a label with larger text and bold font
-            with ui.card().classes('flex-1'):
-                ui.label('Tests this week').classes('text-sm text-gray-500')
-                ui.label('7').classes('text-4xl font-bold')
-            with ui.card().classes('flex-1'):
-                ui.label('Open problems').classes('text-sm text-gray-500')
-                ui.label('3').classes('text-4xl font-bold')
+            with ui.card().classes('flex-1'):#tests today card
+                with ui.row().classes('items-center gap-4'):
+                    ui.icon('science').classes('text-4xl text-accent')
+                    ui.label('Tests today').classes('text-sm text-gray-500')
+                    ui.label('7').classes('text-4xl font-bold')
+            with ui.card().classes('flex-1'):#open problems card
+                with ui.row().classes('items-center gap-4'):
+                    ui.icon('warning').classes('text-4xl text-orange-500')#warning icon next to open problems card
+                    ui.label('Open problems').classes('text-sm text-gray-500')
+                    ui.label('3').classes('text-4xl font-bold')
+
+#--------------------QUICK ACTIONS--------------------
 
         with ui.card().classes('w-full'):
             ui.label('Quick Actions').classes('text-lg font-semibold')
             with ui.row():
                 ui.button('New Water Test', icon='science').classes('w-48 h-24').props('stack')
                 ui.button('Add Customer', icon='person_add').classes('w-48 h-24').props('stack')
-    
+
+#--------------------RECENT CUSTOMERS--------------------
+#future GUI will have a forloop to iterate through recent customer but for demo GUI copy and pasting works just fine 
+        with ui.card().classes('w-full'):
+            ui.label('Recent Customers').classes('text-lg font-semibold')
+            with ui.list().props('separator'):
+                
+                with ui.item():
+                    with ui.item_section():
+                        ui.item_label('Nick McArdle')
+                        ui.item_label('(989) 555-0142 · Last test: Oct 6')
+
+                with ui.item():
+                    with ui.item_section():
+                            ui.item_label('Keith Ho')
+                            ui.item_label('(989) 555-0142 · Last test: Oct 6')
+
+                with ui.item():
+                    with ui.item_section():
+                        ui.item_label('Manish Shrestha')
+                        ui.item_label('(989) 555-0142 · Last test: Oct 6')
+
+                with ui.item():
+                    with ui.item_section():
+                        ui.item_label('Marcelino Chapa')
+                        ui.item_label('(989) 555-0142 · Last test: Oct 6')    

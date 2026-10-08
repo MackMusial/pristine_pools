@@ -24,10 +24,11 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 4. Home = front counter. **← current step: search-first redesign** (Claude's pick).
    - **Done:** page container (`w-full max-w-6xl mx-auto p-6 gap-6`), `bg-slate-100` body, `flex-1` stat cards; header grouped (☰ + pool icon + title | search), drawer buttons with icons, drawer starts closed; big search bar at the top of the column (`outlined clearable autofocus`, 🔍 via `.add_slot('prepend')`); Log Problem removed from Quick Actions (now New Water Test + Add Customer).
    - **Left to do, in order (pick up here):**
-     1. Stat cards → useful ones: "Tests today" + "Open problems" (2 cards instead of 3; optional icons `science` / `warning`).
-     2. Quick Action buttons: swap fixed `w-48` for `flex-1` (and `w-full` on their row) so the two buttons share the card width.
-     3. "Recent customers" card: `ui.list()` of `ui.item()`s with `ui.item_section` + `ui.item_label` (name, gray sub-line like phone or "Last test: Oct 3").
-   - Concepts Mack has learned so far: `with` nesting/indentation, `.classes()` (Tailwind) vs `.props()` (Quasar), `flex-1` + `w-full`, slots, nested dicts + `**` unpacking.
+     1. ~~Stat cards → "Tests today" + "Open problems" with icons~~ **Done** (icons `science` text-accent / `warning` text-orange-500). Optional: stack label over number with `ui.column().classes('gap-0')`.
+     2. **Still pending:** Quick Action buttons: swap fixed `w-48` for `flex-1` (and `w-full` on their row) so the two buttons share the card width.
+     3. "Recent customers" card: **built** (one card, `ui.list().props('separator')`, 4 copy-pasted `ui.item`s; name + details `item_label`s). Pending cleanups: `.props('caption')` on the details lines, fix extra indent on the Keith Ho item. Placeholder copy-paste becomes a `for` loop in Phase 2.
+   - Once 2 + cleanups are in, Home is done → move to step 5 (Customers page).
+   - Concepts Mack has learned so far: `with` nesting/indentation (siblings vs children), `.classes()` (Tailwind) vs `.props()` (Quasar), `flex-1` + `w-full`, slots, `ui.list`/`ui.item`/`item_section`/`item_label`, nested dicts + `**` unpacking.
    - Run tip: always launch from `main.py` (running a page file directly gives `No module named 'layout'`); a launch.json pointing at `${workspaceFolder}/main.py` fixes F5.
 5. Customers page: `ui.table` with placeholder rows + search; row click → customer page. Add Customer `ui.dialog` form (layout only).
 6. Customer page (`/customer/{id}`): contact info card, their **pools as cards**, **Purchases** tab (subsystem 3: log what they bought; Square does the sale).
