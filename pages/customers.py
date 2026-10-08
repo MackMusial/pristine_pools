@@ -9,6 +9,6 @@ def customers():
             ui.label('Customers').classes('text-2xl font-bold')
             with ui.row():
                 ui.button('Add Customer')
-                ui.icon='person_add'
+                # ui.icon='person_add'
 
     
