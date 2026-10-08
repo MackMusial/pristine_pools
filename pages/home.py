@@ -24,8 +24,8 @@ def home():
         with ui.card().classes('w-full'):
             ui.label('Quick Actions').classes('text-lg font-semibold')
             with ui.row():
-                ui.button('New Water Test', icon='science').classes('w-48 h-24').props('stack')
-                ui.button('Add Customer', icon='person_add').classes('w-48 h-24').props('stack')
+                ui.button('New Water Test', icon='science').classes('flex-1 h-24').props('stack')
+                ui.button('Add Customer', icon='person_add').classes('flex-1 h-24').props('stack')
 
 #--------------------RECENT CUSTOMERS--------------------
 #future GUI will have a forloop to iterate through recent customer but for demo GUI copy and pasting works just fine 
