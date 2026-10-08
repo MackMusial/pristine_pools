@@ -19,14 +19,23 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 
 ### Phase 1: GUI (looks only)
 3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing. Decided: **light mode**. Theme switcher is built in `layout.py` (`THEMES` dict: `pool` / `aqua` / `ocean`, `CURRENT_THEME`, `ui.colors(**THEMES[CURRENT_THEME])`). **Color pick deferred** until more of the GUI exists to judge against; header/drawer polish also comes back later.
-4. Home dashboard: Quick Actions cards with icons, summary stat cards (placeholder numbers). **← current step.**
-5. Customers page: `ui.table` with placeholder rows, search box, Add/Edit/Delete buttons (no-op)
-6. Add/Edit Customer `ui.dialog` form (layout only)
-7. Customer detail page (`/customer/{id}`): info card + list of their pools
-8. Pool detail page: pool/equipment info, water-test entry form, test history, out-of-range highlight styling
-9. Problems & AI Suggestions page (layout for problem entry, suggestion list, chosen solution)
-10. Chemical purchases page
-11. Maintenance screen (product lists, water-test ranges, backup). Tentative: Mack may drop it later.
+**App structure (decided 2026-10-07), built around the counter workflow:** customer walks in with a water sample → find customer → pick pool → enter test → see flags → log problem / AI help → print report. Modeled on real pool-store test software (LaMotte WaterLink, BioGuard ALEX, AccuBlue). Drawer has only **Home / Customers / Settings**; pools, tests, problems and purchases live *inside* a customer. Efficiency rules: keyboard-first (Enter submits, sensible Tab order, autofocus), smart defaults (today's date, auto-select a customer's only pool), flag out-of-range values live while typing, quick adds in `ui.dialog`s.
+
+4. Home = front counter. **← current step: search-first redesign** (Claude's pick).
+   - **Done:** page container (`w-full max-w-6xl mx-auto p-6 gap-6`), `bg-slate-100` body, `flex-1` stat cards; header grouped (☰ + pool icon + title | search), drawer buttons with icons, drawer starts closed; big search bar at the top of the column (`outlined clearable autofocus`, 🔍 via `.add_slot('prepend')`); Log Problem removed from Quick Actions (now New Water Test + Add Customer).
+   - **Left to do, in order (pick up here):**
+     1. Stat cards → useful ones: "Tests today" + "Open problems" (2 cards instead of 3; optional icons `science` / `warning`).
+     2. Quick Action buttons: swap fixed `w-48` for `flex-1` (and `w-full` on their row) so the two buttons share the card width.
+     3. "Recent customers" card: `ui.list()` of `ui.item()`s with `ui.item_section` + `ui.item_label` (name, gray sub-line like phone or "Last test: Oct 3").
+   - Concepts Mack has learned so far: `with` nesting/indentation, `.classes()` (Tailwind) vs `.props()` (Quasar), `flex-1` + `w-full`, slots, nested dicts + `**` unpacking.
+   - Run tip: always launch from `main.py` (running a page file directly gives `No module named 'layout'`); a launch.json pointing at `${workspaceFolder}/main.py` fixes F5.
+5. Customers page: `ui.table` with placeholder rows + search; row click → customer page. Add Customer `ui.dialog` form (layout only).
+6. Customer page (`/customer/{id}`): contact info card, their **pools as cards**, **Purchases** tab (subsystem 3: log what they bought; Square does the sale).
+7. Pool page (`/pool/{id}`), the main working screen: pool/equipment info + gallons; tabs **Water Tests** | **Problems**.
+   - Water Tests: latest result + history, out-of-range values color-coded (low / ok / high), **New Test** form, **Print Report**.
+   - Problems: describe problem → AI suggestions (canned for now) → choose one → saved to history. "Log a problem" button also appears on flagged test results.
+8. Settings (subsystem 6): products/manufacturers lists, water-test ranges, backup/restore. Rarely used.
+9. Drawer: trim to Home / Customers / Settings, highlight the active page. Decided: drawer **starts closed** (`ui.left_drawer(value=False)`) so page content centers on the full screen; ☰ opens it.
 
 ### Phase 2: Make it work (later)
 - SQLite via built-in `sqlite3`, all data code in `models.py` (pages never write SQL). `init_db()` with `CREATE TABLE IF NOT EXISTS`; CRUD functions (`add_/get_/update_/delete_customer`) with `?` placeholders, `commit()` on writes, `WHERE id = ?` on update/delete; `row_factory = sqlite3.Row` → dicts for `ui.table`. Gitignore `*.db` (customer personal data).

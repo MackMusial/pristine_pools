@@ -12,7 +12,7 @@ def page_layout():
     ui.query('body').classes('bg-slate-100')
     ui.colors(**THEMES[CURRENT_THEME])
 
-    with ui.left_drawer() as drawer:
+    with ui.left_drawer(value=False) as drawer:
         ui.button('Home',icon='home',on_click=lambda: ui.navigate.to('/')).props('flat align=left').classes('w-full')#button to navigate to home page
         ui.button('Customers',icon='people',on_click=lambda: ui.navigate.to('/customers')).props('flat align=left').classes('w-full')#button to navigate to customers page
 
@@ -20,6 +20,4 @@ def page_layout():
         with ui.row().classes('items-center'):
             ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
             ui.icon('pool')
-            ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters
-        ui.input(placeholder='Search customers...').props('dense dark standout')#makes the searchbar standout better and improves readability
-        
+            ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters        
