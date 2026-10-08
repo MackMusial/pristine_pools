@@ -42,8 +42,8 @@ def home():
 
                 with ui.item():
                     with ui.item_section():
-                            ui.item_label('Keith Ho')
-                            ui.item_label('(989) 555-0142 · Last test: Oct 6').props('caption')
+                        ui.item_label('Keith Ho')
+                        ui.item_label('(989) 555-0142 · Last test: Oct 6').props('caption')
 
                 with ui.item():
                     with ui.item_section():
