@@ -9,12 +9,14 @@ THEMES = {
 CURRENT_THEME = 'pool'#current theme selection... Hardcoded because only one will be selected in the future
 
 def page_layout():
+    ui.query('body').classes('bg-slate-100')
     ui.colors(**THEMES[CURRENT_THEME])
     with ui.left_drawer() as drawer:
-        ui.button('Home',on_click=lambda: ui.navigate.to('/'))#button to navigate to home page
-        ui.button('Customers Page',on_click=lambda: ui.navigate.to('/customers'))#button to navigate to customers page
-    with ui.header():
-        ui.button(icon='menu',on_click=drawer.toggle)#toggles the horizontal nav bar
-        ui.label('Pristine Pools')
+        ui.button('Home',on_click=lambda: ui.navigate.to('/')).props('flat align=left').classes('w-full')#button to navigate to home page
+        ui.button('Customers Page',on_click=lambda: ui.navigate.to('/customers')).props('flat align=left').classes('w-full')#button to navigate to customers page
+    with ui.header().classes('items-center justify-between'):#spreads header out 
+        ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
+        ui.label('Pristine Pools').classes('text-xl font-bold')
+        ui.icon('pool')
         ui.input(placeholder='Search customers...')
         
