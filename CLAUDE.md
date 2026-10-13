@@ -21,14 +21,16 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 3. Global look: theme colors (`ui.colors`), header/drawer styling, active nav item, fonts/spacing. Decided: **light mode**. Theme switcher is built in `layout.py` (`THEMES` dict: `pool` / `aqua` / `ocean`, `CURRENT_THEME`, `ui.colors(**THEMES[CURRENT_THEME])`). **Color pick deferred** until more of the GUI exists to judge against; header/drawer polish also comes back later.
 **App structure (decided 2026-10-07), built around the counter workflow:** customer walks in with a water sample → find customer → pick pool → enter test → see flags → log problem / AI help → print report. Modeled on real pool-store test software (LaMotte WaterLink, BioGuard ALEX, AccuBlue). Drawer has only **Home / Customers / Settings**; pools, tests, problems and purchases live *inside* a customer. Efficiency rules: keyboard-first (Enter submits, sensible Tab order, autofocus), smart defaults (today's date, auto-select a customer's only pool), flag out-of-range values live while typing, quick adds in `ui.dialog`s.
 
-4. Home = front counter. **← current step: search-first redesign** (Claude's pick).
-   - **Done:** page container (`w-full max-w-6xl mx-auto p-6 gap-6`), `bg-slate-100` body, `flex-1` stat cards; header grouped (☰ + pool icon + title | search), drawer buttons with icons, drawer starts closed; big search bar at the top of the column (`outlined clearable autofocus`, 🔍 via `.add_slot('prepend')`); Log Problem removed from Quick Actions (now New Water Test + Add Customer).
-   - **Left to do, in order (pick up here):**
-     1. ~~Stat cards → "Tests today" + "Open problems" with icons~~ **Done** (icons `science` text-accent / `warning` text-orange-500). Optional: stack label over number with `ui.column().classes('gap-0')`.
-     2. ~~Quick Action buttons: `flex-1` on buttons + `w-full` on their row~~ **Done.**
-     3. "Recent customers" card: **built** (one card, `ui.list().props('separator')`, 4 copy-pasted `ui.item`s; name + details `item_label`s). `.props('caption')` on the details lines **done**. Pending: fix extra indent on the Keith Ho item. Placeholder copy-paste becomes a `for` loop in Phase 2.
-   - Section header comments added in `home.py` (SEARCH / Today's stats / QUICK ACTIONS / RECENT CUSTOMERS).
-   - **Paused here (2026-10-08). Pick up:** fix the Keith Ho indent (Shift+Tab ×2) → commit → Home is done → step 5. (Optional: check that the stat-row comment no longer says "quick actions".)
+**Decision (2026-10-12): chat-style layout (like ChatGPT/Claude).** Replaces the search-first Home design. Mack's sketch: header across the top, a column down each side, a long chat bar with a **+** pinned at the bottom center.
+   - **Middle:** Home = the AI chat (messages stack in the middle, bar at the bottom). Customers, customer, pool, Settings, etc. are still normal pages that open in the middle area.
+   - **Left (`ui.left_drawer`):** navigation (Home, Customers, Settings) + recent customers list (like chat history).
+   - **Right (`ui.right_drawer`):** the selected customer/pool's details + latest test, as context next to the chat.
+   - **Header:** the other buttons go here (e.g. New Water Test, Add Customer). Quick actions now live in the header, not on Home.
+   - **+ on the chat bar:** attach a customer/pool, so the AI answer uses that pool's size, equipment and tests (like attaching a file). Canned AI replies in Phase 1.
+   - Chat bar: `ui.footer()` or a sticky bottom row. Not decided yet.
+   - Old Home content: the stat cards and the big search bar are probably dropped or moved (recent customers → left drawer). Decide while building.
+4. Home = chat screen. **← current step: start the chat-style layout** (begin with the footer chat bar, then the right drawer, then header buttons).
+   - Previous search-first Home (search bar, stat cards, Quick Actions, Recent Customers card) is **finished and committed** (`3a7f295`) and can be referenced or reused.
    - Concepts Mack has learned so far: `with` nesting/indentation (siblings vs children), `.classes()` (Tailwind) vs `.props()` (Quasar), `flex-1` + `w-full`, slots, `ui.list`/`ui.item`/`item_section`/`item_label`, nested dicts + `**` unpacking.
    - Run tip: always launch from `main.py` (running a page file directly gives `No module named 'layout'`); a launch.json pointing at `${workspaceFolder}/main.py` fixes F5.
 5. Customers page: `ui.table` with placeholder rows + search; row click → customer page. Add Customer `ui.dialog` form (layout only).
@@ -38,7 +40,7 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
    - Water Tests: latest result + history, out-of-range values color-coded (low / ok / high), **New Test** form, **Print Report**.
    - Problems: describe problem → AI suggestions (canned for now) → choose one → saved to history. "Log a problem" button also appears on flagged test results.
 8. Settings (subsystem 6): products/manufacturers lists, water-test ranges, backup/restore. Rarely used.
-9. Drawer: trim to Home / Customers / Settings, highlight the active page. Decided: drawer **starts closed** (`ui.left_drawer(value=False)`) so page content centers on the full screen; ☰ opens it.
+9. Left drawer: Home / Customers / Settings + recent customers, highlight the active page. Decided: drawer **starts closed** (`ui.left_drawer(value=False)`) so page content centers on the full screen; ☰ opens it.
 
 ### Phase 2: Make it work (later)
 - SQLite via built-in `sqlite3`, all data code in `models.py` (pages never write SQL). `init_db()` with `CREATE TABLE IF NOT EXISTS`; CRUD functions (`add_/get_/update_/delete_customer`) with `?` placeholders, `commit()` on writes, `WHERE id = ?` on update/delete; `row_factory = sqlite3.Row` → dicts for `ui.table`. Gitignore `*.db` (customer personal data).
@@ -57,7 +59,8 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
 ## Decisions
 - **This semester (Fall 2026) = GUI only:** a semi-functional front end to present to the professor. Navigation, dialogs and forms work on hard-coded fake data. The AI shows canned answers. The real database and AI come in Spring 2027.
 - **Mobile:** the GUI must *look* right on a phone (responsive layout, ☰ menu for the drawer). The app still runs on the store PC; no field or remote use.
-- Everything employees need should be reachable from Home in 2–3 clicks (quick-action buttons that open a `ui.dialog`, plus search in the header).
+- Everything employees need should be reachable from Home in 2–3 clicks (header action buttons that open a `ui.dialog`, plus search).
+- **Chat-style layout (2026-10-12):** see build plan step 4.
 
 ## Client & context
 - **Client:** Kara Nominay, owner of Pristine Pools, a new above-ground pool store (not open yet).

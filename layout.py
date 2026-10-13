@@ -24,4 +24,4 @@ def page_layout():
         with ui.row().classes('items-center'):
             ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
             ui.icon('pool')
-            ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters        
+            ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters      

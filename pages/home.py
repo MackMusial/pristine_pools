@@ -4,6 +4,11 @@ from layout import page_layout
 @ui.page('/')
 def home():
     page_layout()
+    with ui.footer().classes('bg-slate-100'):
+        with ui.row().classes('w-full items-center'):
+            ui.button(icon='add')
+            ui.input(placeholder='Ask about a pool problem...')
+            ui.button(icon='send')
 #--------------------SEARCH------------------------------
     with ui.column().classes('w-full max-w-6xl mx-auto p-6 gap-6'):#centers the content and adds padding and gap between elements
         with ui.input(placeholder='Search by name or phone...').classes('w-full').props('outlined clearable autofocus').add_slot('prepend'):
