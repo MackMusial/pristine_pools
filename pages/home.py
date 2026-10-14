@@ -14,7 +14,7 @@ def home():
 
 #--------------------SEARCH------------------------------
     with ui.column().classes('w-full max-w-6xl mx-auto p-6 gap-6'):#centers the content and adds padding and gap between elements
-        with ui.input(placeholder='Search by name or phone...').classes('w-full').props('outlined clearable autofocus').add_slot('prepend').props('outlined rounded'):
+        with ui.input(placeholder='Search by name or phone...').classes('w-full').props('outlined clearable autofocus').add_slot('prepend'):
             ui.icon('search')
 #--------------------Today's stats-------------------------
         with ui.row().classes('w-full'):#creates a row for the cards to be displayed in for the quick actions
