@@ -5,9 +5,9 @@ from layout import page_layout
 def home():
     page_layout()
     with ui.footer().classes('bg-slate-100'):
-        with ui.row().classes('w-full items-center'):
+        with ui.row().classes('w-full max-w-3xl mx-auto justify-center items-center'):
             ui.button(icon='add')
-            ui.input(placeholder='Ask about a pool problem...')
+            ui.input(placeholder='Ask about a pool problem...').classes('flex-1')
             ui.button(icon='send')
 #--------------------SEARCH------------------------------
     with ui.column().classes('w-full max-w-6xl mx-auto p-6 gap-6'):#centers the content and adds padding and gap between elements

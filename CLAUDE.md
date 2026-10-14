@@ -27,9 +27,10 @@ Capstone project (SVSU, CSIS). Developer: Mack. Target completion: **April 2027*
    - **Right (`ui.right_drawer`):** the selected customer/pool's details + latest test, as context next to the chat.
    - **Header:** the other buttons go here (e.g. New Water Test, Add Customer). Quick actions now live in the header, not on Home.
    - **+ on the chat bar:** attach a customer/pool, so the AI answer uses that pool's size, equipment and tests (like attaching a file). Canned AI replies in Phase 1.
-   - Chat bar: `ui.footer()` or a sticky bottom row. Not decided yet.
+   - **Chat bar (decided 2026-10-12): look like Claude.ai's.** Use `ui.footer()` to pin it to the bottom, but make the bar invisible (`bg-slate-100`, the same as the body). Inside it goes a centered column (`w-full max-w-3xl mx-auto`) holding an `outlined rounded` input, with + / send in the input's `prepend` / `append` slots (`chat = ui.input(...)`, then `with chat.add_slot(...)`). Optionally, a small row under the box like Claude's.
    - Old Home content: the stat cards and the big search bar are probably dropped or moved (recent customers → left drawer). Decide while building.
-4. Home = chat screen. **← current step: start the chat-style layout** (begin with the footer chat bar, then the right drawer, then header buttons).
+4. Home = chat screen. **← current step.** Order: (a) chat bar → (b) clear the old Home content out of the middle → (c) chat messages in the middle (`ui.chat_message`, canned conversation) → (d) right drawer (customer/pool context) → (e) header action buttons → (f) left drawer recent customers.
+   - (a) progress: footer `bg-slate-100`; a centered row (`w-full max-w-3xl mx-auto items-center`) holds + / input (`flex-1`) / send. Learned: `justify-*` = along the row, `items-*` = across it; an invisible container can be centered while its contents sit at its left edge. **Next:** `outlined rounded` on the input, and move + / send into its `prepend` / `append` slots.
    - Previous search-first Home (search bar, stat cards, Quick Actions, Recent Customers card) is **finished and committed** (`3a7f295`) and can be referenced or reused.
    - Concepts Mack has learned so far: `with` nesting/indentation (siblings vs children), `.classes()` (Tailwind) vs `.props()` (Quasar), `flex-1` + `w-full`, slots, `ui.list`/`ui.item`/`item_section`/`item_label`, nested dicts + `**` unpacking.
    - Run tip: always launch from `main.py` (running a page file directly gives `No module named 'layout'`); a launch.json pointing at `${workspaceFolder}/main.py` fixes F5.
