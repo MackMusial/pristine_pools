@@ -16,7 +16,26 @@ def page_layout():
 
     with ui.left_drawer(value=False) as drawer:
         ui.button('Home',icon='home',on_click=lambda: ui.navigate.to('/')).props('flat align=left').classes('w-full')#button to navigate to home page
-        ui.button('Customers',icon='people',on_click=lambda: ui.navigate.to('/customers')).props('flat align=left').classes('w-full')#button to navigate to customers page
+        ui.button('Settings',icon='build',on_click=lambda: ui.navigate.to('/settings')).props('flat align=left').classes('w-full')#button to navigate to settings page
+        ui.separator()
+        ui.label('Recent customers').classes('text-xs font-semibold text-gray-500 uppercase px-4 pt-2')
+        with ui.list().props('dense').classes('w-full'):
+            with ui.item(on_click=lambda: None):
+                with ui.item_section():
+                    ui.item_label('Nick McArdle')
+                    ui.item_label('(989) 555-0142 · Last test: Oct 6').props('caption')
+            with ui.item(on_click=lambda: None):
+                with ui.item_section():
+                    ui.item_label('Manish Shrestha')
+                    ui.item_label('(989) 537-7385 · Last test: Oct 10').props('caption')
+            with ui.item(on_click=lambda: None):
+                with ui.item_section():
+                    ui.item_label('Marcelino J. Chapa')
+                    ui.item_label('(989) 548-9736 · Last test: Oct 19').props('caption')
+            with ui.item(on_click=lambda: None):
+                with ui.item_section():
+                    ui.item_label('Keith Ho')
+                    ui.item_label('(989) 723-9264 · Last test: Sept 22').props('caption')
 
 #--------------------Header-------------------------
 
