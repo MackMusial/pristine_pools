@@ -4,10 +4,22 @@ from layout import page_layout
 @ui.page('/')
 def home():
     page_layout()
+#-------------------------Right Drawer-------------------------
     with ui.right_drawer():
         ui.label('Customer').classes('text-lg font-semibold')
         ui.label('Nick McArdle').classes('font-medium')
-        ui.label('(989) 555-0142').classes('text-sm text-grey-500')
+        ui.label('(989) 555-0142').classes('text-sm text-gray-500')
+        ui.separator()
+        ui.label('Pool').classes('text-lg font-semibold')
+        ui.label('24 ft round · hard sided').classes('font-medium')
+        ui.label('15000 gal').classes('text-sm text-gray-500')
+        ui.separator()
+        ui.label("Latest test · October 15").classes('text-lg font-semibold')
+        with ui.row().classes('gap-2'):
+            ui.badge('pH 7.9',color='red')
+            ui.badge('FC 0.5',color='red')
+            ui.badge('Alk 100',color='green')
+#------------------------- Footer -------------------------
     with ui.footer().classes('bg-slate-100'):
         with ui.row().classes('w-full max-w-3xl mx-auto justify-center items-center'):
             chat = ui.input(placeholder='Ask about a pool problem...').classes('flex-1').props('outlined rounded')

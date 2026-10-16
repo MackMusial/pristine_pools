@@ -25,3 +25,6 @@ def page_layout():
             ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
             ui.icon('pool')
             ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters      
+            with ui.row().classes('items-center'):
+                ui.button('New Water Test',icon='science').props('flat color=white')
+                ui.button('Add Customer', icon='person_add').props('flat color=white')
