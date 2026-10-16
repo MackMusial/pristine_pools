@@ -33,9 +33,6 @@ def page_layout():
 #--------------------Hamburger Drawer--------------------
 
     with ui.left_drawer(value=False) as drawer:
-        ui.button('Home',icon='home',on_click=lambda: ui.navigate.to('/')).props('flat align=left').classes('w-full')#button to navigate to home page
-        ui.button('Settings',icon='build',on_click=lambda: ui.navigate.to('/settings')).props('flat align=left').classes('w-full')#button to navigate to settings page
-        ui.separator()
         ui.label('Recent customers').classes('text-xs font-semibold text-gray-500 uppercase px-4 pt-2')
         with ui.list().props('dense').classes('w-full'):
             with ui.item(on_click=lambda: None):
@@ -60,11 +57,14 @@ def page_layout():
     with ui.header().classes('items-center justify-between'):#spreads header out 
         with ui.row().classes('items-center'):
             ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
-            ui.icon('pool')
-            ui.label('Pristine Pools').classes('text-xl font-bold')#increase text size and bold characters      
+            with ui.row().classes('items-center gap-2 cursor-pointer') as logo:#creates a box for icon and label so both are in one box and both are clickable hense the user of cursor-pointer to make a hand pop up when a user tries clicking on it. it shows that its clickable
+                ui.icon('pool')
+                ui.label('Pristine Pools').classes('text-xl font-bold')
+            logo.on('click', lambda:ui.navigate.to('/'))#naviage to home
         search = ui.select(CUSTOMERS,with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}')).props('dense dark standout clearable').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
         with ui.row().classes('items-center'):
             ui.button('New Water Test',icon='science').props('flat color=white')
             ui.button('Add Customer', icon='person_add').props('flat color=white')
+            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')#button to navigate to settings page

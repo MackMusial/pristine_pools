@@ -46,7 +46,8 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
    **Customer screen** (`/customer/{id}`): contact info, their **pools** (cards or a selector), equipment + gallons, and **tabs/panels** for **Water Tests** (latest + history, out-of-range values color-coded, New Test form, Print via the Windows print dialog), **Problems** (describe → canned AI suggestions → choose one → history), and **Purchases** (subsystem 3). Add Customer = a `ui.dialog` form (layout only).
    - Already started in `customers.py`: a centered column + title row (`justify-between`) with an "Add Customer" button. Put the icon on the button (`icon='person_add'`); never assign `ui.icon = ...`, because that overwrites NiceGUI's function.
 7. **Settings screen** (named "Settings" in the app as of 2026-10-16: `pages/settings.py`, route `/settings`, renamed from the old `customers.py`; it's the "Maintenance" screen / subsystem 6 in the docs): lookup lists (products, manufacturers), the "Back Up Now" button, and possibly water-test ranges. Rarely used.
-8. Left drawer: Home / Settings nav + chat history / recent customers; highlight the active page. Drawer **starts closed** (`ui.left_drawer(value=False)`), and ☰ opens it.
+8. **Decision (2026-10-16): keep the ☰ drawer, slimmed down.** The logo (🏊 Pristine Pools) becomes the link to Home; Settings moves to a ⚙ icon button in the header's right group. The drawer then holds only **Recent customers + (later) chat history**, like ChatGPT's sidebar, and it stays the mobile menu spot. (Supersedes the nav buttons below.)
+   Previously: Left drawer: Home / Settings nav + chat history / recent customers; highlight the active page. Drawer **starts closed** (`ui.left_drawer(value=False)`), and ☰ opens it.
 - Three is the target, not a ceiling: Reports or a test-range Settings screen can be added later if Kara wants them.
 
 ### Phase 2: Make it work (later)
