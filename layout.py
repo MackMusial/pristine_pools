@@ -61,7 +61,7 @@ def page_layout():
                 ui.icon('pool')
                 ui.label('Pristine Pools').classes('text-xl font-bold')
             logo.on('click', lambda:ui.navigate.to('/'))#naviage to home
-        search = ui.select(CUSTOMERS,with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}')).props('dense dark standout clearable').classes('w-96')
+        search = ui.select(CUSTOMERS,with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
         with ui.row().classes('items-center'):
