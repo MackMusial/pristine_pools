@@ -22,7 +22,17 @@ def customer(customer_id: int):
                         ui.badge('pH 7.9',color='red')
                         ui.badge('FC 0.5',color='red')
                         ui.badge('Alk 100',color='green')
-
+                columns = [
+                    {'name': 'date', 'label': 'Date', 'field': 'date'},
+                    {'name': 'ph',   'label': 'pH',   'field': 'ph'},
+                    {'name': 'fc',   'label': 'FC',   'field': 'fc'},
+                ]
+                rows = [
+                    {'date': 'Oct 15', 'ph': 7.9, 'fc': 0.5},
+                    {'date': 'Oct 1',  'ph': 7.5, 'fc': 3.0},
+                    {'date': 'Sep 17', 'ph': 7.4, 'fc': 2.8},
+                ]
+                ui.table(columns=columns, rows=rows).classes('w-full')
             with ui.tab_panel(problems_tab):
                 ui.label('Problems go here')
             with ui.tab_panel(purchases_tab):
