@@ -60,7 +60,12 @@ def customer(customer_id: int):
                     {'date': 'Sep 17', 'ph': 7.4, 'fc': 2.8},
                 ]
                 ui.table(columns=columns, rows=rows).classes('w-full')
+            #---------- Problems Tab ----------
             with ui.tab_panel(problems_tab):
-                ui.label('Problems go here')
+                with ui.card().classes('w-full'):
+                    ui.label('Log a Problem').classes('text-lg font-semibold')
+                    ui.button('Get Suggestion')
+                    problem_description = ui.textarea(placeholder="Describe the customers problem...").props('outlined').classes('w-full')
+            #---------- Purchases Tab ----------
             with ui.tab_panel(purchases_tab):
                 ui.label('Purchases go here')
