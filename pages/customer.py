@@ -60,12 +60,27 @@ def customer(customer_id: int):
                     {'date': 'Sep 17', 'ph': 7.4, 'fc': 2.8},
                 ]
                 ui.table(columns=columns, rows=rows).classes('w-full')
+
             #---------- Problems Tab ----------
+            suggestions = [
+                        'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
+                        'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
+                        'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
+            ]
+
             with ui.tab_panel(problems_tab):
                 with ui.card().classes('w-full'):
                     ui.label('Log a Problem').classes('text-lg font-semibold')
                     ui.button('Get Suggestion')
                     problem_description = ui.textarea(placeholder="Describe the customers problem...").props('outlined').classes('w-full')
+                with ui.card().classes('w-full'):
+                    ui.label('Suggestions').classes('text-lg font-semibold')
+                    selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
+                    fix_box = ui.textarea(label='Fix applied').props('outlined').classes('w-full').props('clearable')
+                    with ui.row().classes('w-full justify-end'):
+                        ui.button('Save Fix').classes('justify-end')
+                    
+                    
             #---------- Purchases Tab ----------
             with ui.tab_panel(purchases_tab):
                 ui.label('Purchases go here')
