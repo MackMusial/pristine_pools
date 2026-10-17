@@ -8,6 +8,33 @@ def customer(customer_id: int):
     with ui.column().classes('w-full max-w-6xl mx-auto p-6 gap-6'):  # centered page column with padding
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(CUSTOMERS[customer_id]).classes('text-2xl font-bold')
+
+        #---------- Contact Card ----------
+        with ui.card().classes('flex-1 w-full'):
+            ui.label('Contact').classes('text-lg font-semibold')
+            ui.label('Address').classes('text-xs text-gray-500')
+            ui.label('4127 Bay Rd, Saginaw, MI 48603')
+            ui.label('Phone').classes('text-xs text-gray-500')
+            ui.label('(989) 555-0142')
+            ui.label('Customer since').classes('text-xs text-gray-500')
+            ui.label('May 2026')
+
+        #---------- Pool Card ----------
+        with ui.card().classes('flex-1 w-full'):
+            ui.label('Pool').classes('text-lg font-semibold')
+            ui.label('Size').classes('text-xs text-gray-500')
+            ui.label('24 ft round · 52 in wall · 15,000 gal')
+            ui.label('Wall / liner').classes('text-xs text-gray-500')
+            ui.label('Hard-sided steel · 25 mil overlap liner')
+            ui.label('Floor').classes('text-xs text-gray-500')
+            ui.label('Sand base')
+            ui.label('Filter').classes('text-xs text-gray-500')
+            ui.label('Sand filter · 150 lbs sand')
+            ui.label('Chlorinator').classes('text-xs text-gray-500')
+            ui.label('None')
+            ui.label('Installed').classes('text-xs text-gray-500')
+            ui.label('June 2026 · Great Lakes Pool Install')
+
         with ui.tabs() as tabs:
             test_tab = ui.tab('Water Tests', icon='science')
             problems_tab = ui.tab('Problems', icon='report_problem')
