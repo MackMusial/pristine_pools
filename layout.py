@@ -1,12 +1,13 @@
 from nicegui import ui
 
-#-----Different themes we can present to the customer and see what they like the most-----
+# ---------- Themes ----------
+# Color options to show the client so she can pick one.
 THEMES = {
     'pool': {'primary': '#0369a1', 'secondary': '#0d9488', 'accent': '#38bdf8'},
     'aqua': {'primary': '#1e3a8a', 'secondary': '#06b6d4', 'accent': '#f59e0b'},
     'ocean': {'primary': '#0f172a', 'secondary': '#22d3ee', 'accent': '#a78bfa'},
 }
-CUSTOMERS = {#customers dict Hardcoded for example UI 
+CUSTOMERS = {  # hardcoded sample customers for the demo UI
     1: 'Nick McArdle · (989) 555-0142',
     2: 'Manish Shrestha · (989) 555-0185',
     3: 'Marcelino J. Chapa · (989) 555-0136',
@@ -24,13 +25,15 @@ CUSTOMERS = {#customers dict Hardcoded for example UI
     15: 'Megan Fischer · (989) 555-0115',
     16: 'Jake Wojcik · (989) 555-0138',
 }
-CURRENT_THEME = 'pool'#current theme selection... Hardcoded because only one will be selected in the future
+CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
+
 
 def page_layout():
+    ui.add_css('.customer-menu { max-height: 200px !important; }')
     ui.query('body').classes('bg-slate-100')
     ui.colors(**THEMES[CURRENT_THEME])
 
-#--------------------Hamburger Drawer--------------------
+    # ---------- Left Drawer ----------
 
     with ui.left_drawer(value=False) as drawer:
         ui.label('Recent customers').classes('text-xs font-semibold text-gray-500 uppercase px-4 pt-2')
@@ -52,19 +55,28 @@ def page_layout():
                     ui.item_label('Keith Ho')
                     ui.item_label('(989) 723-9264 · Last test: Sept 22').props('caption')
 
-#--------------------Header-------------------------
+    # ---------- Header ----------
 
-    with ui.header().classes('items-center justify-between'):#spreads header out 
+    with ui.header().classes('items-center justify-between'):  # spreads the three groups across the header
         with ui.row().classes('items-center'):
-            ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')#hamburger for navigation between pages
-            with ui.row().classes('items-center gap-2 cursor-pointer') as logo:#creates a box for icon and label so both are in one box and both are clickable hense the user of cursor-pointer to make a hand pop up when a user tries clicking on it. it shows that its clickable
+            ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
+
+            # ---------- Logo (Home link) ----------
+
+            with ui.row().classes('items-center gap-2 cursor-pointer') as logo:  # icon + title act as one clickable Home link
                 ui.icon('pool')
                 ui.label('Pristine Pools').classes('text-xl font-bold')
-            logo.on('click', lambda:ui.navigate.to('/'))#naviage to home
-        search = ui.select(CUSTOMERS,with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout').classes('w-96')
+            logo.on('click', lambda:ui.navigate.to('/'))  # navigate to Home
+
+        # ---------- Customer Search ----------
+
+        search = ui.select(CUSTOMERS,with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
+
+        # ---------- Action Buttons ----------
+
         with ui.row().classes('items-center'):
             ui.button('New Water Test',icon='science').props('flat color=white')
             ui.button('Add Customer', icon='person_add').props('flat color=white')
-            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')#button to navigate to settings page
+            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings page
