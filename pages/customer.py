@@ -5,14 +5,14 @@ from layout import page_layout, CUSTOMERS
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int):
     page_layout()
-    with ui.column().classes('w-full max-w-screen-2xl mx-auto p-6 gap-6 md:h-[calc(100vh-4rem)]'):  # centered page column with padding
+    with ui.column().classes('w-full max-w-screen-2xl mx-auto p-6 gap-6 md:h-[calc(100vh-7rem)]'):  # centered page column with padding
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(CUSTOMERS[customer_id]).classes('text-2xl font-bold')
         with ui.row().classes('w-full no-wrap gap-6 items-start md:flex-1 md:min-h-0'):
-            with ui.column().classes('w-1/3 md:h-full md:overflow-y-auto'):
+            with ui.column().classes('w-1/3 md:h-full'):
 
                 #---------- Contact Card ----------
-                with ui.card().classes('w-full'):
+                with ui.card().classes('w-full gap-1'):
                     ui.label('Contact').classes('text-lg font-semibold')
                     #with ui.grid(columns='auto 1fr').classes('items-baseline w-full gap-x-4 gap-y-1'):  #items-baseline moves the text to the bottom of the line. without it the Contact header would be slightly higher than the actual data
                     ui.label('Address').classes('text-xs text-gray-500')
@@ -23,7 +23,7 @@ def customer(customer_id: int):
                     ui.label('May 2026')
 
                 #---------- Pool Card ----------
-                with ui.card().classes('w-full'):
+                with ui.card().classes('w-full gap-1'):
                     ui.label('Pool').classes('text-lg font-semibold')
                     #with ui.grid(columns='auto 1fr').classes('items-baseline w-full gap-x-4 gap-y-1'):    
                     ui.label('Size').classes('text-xs text-gray-500')
@@ -66,26 +66,26 @@ def customer(customer_id: int):
                         ]
                         ui.table(columns=columns, rows=rows).classes('w-full')
 
-                    #---------- Problems Tab ----------
-                    suggestions = [
-                                'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
-                                'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
-                                'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
-                    ]
                     #---------- Log a Problem ----------
                     with ui.tab_panel(problems_tab):
-                        with ui.card().classes('w-full'):
-                            ui.label('Log a Problem').classes('text-lg font-semibold')
-                            ui.button('Get Suggestion')
-                            problem_description = ui.textarea(placeholder="Describe the customers problem...").props('outlined').classes('w-full')
+                        suggestions = [
+                            'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
+                            'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
+                            'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
+                        ]
+                        with ui.row().classes('w-full no-wrap gap-4 items-start'):
+                            with ui.card().classes('w-1/3'):
+                                ui.label('Log a Problem').classes('text-lg font-semibold')
+                                ui.button('Get Suggestion')
+                                problem_description = ui.textarea(placeholder="Describe the customers problem...").props('outlined autogrow').classes('w-full')#autogrow starts the box at one line and grows on as the user types
 
-                    #---------- Get Suggestion ----------
-                        with ui.card().classes('w-full'):
-                            ui.label('Suggestions').classes('text-lg font-semibold')
-                            selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
-                            fix_box = ui.textarea(label='Fix applied').props('outlined').classes('w-full').props('clearable')
-                            with ui.row().classes('w-full justify-end'):
-                                ui.button('Save Fix').classes('justify-end')
+                    #---------- Suggestion ----------
+                            with ui.card().classes('flex-1'):
+                                ui.label('Suggestions').classes('text-lg font-semibold')
+                                selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
+                                fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow').classes('w-full')
+                                with ui.row().classes('w-full justify-end'):
+                                    ui.button('Save Fix').classes('justify-end')
 
 
                     #---------- Purchases Tab ----------
