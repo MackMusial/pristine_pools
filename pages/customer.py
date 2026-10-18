@@ -5,11 +5,11 @@ from layout import page_layout, CUSTOMERS
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int):
     page_layout()
-    with ui.column().classes('w-full max-w-screen-2xl mx-auto p-6 gap-6'):  # centered page column with padding
+    with ui.column().classes('w-full max-w-screen-2xl mx-auto p-6 gap-6 md:h-[calc(100vh-4rem)]'):  # centered page column with padding
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(CUSTOMERS[customer_id]).classes('text-2xl font-bold')
-        with ui.row().classes('w-full no-wrap gap-6 items-start'):
-            with ui.column().classes('w-1/3'):
+        with ui.row().classes('w-full no-wrap gap-6 items-start md:flex-1 md:min-h-0'):
+            with ui.column().classes('w-1/3 md:h-full md:overflow-y-auto'):
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full'):
@@ -39,7 +39,7 @@ def customer(customer_id: int):
                     ui.label('Installed').classes('text-xs text-gray-500')
                     ui.label('June 2026 · Great Lakes Pool Install')
 
-            with ui.column().classes('flex-1'):
+            with ui.column().classes('flex-1 md:h-full md:overflow-y-auto'):
                 with ui.tabs() as tabs:
                     test_tab = ui.tab('Water Tests', icon='science')
                     problems_tab = ui.tab('Problems', icon='report_problem')
