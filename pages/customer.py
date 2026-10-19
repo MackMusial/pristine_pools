@@ -48,23 +48,41 @@ def customer(customer_id: int):
                     purchases_tab = ui.tab('Purchases',icon='shopping_cart')
                 with ui.tab_panels(tabs, value=test_tab).classes('w-full'):
                     with ui.tab_panel(test_tab):
-                        with ui.card().classes('w-full'):
+                        with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Latest test · Oct 15').classes('text-lg font-semibold')
-                                ui.button(icon='print')
+                                with ui.row().classes('items-center gap-2'):
+                                    ui.button(icon='print').props('flat round')  #Print button
+                                    ui.button('New Test',icon='add')
                             with ui.row().classes('gap-2'):
                                 ui.badge('pH 7.9',color='red')
                                 ui.badge('FC 0.5',color='red')
                                 ui.badge('Alk 100',color='green')
+                                ui.badge('FC 0,5',color='red')
+                                ui.badge('TC .7',color='red')
+                                ui.badge('pH 7.9',color='red')
+                                ui.badge('Alk 100',color='green')
+                                ui.badge('Hardness 190',color='orange')
+                                ui.badge('CYA',color='green')
+                                ui.badge('Phosphates 450',color='red')
+                                
                         columns = [
-                            {'name': 'date', 'label': 'Date', 'field': 'date'},
-                            {'name': 'ph',   'label': 'pH',   'field': 'ph'},
-                            {'name': 'fc',   'label': 'FC',   'field': 'fc'},
+                            {'name': 'date', 'label': 'Date',     'field': 'date'},
+                            {'name': 'fc',   'label': 'FC',       'field': 'fc'},
+                            {'name': 'ph',   'label': 'pH',       'field': 'ph'},
+                            {'name': 'ta',   'label': 'Alk',      'field': 'ta'},
+                            {'name': 'ch',   'label': 'Hardness', 'field': 'ch'},
+                            {'name': 'cya',  'label': 'CYA',      'field': 'cya'},
+                            {'name': 'phos', 'label': 'Phos',     'field': 'phos'},
                         ]
                         rows = [
-                            {'date': 'Oct 15', 'ph': 7.9, 'fc': 0.5},
-                            {'date': 'Oct 1',  'ph': 7.5, 'fc': 3.0},
-                            {'date': 'Sep 17', 'ph': 7.4, 'fc': 2.8},
+                            {'date': 'Oct 15', 'fc': 0.5, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450},
+                            {'date': 'Oct 1',  'fc': 3.0, 'ph': 7.5, 'ta': 100, 'ch': 190, 'cya': 40, 'phos': 200},
+                            {'date': 'Sep 17', 'fc': 2.8, 'ph': 7.4, 'ta': 95,  'ch': 190, 'cya': 35, 'phos': 150},
+                            {'date': 'Sep 2',  'fc': 1.5, 'ph': 7.6, 'ta': 90,  'ch': 200, 'cya': 35, 'phos': 300},
+                            {'date': 'Aug 14', 'fc': 2.5, 'ph': 7.5, 'ta': 100, 'ch': 200, 'cya': 30, 'phos': 100},
+                            {'date': 'Jul 20', 'fc': 0.8, 'ph': 7.6, 'ta': 110, 'ch': 210, 'cya': 30, 'phos': 100},
+                            {'date': 'Jun 28', 'fc': 0.0, 'ph': 7.8, 'ta': 60,  'ch': 220, 'cya': 0,  'phos': 50},
                         ]
                         ui.table(columns=columns, rows=rows).classes('w-full')
 
@@ -81,11 +99,11 @@ def customer(customer_id: int):
                             ('Jul 20 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
                             ('Jun 28 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, inital shock with 3 lbs cal-hypo'),
                         ]
-                        with ui.row().classes('w-full no-wrap gap-4 items-start'):
+                        with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
                                 ui.label('Log a Problem').classes('text-lg font-semibold')
-                                problem_description = ui.textarea(placeholder="Describe the customer's problem...").props('outlined autogrow').classes('w-full')#autogrow starts the box at one line and grows on as the user types
-                                with ui.row().classes('w-full justify-end'):
+                                problem_description = ui.textarea(placeholder="Describe the customer's problem...").props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
+                                with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
                                     ui.button('Get Suggestion')
 
                     #---------- Suggestion ----------
@@ -98,14 +116,35 @@ def customer(customer_id: int):
 
                         with ui.card().classes('w-full'):
                             ui.label('Problem history').classes('text-lg font-semibold')
-                            with ui.list().props('separator'):
-                                with ui.item():
-                                    with ui.item_section():
-                                        for problem, fix in history:  #forloop to iterate through each tuple in history
+                            with ui.list().props('separator').classes('w-full max-h-48 overflow-y-auto'):  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
+                                for problem, fix in history:  #forloop to iterate through each tuple in history
+                                    with ui.item():
+                                        with ui.item_section():
                                             ui.item_label(problem)
                                             ui.item_label(fix).props('caption')
 
 
                     #---------- Purchases Tab ----------
                     with ui.tab_panel(purchases_tab):
-                        ui.label('Purchases go here')
+                        purchase_columns = [
+                            {'name': 'date',    'label': 'Date',    'field': 'date'},
+                            {'name': 'product', 'label': 'Product', 'field': 'product'},
+                            {'name': 'brand',   'label': 'Brand',   'field': 'brand'},
+                            {'name': 'qty',     'label': 'Qty',     'field': 'qty'},
+                            {'name': 'size',    'label': 'Size',    'field': 'size'},
+                        ]
+                        purchase_rows = [
+                            {'date': 'Oct 15', 'product': 'Cal-hypo shock (73%)',     'brand': 'HTH',               'qty': 2, 'size': '1 lb bag'},
+                            {'date': 'Oct 15', 'product': 'pH reducer',               'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
+                            {'date': 'Oct 15', 'product': 'Algaecide 60',             'brand': 'BioGuard',          'qty': 1, 'size': '1 qt'},
+                            {'date': 'Sep 2',  'product': 'Clarifier',                'brand': 'Natural Chemistry', 'qty': 1, 'size': '1 qt'},
+                            {'date': 'Jul 20', 'product': 'Floating chlorinator',     'brand': 'Pool Time',         'qty': 1, 'size': '—'},
+                            {'date': 'Jul 20', 'product': '3" chlorine tabs',         'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
+                            {'date': 'Jun 28', 'product': 'Alkalinity increaser',     'brand': 'Arm & Hammer',      'qty': 3, 'size': '1 lb box'},
+                            {'date': 'Jun 28', 'product': 'Opening kit',              'brand': 'HTH',               'qty': 1, 'size': '15k gal kit'},
+                        ]
+                        with ui.card().classes('w-full'):
+                            with ui.row().classes('w-full items-center justify-between'):
+                                ui.label('Purchases').classes('text-lg font-semibold')
+                                ui.button('Log Purchase', icon='add')
+                            ui.table(columns=purchase_columns, rows=purchase_rows).classes('w-full').props('flat bordered')

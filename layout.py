@@ -77,6 +77,5 @@ def page_layout():
         # ---------- Action Buttons ----------
 
         with ui.row().classes('items-center'):
-            ui.button('New Water Test',icon='science').props('flat color=white')
             ui.button('Add Customer', icon='person_add').props('flat color=white')
             ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings page
