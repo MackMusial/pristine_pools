@@ -39,6 +39,8 @@ def customer(customer_id: int):
                     ui.label('Installed').classes('text-xs text-gray-500')
                     ui.label('June 2026 · Great Lakes Pool Install')
 
+            #----------  Water Tests ----------
+
             with ui.column().classes('flex-1 md:h-full md:overflow-y-auto'):
                 with ui.tabs() as tabs:
                     test_tab = ui.tab('Water Tests', icon='science')
@@ -66,18 +68,25 @@ def customer(customer_id: int):
                         ]
                         ui.table(columns=columns, rows=rows).classes('w-full')
 
-                    #---------- Log a Problem ----------
+                    #---------- Problems ----------
                     with ui.tab_panel(problems_tab):
                         suggestions = [
                             'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
                             'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
                             'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
                         ]
+                        history = [ 
+                            ('Oct 15 · Green water', 'Lowered pH with 1.5 lbs pH reducer, then shocked with 2 lbs of cal-hypo (customer shocked 2 days earlier). Brushed walls'),
+                            ('Sep 2 · Cloudy water', 'Backwashed sand filter, added clarifier. Ran filter 24 hrs. Cleared in 2 days'),
+                            ('Jul 20 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
+                            ('Jun 28 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, inital shock with 3 lbs cal-hypo'),
+                        ]
                         with ui.row().classes('w-full no-wrap gap-4 items-start'):
                             with ui.card().classes('w-1/3'):
                                 ui.label('Log a Problem').classes('text-lg font-semibold')
-                                ui.button('Get Suggestion')
-                                problem_description = ui.textarea(placeholder="Describe the customers problem...").props('outlined autogrow').classes('w-full')#autogrow starts the box at one line and grows on as the user types
+                                problem_description = ui.textarea(placeholder="Describe the customer's problem...").props('outlined autogrow').classes('w-full')#autogrow starts the box at one line and grows on as the user types
+                                with ui.row().classes('w-full justify-end'):
+                                    ui.button('Get Suggestion')
 
                     #---------- Suggestion ----------
                             with ui.card().classes('flex-1'):
@@ -85,7 +94,16 @@ def customer(customer_id: int):
                                 selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
                                 fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow').classes('w-full')
                                 with ui.row().classes('w-full justify-end'):
-                                    ui.button('Save Fix').classes('justify-end')
+                                    ui.button('Save Fix',icon='check')
+
+                        with ui.card().classes('w-full'):
+                            ui.label('Problem history').classes('text-lg font-semibold')
+                            with ui.list().props('separator'):
+                                with ui.item():
+                                    with ui.item_section():
+                                        for problem, fix in history:  #forloop to iterate through each tuple in history
+                                            ui.item_label(problem)
+                                            ui.item_label(fix).props('caption')
 
 
                     #---------- Purchases Tab ----------
