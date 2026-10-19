@@ -48,24 +48,31 @@ def customer(customer_id: int):
                     purchases_tab = ui.tab('Purchases',icon='shopping_cart')
                 with ui.tab_panels(tabs, value=test_tab).classes('w-full'):
                     with ui.tab_panel(test_tab):
+
+                        #---------- New Test Dialog ----------
+                        with ui.dialog() as test_dialog, ui.card():  #Create Dialog box for when user wants to create a new water test
+                            ui.label('New Water Test').classes('text-lg font-semibold')
+                            with ui.row().classes('w-full justify-end'):
+                                ui.button('Cancel', on_click=test_dialog.close).props('flat')
+
+                        #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Latest test · Oct 15').classes('text-lg font-semibold')
                                 with ui.row().classes('items-center gap-2'):
                                     ui.button(icon='print').props('flat round')  #Print button
-                                    ui.button('New Test',icon='add')
+                                    ui.button('New Test',icon='add',on_click=test_dialog.open)
                             with ui.row().classes('gap-2'):
                                 ui.badge('pH 7.9',color='red')
-                                ui.badge('FC 0.5',color='red')
+                                ui.badge('FC 0,5',color='red')
                                 ui.badge('Alk 100',color='green')
                                 ui.badge('FC 0,5',color='red')
-                                ui.badge('TC .7',color='red')
+                                ui.badge('TC 0.7',color='red')
                                 ui.badge('pH 7.9',color='red')
                                 ui.badge('Alk 100',color='green')
                                 ui.badge('Hardness 190',color='orange')
-                                ui.badge('CYA',color='green')
-                                ui.badge('Phosphates 450',color='red')
-                                
+                                ui.badge('CYA 40',color='green')
+                                ui.badge('Phosphates 450',color='red') 
                         columns = [
                             {'name': 'date', 'label': 'Date',     'field': 'date'},
                             {'name': 'fc',   'label': 'FC',       'field': 'fc'},
