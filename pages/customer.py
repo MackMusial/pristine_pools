@@ -45,8 +45,8 @@ def customer(customer_id: int):
             #----------  Water Tests ----------
 
             with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
-                with ui.tab_panels(tabs, value=test_tab).classes('w-full flex-1'):  # flex-1: the white panel fills down to the bottom of the info cards
-                    with ui.tab_panel(test_tab):
+                with ui.tab_panels(tabs, value=test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
+                    with ui.tab_panel(test_tab).classes('p-1'):
 
                         #---------- New Test Dialog ----------
                         with ui.dialog() as test_dialog, ui.card().classes('w-96'):  #Create Dialog box for when user wants to create a new water test
@@ -122,7 +122,7 @@ def customer(customer_id: int):
                         ''')
 
                     #---------- Problems ----------
-                    with ui.tab_panel(problems_tab):
+                    with ui.tab_panel(problems_tab).classes('p-1'):
                         suggestions = [
                             'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
                             'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
@@ -160,7 +160,7 @@ def customer(customer_id: int):
 
 
                     #---------- Purchases Tab ----------
-                    with ui.tab_panel(purchases_tab):
+                    with ui.tab_panel(purchases_tab).classes('p-1'): #p-1 removes the padding down to 4px (tailwind's spacing scale is x4)
                         purchase_columns = [
                             {'name': 'date',    'label': 'Date',    'field': 'date', 'align': 'left'},
                             {'name': 'product', 'label': 'Product', 'field': 'product', 'align': 'left'},
