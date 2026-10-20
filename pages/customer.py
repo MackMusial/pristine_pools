@@ -4,12 +4,17 @@ from layout import page_layout, CUSTOMERS
 
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int):
+    name, phone = CUSTOMERS[customer_id].split(' · ')
     page_layout()
-    with ui.column().classes('w-full max-w-screen-2xl mx-auto p-6 gap-6 md:h-[calc(100vh-7rem)]'):  # centered page column with padding
+    with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
-            ui.label(CUSTOMERS[customer_id]).classes('text-2xl font-bold')
-        with ui.row().classes('w-full no-wrap gap-6 items-start md:flex-1 md:min-h-0'):
-            with ui.column().classes('w-1/3 md:h-full'):  #testing for github
+            ui.label(name).classes('text-2xl font-bold')
+            with ui.tabs().props('inline-label dense') as tabs:
+                test_tab = ui.tab('Water Tests', icon='science')
+                problems_tab = ui.tab('Problems', icon='report_problem')
+                purchases_tab = ui.tab('Purchases',icon='shopping_cart')
+        with ui.row().classes('w-full no-wrap gap-6 items-stretch'):  # items-stretch: both columns get the same height (the row's)
+            with ui.column().classes('w-1/3'):  # the info cards set the row's height
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1'):
@@ -17,7 +22,7 @@ def customer(customer_id: int):
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label('4127 Bay Rd, Saginaw, MI 48603')
                     ui.label('Phone').classes('text-xs text-gray-500')
-                    ui.label('(989) 555-0142')
+                    ui.label(phone)
                     ui.label('Customer since').classes('text-xs text-gray-500')
                     ui.label('May 2026')
 
@@ -39,12 +44,8 @@ def customer(customer_id: int):
 
             #----------  Water Tests ----------
 
-            with ui.column().classes('flex-1 md:h-full md:overflow-y-auto'):
-                with ui.tabs() as tabs:
-                    test_tab = ui.tab('Water Tests', icon='science')
-                    problems_tab = ui.tab('Problems', icon='report_problem')
-                    purchases_tab = ui.tab('Purchases',icon='shopping_cart')
-                with ui.tab_panels(tabs, value=test_tab).classes('w-full'):
+            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
+                with ui.tab_panels(tabs, value=test_tab).classes('w-full flex-1'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab):
 
                         #---------- New Test Dialog ----------
