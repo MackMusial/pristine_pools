@@ -1,5 +1,6 @@
 from nicegui import ui
 from layout import page_layout, CUSTOMERS
+from datetime import date 
 
 
 @ui.page('/customer/{customer_id}')
@@ -68,7 +69,7 @@ def customer(customer_id: int):
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
-                                ui.label('Latest test · Oct 15').classes('text-lg font-semibold')
+                                ui.label('Latest test · Oct 15, 2026').classes('text-lg font-semibold')
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
@@ -83,19 +84,19 @@ def customer(customer_id: int):
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
                         rows = [
-                            {'date': 'Oct 15', 'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450,
+                            {'date': 'Oct 15, 2026', 'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450,
                              'fc_color': 'red', 'tc_color': 'red', 'ph_color': 'red', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'red'},
-                            {'date': 'Oct 1',  'fc': 3.0, 'tc': 3.2, 'ph': 7.5, 'ta': 100, 'ch': 190, 'cya': 40, 'phos': 200,
+                            {'date': 'Oct 1, 2026',  'fc': 3.0, 'tc': 3.2, 'ph': 7.5, 'ta': 100, 'ch': 190, 'cya': 40, 'phos': 200,
                              'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'orange'},
-                            {'date': 'Sep 17', 'fc': 2.8, 'tc': 3.0, 'ph': 7.4, 'ta': 95,  'ch': 190, 'cya': 35, 'phos': 150,
+                            {'date': 'Sep 17, 2026', 'fc': 2.8, 'tc': 3.0, 'ph': 7.4, 'ta': 95,  'ch': 190, 'cya': 35, 'phos': 150,
                              'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'orange'},
-                            {'date': 'Sep 2',  'fc': 1.5, 'tc': 2.0, 'ph': 7.6, 'ta': 90,  'ch': 200, 'cya': 35, 'phos': 300,
+                            {'date': 'Sep 2, 2026',  'fc': 1.5, 'tc': 2.0, 'ph': 7.6, 'ta': 90,  'ch': 200, 'cya': 35, 'phos': 300,
                              'fc_color': 'green', 'tc_color': 'orange', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'orange'},
-                            {'date': 'Aug 14', 'fc': 2.5, 'tc': 2.7, 'ph': 7.5, 'ta': 100, 'ch': 200, 'cya': 30, 'phos': 100,
+                            {'date': 'Aug 14, 2026', 'fc': 2.5, 'tc': 2.7, 'ph': 7.5, 'ta': 100, 'ch': 200, 'cya': 30, 'phos': 100,
                              'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'green'},
-                            {'date': 'Jul 20', 'fc': 0.8, 'tc': 1.1, 'ph': 7.6, 'ta': 110, 'ch': 210, 'cya': 30, 'phos': 100,
+                            {'date': 'Jul 20, 2026', 'fc': 0.8, 'tc': 1.1, 'ph': 7.6, 'ta': 110, 'ch': 210, 'cya': 30, 'phos': 100,
                              'fc_color': 'orange', 'tc_color': 'orange', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'green'},
-                            {'date': 'Jun 28', 'fc': 0.0, 'tc': 0.0, 'ph': 7.8, 'ta': 60,  'ch': 220, 'cya': 0,  'phos': 50,
+                            {'date': 'Jun 28, 2026', 'fc': 0.0, 'tc': 0.0, 'ph': 7.8, 'ta': 60,  'ch': 220, 'cya': 0,  'phos': 50,
                              'fc_color': 'red', 'tc_color': 'red', 'ph_color': 'orange', 'ta_color': 'orange', 'ch_color': 'green', 'cya_color': 'red', 'phos_color': 'green'},
                         ]
                         table = ui.table(columns=columns, rows=rows).classes('w-full')
@@ -129,11 +130,11 @@ def customer(customer_id: int):
                             'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
                         ]
                         history = [ 
-                            ('Oct 15 · Green water', 'Lowered pH with 1.5 lbs pH reducer, then shocked with 2 lbs of cal-hypo (customer shocked 2 days earlier). Brushed walls'),
-                            ('Sep 2 · Cloudy water', 'Backwashed sand filter, added clarifier. Ran filter 24 hrs. Cleared in 2 days'),
-                            ('Aug 26 · Broken filter', 'Multiport valve leaking from the waste line. Replaced the spider gasket and lubed the valve. Filter back online same day'),
-                            ('Jul 20 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
-                            ('Jun 28 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, initial shock with 3 lbs cal-hypo'),
+                            ('Oct 15, 2026 · Green water', 'Lowered pH with 1.5 lbs pH reducer, then shocked with 2 lbs of cal-hypo (customer shocked 2 days earlier). Brushed walls'),
+                            ('Sep 2, 2026 · Cloudy water', 'Backwashed sand filter, added clarifier. Ran filter 24 hrs. Cleared in 2 days'),
+                            ('Aug 26, 2026 · Broken filter', 'Multiport valve leaking from the waste line. Replaced the spider gasket and lubed the valve. Filter back online same day'),
+                            ('Jul 20, 2026 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
+                            ('Jun 28, 2026 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, initial shock with 3 lbs cal-hypo'),
                         ]
                         with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
@@ -173,17 +174,35 @@ def customer(customer_id: int):
                             {'name': 'size',    'label': 'Size',    'field': 'size', 'align': 'center'},
                         ]
                         purchase_rows = [
-                            {'date': 'Oct 15', 'product': 'Cal-hypo shock (73%)',     'brand': 'HTH',               'qty': 2, 'size': '1 lb bag'},
-                            {'date': 'Oct 15', 'product': 'pH reducer',               'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
-                            {'date': 'Oct 15', 'product': 'Algaecide 60',             'brand': 'BioGuard',          'qty': 1, 'size': '1 qt'},
-                            {'date': 'Sep 2',  'product': 'Clarifier',                'brand': 'Natural Chemistry', 'qty': 1, 'size': '1 qt'},
-                            {'date': 'Jul 20', 'product': 'Floating chlorinator',     'brand': 'Pool Time',         'qty': 1, 'size': '—'},
-                            {'date': 'Jul 20', 'product': '3" chlorine tabs',         'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
-                            {'date': 'Jun 28', 'product': 'Alkalinity increaser',     'brand': 'Arm & Hammer',      'qty': 3, 'size': '1 lb box'},
-                            {'date': 'Jun 28', 'product': 'Opening kit',              'brand': 'HTH',               'qty': 1, 'size': '15k gal kit'},
+                            {'date': 'Oct 15, 2026', 'product': 'Cal-hypo shock (73%)',     'brand': 'HTH',               'qty': 2, 'size': '1 lb bag'},
+                            {'date': 'Oct 15, 2026', 'product': 'pH reducer',               'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
+                            {'date': 'Oct 15, 2026', 'product': 'Algaecide 60',             'brand': 'BioGuard',          'qty': 1, 'size': '1 qt'},
+                            {'date': 'Sep 2, 2026',  'product': 'Clarifier',                'brand': 'Natural Chemistry', 'qty': 1, 'size': '1 qt'},
+                            {'date': 'Jul 20, 2026', 'product': 'Floating chlorinator',     'brand': 'Pool Time',         'qty': 1, 'size': '—'},
+                            {'date': 'Jul 20, 2026', 'product': '3" chlorine tabs',         'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
+                            {'date': 'Jun 28, 2026', 'product': 'Alkalinity increaser',     'brand': 'Arm & Hammer',      'qty': 3, 'size': '1 lb box'},
+                            {'date': 'Jun 28, 2026', 'product': 'Opening kit',              'brand': 'HTH',               'qty': 1, 'size': '15k gal kit'},
                         ]
+                        products = [
+                            'Cal-hypo shock (73%)', 'pH reducer', 'pH increaser', 'Alkalinity increaser',
+                            'Calcium hardness increaser', 'Algaecide 60', 'Clarifier', '3" chlorine tabs',
+                            'Stabilizer (CYA)', 'Phosphate remover', 'Floating chlorinator', 'Opening kit',
+                        ]
+
+                        #---------- Purchase Dialog ----------
+                        
+                        with ui.dialog() as purchase_dialog, ui.card().classes('w-96'):
+                            ui.label('Log Purchase').classes('w-full font-semibold text-lg')
+                            with ui.grid(columns=2).classes('w-full gap-3'):
+                                ui.input(label='Date',value=date.today().strftime('%b %d, %Y'))
+                                ui.select(products,with_input=True, label='Product').classes('w-full')
+                                ui.number(label='Qty', value=1, min=1)
+                            with ui.row().classes('w-full justify-end'):
+                                ui.button('Cancel', on_click=purchase_dialog.close).props('flat')
+                                ui.button('Save', icon='check',on_click=purchase_dialog.close)
+                        #-------------------------------------
                         with ui.card().classes('w-full'):
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Purchases').classes('text-lg font-semibold')
-                                ui.button('Log Purchase', icon='add')
+                                ui.button('Log Purchase', icon='add', on_click=purchase_dialog.open)
                             ui.table(columns=purchase_columns, rows=purchase_rows).classes('w-full').props('flat bordered')

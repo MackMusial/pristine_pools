@@ -42,19 +42,19 @@ def page_layout():
             with ui.item(on_click=lambda: None):
                 with ui.item_section():
                     ui.item_label('Nick McArdle')
-                    ui.item_label('(989) 555-0142 · Last test: Oct 6').props('caption')
+                    ui.item_label('(989) 555-0142 · Last test: Oct 6, 2026').props('caption')
             with ui.item(on_click=lambda: None):
                 with ui.item_section():
                     ui.item_label('Manish Shrestha')
-                    ui.item_label('(989) 537-7385 · Last test: Oct 10').props('caption')
+                    ui.item_label('(989) 537-7385 · Last test: Oct 10, 2026').props('caption')
             with ui.item(on_click=lambda: None):
                 with ui.item_section():
                     ui.item_label('Marcelino J. Chapa')
-                    ui.item_label('(989) 548-9736 · Last test: Oct 19').props('caption')
+                    ui.item_label('(989) 548-9736 · Last test: Oct 19, 2026').props('caption')
             with ui.item(on_click=lambda: None):
                 with ui.item_section():
                     ui.item_label('Keith Ho')
-                    ui.item_label('(989) 723-9264 · Last test: Sept 22').props('caption')
+                    ui.item_label('(989) 723-9264 · Last test: Sept 22, 2026').props('caption')
 
     # ---------- Header ----------
 

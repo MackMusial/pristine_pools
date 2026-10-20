@@ -14,7 +14,7 @@ def home():
         ui.label('24 ft round · hard sided').classes('font-medium')
         ui.label('15000 gal').classes('text-sm text-gray-500')
         ui.separator()
-        ui.label("Latest test · October 15").classes('text-lg font-semibold')
+        ui.label("Latest test · October 15, 2026").classes('text-lg font-semibold')
         with ui.row().classes('gap-2'):
             ui.badge('pH 7.9',color='red')
             ui.badge('FC 0.5',color='red')
