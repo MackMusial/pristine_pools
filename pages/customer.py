@@ -139,14 +139,17 @@ def customer(customer_id: int):
                                 ui.label('Log a Problem').classes('text-lg font-semibold')
                                 problem_description = ui.textarea(placeholder="Describe the customer's problem...").props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
                                 with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
-                                    ui.button('Get Suggestion')
+                                    ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
 
                     #---------- Suggestion ----------
                             with ui.card().classes('flex-1'):
-                                ui.label('Suggestions').classes('text-lg font-semibold')
-                                selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
+                                ui.label('Fix').classes('text-lg font-semibold')
+                                with ui.column().classes('w-full') as suggestion_box:
+                                    ui.label('Suggestions').classes('text-lg text-gray-500')
+                                    selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
+                                suggestion_box.set_visibility(False)
                                 fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow input-style="max-height: 8rem"').classes('w-full')
-                                with ui.row().classes('w-full justify-end'):
+                                with ui.row().classes('w-full justify-end mt-auto'):
                                     ui.button('Save Fix',icon='check')
 
                         with ui.card().classes('w-full'):
