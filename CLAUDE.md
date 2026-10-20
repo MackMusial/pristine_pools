@@ -112,6 +112,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - Optional: view the app in VS Code's Simple Browser (Ctrl+Shift+P, "Simple Browser: Show"). `ui.left_drawer` auto-hides when the window is narrow.
 
 ## Decisions
+- **⏰ DEADLINE: the whole GUI is due Tuesday 2026-10-27 at 8:30.** Remaining after the Customer screen: Home redo (welcome screen, bubbles, attached-customer drawer, chat history), New Customer dialog, Settings screen, phone stacking. Prioritize what the professor sees in a demo.
 - **This semester (Fall 2026) = GUI only:** a semi-functional front end to present to the professor. Navigation, dialogs and forms work on hard-coded fake data. The AI shows canned answers. The real database and AI come in Spring 2027.
 - **Mobile:** the GUI must *look* right on a phone (responsive layout, ☰ menu for the drawer). The app still runs on the store PC; no field or remote use.
 - Everything employees need should be reachable from Home in 2–3 clicks (header action buttons that open a `ui.dialog`, plus search).
