@@ -65,7 +65,7 @@ def page_layout():
 
             with ui.row().classes('items-center gap-2 cursor-pointer') as logo:  # icon + title act as one clickable Home link
                 ui.icon('pool')
-                ui.label('Pristine Pools').classes('text-xl font-bold')
+                ui.label('Pristine Pools').classes('text-2xl font-bold')
             logo.on('click', lambda:ui.navigate.to('/'))  # navigate to Home
 
         # ---------- Customer Search ----------
@@ -77,5 +77,5 @@ def page_layout():
         # ---------- Action Buttons ----------
 
         with ui.row().classes('items-center'):
-            ui.button('Add Customer', icon='person_add').props('flat color=white')
+            ui.button('New Customer', icon='person_add').props('flat color=white')
             ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings page
