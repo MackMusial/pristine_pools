@@ -6,18 +6,18 @@ from layout import page_layout, CUSTOMERS
 def customer(customer_id: int):
     name, phone = CUSTOMERS[customer_id].split(' · ')
     page_layout()
-    with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
+    with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(name).classes('text-2xl font-bold')
-            with ui.tabs().props('inline-label dense') as tabs:
+            with ui.tabs().props('inline-label dense').classes('print:hidden') as tabs:
                 test_tab = ui.tab('Water Tests', icon='science')
                 problems_tab = ui.tab('Problems', icon='report_problem')
                 purchases_tab = ui.tab('Purchases',icon='shopping_cart')
-        with ui.row().classes('w-full no-wrap gap-6 items-stretch'):  # items-stretch: both columns get the same height (the row's)
-            with ui.column().classes('w-1/3'):  # the info cards set the row's height
+        with ui.row().classes('w-full no-wrap gap-6 items-stretch print:flex-col print:gap-3'):  # items-stretch: both columns get the same height (the row's)
+            with ui.column().classes('w-1/3 print:w-full print:flex-row'):  # the info cards set the row's height
 
                 #---------- Contact Card ----------
-                with ui.card().classes('w-full gap-1'):
+                with ui.card().classes('w-full gap-1 print:flex-1'):
                     ui.label('Contact').classes('text-lg font-semibold')
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label('4127 Bay Rd, Saginaw, MI 48603')
@@ -27,7 +27,7 @@ def customer(customer_id: int):
                     ui.label('May 2026')
 
                 #---------- Pool Card ----------
-                with ui.card().classes('w-full gap-1'):
+                with ui.card().classes('w-full gap-1 print:flex-1'):
                     ui.label('Pool').classes('text-lg font-semibold')
                     ui.label('Size').classes('text-xs text-gray-500')
                     ui.label('24 ft round · 52 in wall · 15,000 gal')
@@ -69,8 +69,8 @@ def customer(customer_id: int):
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Latest test · Oct 15').classes('text-lg font-semibold')
-                                with ui.row().classes('items-center gap-2'):
-                                    ui.button(icon='print').props('flat round')  #Print button
+                                with ui.row().classes('items-center gap-2 print:hidden'):
+                                    ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
                         columns = [
                             {'name': 'date', 'label': 'Date',     'field': 'date', 'align': 'left'},

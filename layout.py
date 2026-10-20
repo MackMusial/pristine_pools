@@ -29,8 +29,9 @@ CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
 
 
 def page_layout():
+    ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
     ui.add_css('.customer-menu { max-height: 200px !important; }')
-    ui.query('body').classes('bg-slate-100')
+    ui.query('body').classes('bg-slate-100 print:bg-white')
     ui.colors(**THEMES[CURRENT_THEME])
 
     # ---------- Left Drawer ----------
@@ -57,7 +58,7 @@ def page_layout():
 
     # ---------- Header ----------
 
-    with ui.header().classes('items-center justify-between'):  # spreads the three groups across the header
+    with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
             ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
 
