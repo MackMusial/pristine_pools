@@ -14,7 +14,6 @@ def customer(customer_id: int):
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1'):
                     ui.label('Contact').classes('text-lg font-semibold')
-                    #with ui.grid(columns='auto 1fr').classes('items-baseline w-full gap-x-4 gap-y-1'):  #items-baseline moves the text to the bottom of the line. without it the Contact header would be slightly higher than the actual data
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label('4127 Bay Rd, Saginaw, MI 48603')
                     ui.label('Phone').classes('text-xs text-gray-500')
@@ -25,7 +24,6 @@ def customer(customer_id: int):
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1'):
                     ui.label('Pool').classes('text-lg font-semibold')
-                    #with ui.grid(columns='auto 1fr').classes('items-baseline w-full gap-x-4 gap-y-1'):    
                     ui.label('Size').classes('text-xs text-gray-500')
                     ui.label('24 ft round · 52 in wall · 15,000 gal')
                     ui.label('Wall / liner').classes('text-xs text-gray-500')
@@ -50,10 +48,21 @@ def customer(customer_id: int):
                     with ui.tab_panel(test_tab):
 
                         #---------- New Test Dialog ----------
-                        with ui.dialog() as test_dialog, ui.card():  #Create Dialog box for when user wants to create a new water test
+                        with ui.dialog() as test_dialog, ui.card().classes('w-96'):  #Create Dialog box for when user wants to create a new water test
                             ui.label('New Water Test').classes('text-lg font-semibold')
+                            with ui.grid(columns=2).classes('w-full gap-3'):
+                                ui.number(label='FC').props('outlined dense')
+                                ui.number(label='TC').props('outlined dense')
+                                ui.number(label='pH').props('outlined dense')
+                                ui.number(label='Alk').props('outlined dense')
+                                ui.number(label='Hardness').props('outlined dense')
+                                ui.number(label='CYA').props('outlined dense')
+                                ui.number(label='Phosphates').props('outlined dense')
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=test_dialog.close).props('flat')
+                                ui.button('Save', icon='check',on_click=test_dialog.close)
+                                    
+
 
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
@@ -62,36 +71,54 @@ def customer(customer_id: int):
                                 with ui.row().classes('items-center gap-2'):
                                     ui.button(icon='print').props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
-                            with ui.row().classes('gap-2'):
-                                ui.badge('pH 7.9',color='red')
-                                ui.badge('FC 0,5',color='red')
-                                ui.badge('Alk 100',color='green')
-                                ui.badge('FC 0,5',color='red')
-                                ui.badge('TC 0.7',color='red')
-                                ui.badge('pH 7.9',color='red')
-                                ui.badge('Alk 100',color='green')
-                                ui.badge('Hardness 190',color='orange')
-                                ui.badge('CYA 40',color='green')
-                                ui.badge('Phosphates 450',color='red') 
                         columns = [
-                            {'name': 'date', 'label': 'Date',     'field': 'date'},
-                            {'name': 'fc',   'label': 'FC',       'field': 'fc'},
-                            {'name': 'ph',   'label': 'pH',       'field': 'ph'},
-                            {'name': 'ta',   'label': 'Alk',      'field': 'ta'},
-                            {'name': 'ch',   'label': 'Hardness', 'field': 'ch'},
-                            {'name': 'cya',  'label': 'CYA',      'field': 'cya'},
-                            {'name': 'phos', 'label': 'Phos',     'field': 'phos'},
+                            {'name': 'date', 'label': 'Date',     'field': 'date', 'align': 'left'},
+                            {'name': 'fc',   'label': 'FC',       'field': 'fc',   'align': 'center'},
+                            {'name': 'tc',   'label': 'TC',       'field': 'tc',   'align': 'center'},
+                            {'name': 'ph',   'label': 'pH',       'field': 'ph',   'align': 'center'},
+                            {'name': 'ta',   'label': 'Alk',      'field': 'ta',   'align': 'center'},
+                            {'name': 'ch',   'label': 'Hardness', 'field': 'ch',   'align': 'center'},
+                            {'name': 'cya',  'label': 'CYA',      'field': 'cya',  'align': 'center'},
+                            {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
                         rows = [
-                            {'date': 'Oct 15', 'fc': 0.5, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450},
-                            {'date': 'Oct 1',  'fc': 3.0, 'ph': 7.5, 'ta': 100, 'ch': 190, 'cya': 40, 'phos': 200},
-                            {'date': 'Sep 17', 'fc': 2.8, 'ph': 7.4, 'ta': 95,  'ch': 190, 'cya': 35, 'phos': 150},
-                            {'date': 'Sep 2',  'fc': 1.5, 'ph': 7.6, 'ta': 90,  'ch': 200, 'cya': 35, 'phos': 300},
-                            {'date': 'Aug 14', 'fc': 2.5, 'ph': 7.5, 'ta': 100, 'ch': 200, 'cya': 30, 'phos': 100},
-                            {'date': 'Jul 20', 'fc': 0.8, 'ph': 7.6, 'ta': 110, 'ch': 210, 'cya': 30, 'phos': 100},
-                            {'date': 'Jun 28', 'fc': 0.0, 'ph': 7.8, 'ta': 60,  'ch': 220, 'cya': 0,  'phos': 50},
+                            {'date': 'Oct 15', 'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450,
+                             'fc_color': 'red', 'tc_color': 'red', 'ph_color': 'red', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'red'},
+                            {'date': 'Oct 1',  'fc': 3.0, 'tc': 3.2, 'ph': 7.5, 'ta': 100, 'ch': 190, 'cya': 40, 'phos': 200,
+                             'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'orange'},
+                            {'date': 'Sep 17', 'fc': 2.8, 'tc': 3.0, 'ph': 7.4, 'ta': 95,  'ch': 190, 'cya': 35, 'phos': 150,
+                             'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'orange'},
+                            {'date': 'Sep 2',  'fc': 1.5, 'tc': 2.0, 'ph': 7.6, 'ta': 90,  'ch': 200, 'cya': 35, 'phos': 300,
+                             'fc_color': 'green', 'tc_color': 'orange', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'orange'},
+                            {'date': 'Aug 14', 'fc': 2.5, 'tc': 2.7, 'ph': 7.5, 'ta': 100, 'ch': 200, 'cya': 30, 'phos': 100,
+                             'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'green'},
+                            {'date': 'Jul 20', 'fc': 0.8, 'tc': 1.1, 'ph': 7.6, 'ta': 110, 'ch': 210, 'cya': 30, 'phos': 100,
+                             'fc_color': 'orange', 'tc_color': 'orange', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'green'},
+                            {'date': 'Jun 28', 'fc': 0.0, 'tc': 0.0, 'ph': 7.8, 'ta': 60,  'ch': 220, 'cya': 0,  'phos': 50,
+                             'fc_color': 'red', 'tc_color': 'red', 'ph_color': 'orange', 'ta_color': 'orange', 'ch_color': 'green', 'cya_color': 'red', 'phos_color': 'green'},
                         ]
-                        ui.table(columns=columns, rows=rows).classes('w-full')
+                        table = ui.table(columns=columns, rows=rows).classes('w-full')
+                        #---------- Colored cells ----------
+                        # 'body-cell' slot = a custom template used for EVERY cell in the table body
+                        # the template is Vue (the browser's template language), not Python, so comments can't go inside the string.
+                        #   a '#' in there gets sent to the browser as text and breaks the whole page
+                        # <q-td :props="props">  -> a table cell. passing props keeps the column's alignment ('align' in columns)
+                        # <q-badge v-if="...">   -> only draw a badge if this row has a color key for this column
+                        #                           e.g. the FC cell looks up row['fc_color'] -> 'red'
+                        # :color="..."           -> the ':' means evaluate it, so the badge color comes from the row data
+                        # {{ props.value }}      -> the cell's number
+                        # </q-badge>             -> closing tag: slash first, same name as the opening tag
+                        # <span v-else>          -> no color key = just show the plain number
+                        # phase 2: rules.py adds the _color keys by comparing each reading to the ranges in Settings
+                        table.add_slot('body-cell', r'''
+                            <q-td :props="props">
+                                <q-badge v-if="props.row[props.col.field + '_color']"
+                                        :color="props.row[props.col.field + '_color']">
+                                    {{ props.value }}  
+                                </q-badge>
+                                <span v-else>{{ props.value }}</span>
+                            </q-td>
+                        ''')
 
                     #---------- Problems ----------
                     with ui.tab_panel(problems_tab):
@@ -104,7 +131,7 @@ def customer(customer_id: int):
                             ('Oct 15 · Green water', 'Lowered pH with 1.5 lbs pH reducer, then shocked with 2 lbs of cal-hypo (customer shocked 2 days earlier). Brushed walls'),
                             ('Sep 2 · Cloudy water', 'Backwashed sand filter, added clarifier. Ran filter 24 hrs. Cleared in 2 days'),
                             ('Jul 20 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
-                            ('Jun 28 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, inital shock with 3 lbs cal-hypo'),
+                            ('Jun 28 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, initial shock with 3 lbs cal-hypo'),
                         ]
                         with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
@@ -117,7 +144,7 @@ def customer(customer_id: int):
                             with ui.card().classes('flex-1'):
                                 ui.label('Suggestions').classes('text-lg font-semibold')
                                 selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
-                                fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow').classes('w-full')
+                                fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow input-style="max-height: 8rem"').classes('w-full')
                                 with ui.row().classes('w-full justify-end'):
                                     ui.button('Save Fix',icon='check')
 
@@ -134,11 +161,11 @@ def customer(customer_id: int):
                     #---------- Purchases Tab ----------
                     with ui.tab_panel(purchases_tab):
                         purchase_columns = [
-                            {'name': 'date',    'label': 'Date',    'field': 'date'},
-                            {'name': 'product', 'label': 'Product', 'field': 'product'},
-                            {'name': 'brand',   'label': 'Brand',   'field': 'brand'},
-                            {'name': 'qty',     'label': 'Qty',     'field': 'qty'},
-                            {'name': 'size',    'label': 'Size',    'field': 'size'},
+                            {'name': 'date',    'label': 'Date',    'field': 'date', 'align': 'left'},
+                            {'name': 'product', 'label': 'Product', 'field': 'product', 'align': 'left'},
+                            {'name': 'brand',   'label': 'Brand',   'field': 'brand', 'align': 'left'},
+                            {'name': 'qty',     'label': 'Qty',     'field': 'qty', 'align': 'center'},
+                            {'name': 'size',    'label': 'Size',    'field': 'size', 'align': 'center'},
                         ]
                         purchase_rows = [
                             {'date': 'Oct 15', 'product': 'Cal-hypo shock (73%)',     'brand': 'HTH',               'qty': 2, 'size': '1 lb bag'},
