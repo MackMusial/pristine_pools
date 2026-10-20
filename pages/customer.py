@@ -9,7 +9,7 @@ def customer(customer_id: int):
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(CUSTOMERS[customer_id]).classes('text-2xl font-bold')
         with ui.row().classes('w-full no-wrap gap-6 items-start md:flex-1 md:min-h-0'):
-            with ui.column().classes('w-1/3 md:h-full'):
+            with ui.column().classes('w-1/3 md:h-full'):  #testing for github
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1'):
