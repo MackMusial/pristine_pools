@@ -193,10 +193,10 @@ def customer(customer_id: int):
                         
                         with ui.dialog() as purchase_dialog, ui.card().classes('w-96'):
                             ui.label('Log Purchase').classes('w-full font-semibold text-lg')
+                            ui.select(products,with_input=True, label='Product').classes('w-full').props('outlined dense')
                             with ui.grid(columns=2).classes('w-full gap-3'):
-                                ui.input(label='Date',value=date.today().strftime('%b %d, %Y'))
-                                ui.select(products,with_input=True, label='Product').classes('w-full')
-                                ui.number(label='Qty', value=1, min=1)
+                                ui.input(label='Date',value=date.today().strftime('%b %d, %Y')).props('outlined dense')
+                                ui.number(label='Qty', value=1, min=1).props('outlined dense')
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=purchase_dialog.close).props('flat')
                                 ui.button('Save', icon='check',on_click=purchase_dialog.close)
