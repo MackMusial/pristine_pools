@@ -13,7 +13,7 @@ def customer(customer_id: int):
                 test_tab = ui.tab('Water Tests', icon='science')
                 problems_tab = ui.tab('Problems', icon='report_problem')
                 purchases_tab = ui.tab('Purchases',icon='shopping_cart')
-        with ui.row().classes('w-full no-wrap gap-6 items-stretch print:flex-col print:gap-3'):  # items-stretch: both columns get the same height (the row's)
+        with ui.row().classes('w-full no-wrap gap-6 items-stretch print:flex-col print:gap-3 md:min-h-[calc(100vh-11.5rem)] print:min-h-0'):  # items-stretch: both columns get the same height (the row's)
             with ui.column().classes('w-1/3 print:w-full print:flex-row'):  # the info cards set the row's height
 
                 #---------- Contact Card ----------
@@ -131,6 +131,7 @@ def customer(customer_id: int):
                         history = [ 
                             ('Oct 15 · Green water', 'Lowered pH with 1.5 lbs pH reducer, then shocked with 2 lbs of cal-hypo (customer shocked 2 days earlier). Brushed walls'),
                             ('Sep 2 · Cloudy water', 'Backwashed sand filter, added clarifier. Ran filter 24 hrs. Cleared in 2 days'),
+                            ('Aug 26 · Broken filter', 'Multiport valve leaking from the waste line. Replaced the spider gasket and lubed the valve. Filter back online same day'),
                             ('Jul 20 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
                             ('Jun 28 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, initial shock with 3 lbs cal-hypo'),
                         ]
@@ -152,9 +153,9 @@ def customer(customer_id: int):
                                 with ui.row().classes('w-full justify-end mt-auto'):
                                     ui.button('Save Fix',icon='check')
 
-                        with ui.card().classes('w-full'):
+                        with ui.card().classes('w-full min-h-0'):
                             ui.label('Problem history').classes('text-lg font-semibold')
-                            with ui.list().props('separator').classes('w-full max-h-48 overflow-y-auto'):  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
+                            with ui.list().props('separator').classes('w-full flex-1 min-h-0 overflow-y-auto'):  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
                                 for problem, fix in history:  #forloop to iterate through each tuple in history
                                     with ui.item():
                                         with ui.item_section():
