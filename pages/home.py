@@ -4,21 +4,7 @@ from layout import page_layout
 @ui.page('/')
 def home():
     page_layout()
-    # ---------- Right Drawer ----------
-    with ui.right_drawer():
-        ui.label('Customer').classes('text-lg font-semibold')
-        ui.label('Nick McArdle').classes('font-medium')
-        ui.label('(989) 555-0142').classes('text-sm text-gray-500')
-        ui.separator()
-        ui.label('Pool').classes('text-lg font-semibold')
-        ui.label('24 ft round · hard sided').classes('font-medium')
-        ui.label('15000 gal').classes('text-sm text-gray-500')
-        ui.separator()
-        ui.label("Latest test · October 15, 2026").classes('text-lg font-semibold')
-        with ui.row().classes('gap-2'):
-            ui.badge('pH 7.9',color='red')
-            ui.badge('FC 0.5',color='red')
-            ui.badge('Alk 100',color='green')
+
     # ---------- Chat Bar (footer) ----------
     with ui.footer().classes('bg-slate-100'):
         with ui.row().classes('w-full max-w-3xl mx-auto justify-center items-center'):
@@ -28,8 +14,8 @@ def home():
             with chat.add_slot('append'):
                 ui.button(icon='send').props('flat round dense')
 
-    with ui.column().classes('items-center pt-16 gap-2') as welcome:
-        ui.label('How can I help today?').classes('text-4-l font-bold')
+    with ui.column().classes(' w-full items-center pt-16 gap-2') as welcome:
+        ui.label('How can I help today?').classes('text-4xl font-bold')
         ui.label("Describe a customer's pool problem, or attach a customer with +").classes('text-gray-500')
     # ---------- Chat Messages ----------
     with ui.column().classes('w-full max-w-3xl mx-auto') as messages:

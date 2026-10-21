@@ -34,33 +34,11 @@ def page_layout():
     ui.query('body').classes('bg-slate-100 print:bg-white')
     ui.colors(**THEMES[CURRENT_THEME])
 
-    # ---------- Left Drawer ----------
-
-    with ui.left_drawer(value=False) as drawer:
-        ui.label('Recent customers').classes('text-xs font-semibold text-gray-500 uppercase px-4 pt-2')
-        with ui.list().props('dense').classes('w-full'):
-            with ui.item(on_click=lambda: None):
-                with ui.item_section():
-                    ui.item_label('Nick McArdle')
-                    ui.item_label('(989) 555-0142 · Last test: Oct 6, 2026').props('caption')
-            with ui.item(on_click=lambda: None):
-                with ui.item_section():
-                    ui.item_label('Manish Shrestha')
-                    ui.item_label('(989) 537-7385 · Last test: Oct 10, 2026').props('caption')
-            with ui.item(on_click=lambda: None):
-                with ui.item_section():
-                    ui.item_label('Marcelino J. Chapa')
-                    ui.item_label('(989) 548-9736 · Last test: Oct 19, 2026').props('caption')
-            with ui.item(on_click=lambda: None):
-                with ui.item_section():
-                    ui.item_label('Keith Ho')
-                    ui.item_label('(989) 723-9264 · Last test: Sept 22, 2026').props('caption')
-
     # ---------- Header ----------
 
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
-            ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
+            # ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
 
             # ---------- Logo (Home link) ----------
 
