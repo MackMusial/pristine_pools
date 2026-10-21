@@ -27,8 +27,12 @@ def home():
                 ui.button(icon='add').props('flat round dense')
             with chat.add_slot('append'):
                 ui.button(icon='send').props('flat round dense')
-    # ---------- Chat Messages ----------
-    with ui.column().classes('w-full max-w-3xl mx-auto'):
-        ui.chat_message("Customer's pool turned green overnight. 15,000 gal, free chlorine 0.5, pH 7.9. What should I recommend?",name='Staff',sent=True)
-        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False)
 
+    with ui.column().classes('items-center pt-16 gap-2') as welcome:
+        ui.label('How can I help today?').classes('text-4-l font-bold')
+        ui.label("Describe a customer's pool problem, or attach a customer with +").classes('text-gray-500')
+    # ---------- Chat Messages ----------
+    with ui.column().classes('w-full max-w-3xl mx-auto') as messages:
+        ui.chat_message("Customer's pool turned green overnight. 15,000 gal, free chlorine 0.5, pH 7.9. What should I recommend?", name='Staff', sent=True)
+        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False)
+    messages.set_visibility(False)
