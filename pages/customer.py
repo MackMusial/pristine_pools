@@ -1,6 +1,8 @@
 from nicegui import ui
-from layout import page_layout, CUSTOMERS
-from datetime import date 
+from layout import page_layout, CUSTOMERS, refresh_attention, schedule_retest
+from datetime import date
+import store
+from rules import test_colors
 
 
 @ui.page('/customer/{customer_id}')
@@ -53,23 +55,47 @@ def customer(customer_id: int):
                         with ui.dialog() as test_dialog, ui.card().classes('w-96'):  #Create Dialog box for when user wants to create a new water test
                             ui.label('New Water Test').classes('text-lg font-semibold')
                             with ui.grid(columns=2).classes('w-full gap-3'):
-                                ui.number(label='FC').props('outlined dense')
-                                ui.number(label='TC').props('outlined dense')
-                                ui.number(label='pH').props('outlined dense')
-                                ui.number(label='Alk').props('outlined dense')
-                                ui.number(label='Hardness').props('outlined dense')
-                                ui.number(label='CYA').props('outlined dense')
-                                ui.number(label='Phosphates').props('outlined dense')
+                                readings = {  # field -> its input box (keys match the table's fields)
+                                    'fc':   ui.number(label='FC').props('outlined dense'),
+                                    'tc':   ui.number(label='TC').props('outlined dense'),
+                                    'ph':   ui.number(label='pH').props('outlined dense'),
+                                    'ta':   ui.number(label='Alk').props('outlined dense'),
+                                    'ch':   ui.number(label='Hardness').props('outlined dense'),
+                                    'cya':  ui.number(label='CYA').props('outlined dense'),
+                                    'phos': ui.number(label='Phosphates').props('outlined dense'),
+                                }
+
+                            def save_test():
+                                values = {field: box.value for field, box in readings.items()}
+                                colors = test_colors(values)
+                                today = date.today().strftime('%b %d, %Y')
+                                row = {'date': today, **values, **{f'{field}_color': c for field, c in colors.items()}}
+                                table.rows.insert(0, row)  # newest test on top
+                                table.update()
+                                latest_label.set_text(f'Latest test · {today}')
+                                for box in readings.values():
+                                    box.set_value(None)
+                                test_dialog.close()
+
+                                store.clear_retest(customer_id)  # a saved test counts as the retest
+                                refresh_attention()
+                                red = [field.upper() for field, c in colors.items() if c == 'red']
+                                orange = [field.upper() for field, c in colors.items() if c == 'orange']
+                                if red:
+                                    schedule_retest(customer_id, 2, f"flagged test ({', '.join(red)})")
+                                elif orange:
+                                    schedule_retest(customer_id, 7, f"watch ({', '.join(orange)})")
+
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=test_dialog.close).props('flat')
-                                ui.button('Save', icon='check',on_click=test_dialog.close)
-                                    
+                                ui.button('Save', icon='check', on_click=save_test)
+
 
 
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
-                                ui.label('Latest test · Oct 15, 2026').classes('text-lg font-semibold')
+                                latest_label = ui.label('Latest test · Oct 15, 2026').classes('text-lg font-semibold')
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
@@ -138,10 +164,12 @@ def customer(customer_id: int):
                         ]
                         with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
-                                ui.label('Log a Problem').classes('text-lg font-semibold')
+                                with ui.row().classes('w-full items-center justify-between'):
+                                    ui.label('Log a Problem').classes('text-lg font-semibold')
+                                    ui.badge('Open · logged Oct 19', color='orange')  # placeholder: step A shows it only when this customer has an open problem
                                 problem_description = ui.textarea(placeholder="Describe the customer's problem...").props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
                                 with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
-                                    ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
+                                    ui.button('Get Suggestion',on_click=lambda: log_problem())
 
                     #---------- Suggestion ----------
                             with ui.card().classes('flex-1'):
@@ -152,11 +180,38 @@ def customer(customer_id: int):
                                 suggestion_box.set_visibility(False)
                                 fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow input-style="max-height: 8rem"').classes('w-full')
                                 with ui.row().classes('w-full justify-end mt-auto'):
-                                    ui.button('Save Fix',icon='check')
+                                    ui.button('Save Fix',icon='check',on_click=lambda: save_fix())
+
+                        # ---------- Open problem / retest wiring ----------
+                        def log_problem():
+                            text = (problem_description.value or '').strip()
+                            if text:
+                                store.add_open_problem(customer_id, text[:40])  # short version for the drawer
+                                refresh_attention()
+                            suggestion_box.set_visibility(True)
+
+                        def save_fix():
+                            fix = (fix_box.value or '').strip()
+                            if not fix:
+                                return
+                            problem = (problem_description.value or '').strip() or 'Problem'
+                            store.close_problem(customer_id)
+                            refresh_attention()
+                            with history_list:
+                                with ui.item() as new_item:
+                                    with ui.item_section():
+                                        ui.item_label(f"{date.today().strftime('%b %d, %Y')} · {problem}")
+                                        ui.item_label(fix).props('caption')
+                            new_item.move(history_list, target_index=0)  # newest on top
+                            problem_description.set_value('')
+                            fix_box.set_value('')
+                            selection.set_value(None)
+                            suggestion_box.set_visibility(False)
+                            schedule_retest(customer_id, 2, f'after fix: {problem[:30]}')
 
                         with ui.card().classes('w-full min-h-0'):
                             ui.label('Problem history').classes('text-lg font-semibold')
-                            with ui.list().props('separator').classes('w-full flex-1 min-h-0 overflow-y-auto'):  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
+                            with ui.list().props('separator').classes('w-full flex-1 min-h-0 overflow-y-auto') as history_list:  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
                                 for problem, fix in history:  #forloop to iterate through each tuple in history
                                     with ui.item():
                                         with ui.item_section():
