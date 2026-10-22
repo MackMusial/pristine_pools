@@ -154,7 +154,7 @@ def customer(customer_id: int):
                                         continue
                                     with ui.item():
                                         with ui.item_section():
-                                            ui.item_label(f"{p['date']} · {p['title']}")")
+                                            ui.item_label(f"{p['date']} · {p['title']}")
                                             ui.item_label(p['fix']).props('caption')
 
 
