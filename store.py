@@ -379,3 +379,12 @@ customers = {
         'retest': {'due': TODAY - timedelta(days=2), 'reason': 'High phosphates'},  # overdue
     },
 }
+
+def search_options():
+    options = {}
+    for cid, c in customers.items():
+        options[cid] = f"{c['name']} · {c['phone']}" 
+    return options
+
+if __name__ == '__main__':
+    print(search_options())

@@ -1,4 +1,5 @@
 from nicegui import ui
+import store
 
 # ---------- Themes ----------
 # Color options to show the client so she can pick one.
@@ -49,7 +50,7 @@ def page_layout():
 
         # ---------- Customer Search ----------
 
-        search = ui.select(CUSTOMERS,with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
+        search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
 
@@ -57,4 +58,4 @@ def page_layout():
 
         with ui.row().classes('items-center'):
             ui.button('New Customer', icon='group_add').props('flat color=white')
-            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings page
+            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings paui.

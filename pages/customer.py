@@ -1,15 +1,16 @@
 from nicegui import ui
-from layout import page_layout, CUSTOMERS
+from layout import page_layout
 from datetime import date 
+import store
 
 
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int):
-    name, phone = CUSTOMERS[customer_id].split(' · ')
+    c = store.customers[customer_id]
     page_layout()
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
-            ui.label(name).classes('text-2xl font-bold')
+            ui.label(c['name']).classes('text-2xl font-bold')
             with ui.tabs().props('inline-label dense').classes('print:hidden') as tabs:
                 test_tab = ui.tab('Water Tests', icon='science')
                 problems_tab = ui.tab('Problems', icon='report_problem')
@@ -21,11 +22,11 @@ def customer(customer_id: int):
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     ui.label('Contact').classes('text-lg font-semibold')
                     ui.label('Address').classes('text-xs text-gray-500')
-                    ui.label('4127 Bay Rd, Saginaw, MI 48603')
+                    ui.label(c['address'])
                     ui.label('Phone').classes('text-xs text-gray-500')
-                    ui.label(phone)
+                    ui.label(c['phone'])
                     ui.label('Customer since').classes('text-xs text-gray-500')
-                    ui.label('May 2026')
+                    ui.label(c['since'])
 
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
