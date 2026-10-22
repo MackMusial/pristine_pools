@@ -127,13 +127,7 @@ def customer(customer_id: int):
                             'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
                             'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
                         ]
-                        history = [ 
-                            ('Oct 15, 2026 · Green water', 'Lowered pH with 1.5 lbs pH reducer, then shocked with 2 lbs of cal-hypo (customer shocked 2 days earlier). Brushed walls'),
-                            ('Sep 2, 2026 · Cloudy water', 'Backwashed sand filter, added clarifier. Ran filter 24 hrs. Cleared in 2 days'),
-                            ('Aug 26, 2026 · Broken filter', 'Multiport valve leaking from the waste line. Replaced the spider gasket and lubed the valve. Filter back online same day'),
-                            ('Jul 20, 2026 · Low chlorine', 'Raised FC with 1 lb cal-hypo. Recommended adding a floating chlorinator.'),
-                            ('Jun 28, 2026 · Opening startup', 'Balanced alkalinity to 100 ppm with 3 lbs baking soda, initial shock with 3 lbs cal-hypo'),
-                        ]
+
                         with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
                                 ui.label('Log a Problem').classes('text-lg font-semibold')
@@ -155,11 +149,13 @@ def customer(customer_id: int):
                         with ui.card().classes('w-full min-h-0'):
                             ui.label('Problem history').classes('text-lg font-semibold')
                             with ui.list().props('separator').classes('w-full flex-1 min-h-0 overflow-y-auto'):  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
-                                for problem, fix in history:  #forloop to iterate through each tuple in history
+                                for p in c['problems']:  #each problem dict
+                                    if p['fix'] is None:
+                                        continue
                                     with ui.item():
                                         with ui.item_section():
-                                            ui.item_label(problem)
-                                            ui.item_label(fix).props('caption')
+                                            ui.item_label(f"{p['date']} · {p['title']}")")
+                                            ui.item_label(p['fix']).props('caption')
 
 
                     #---------- Purchases Tab ----------
