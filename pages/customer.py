@@ -123,7 +123,10 @@ def customer(customer_id: int):
                     #---------- Problems ----------
                     with ui.tab_panel(problems_tab).classes('p-1'):
 
-                        open_p = None
+                        #check to see if there a fix associated with the problem
+                        #if not assign the problem to open_p to be displayed as a problem without a fix 
+                        #to alert an employee that there is a problem without a fix
+                        open_p = None  
                         for p in c['problems']:
                             if p['fix'] is None:
                                 open_p = p
@@ -137,10 +140,14 @@ def customer(customer_id: int):
 
                         with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
-                                ui.label('Log a Problem').classes('text-lg font-semibold')
-                                problem_description = ui.textarea(placeholder="Describe the customer's problem...").props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
-                                with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
-                                    ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
+                                with ui.row().classes('w-full items-center justify-between'):    
+                                    ui.label('Log a Problem').classes('text-lg font-semibold')
+                                    if(open_p):  #if open_p true, there is a problem without a fix so display it
+                                        ui.badge(f"Open · logged {open_p['date']}", color='orange')
+                                    # value=open_p['text'] if open_p else '' displays the open problem if there is one (thats the if open_p else '') 
+                                    problem_description = ui.textarea(placeholder="Describe the customer's problem...", value=open_p['text'] if open_p else '').props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
+                                    with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
+                                        ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
 
                     #---------- Suggestion ----------
                             with ui.card().classes('flex-1'):

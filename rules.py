@@ -17,11 +17,12 @@ def color_for(field, value):
     return 'orange'
 
 def test_colors(row):
-    colors =  {f'{field}_color': color_for(field, row[field]) for field in BANDS}
+    colors =  {f'{field}_color': color_for(field, row[field]) for field in BANDS if row.get(field) is not None}
     
-    if row['tc'] - row['fc'] >= 0.5 and colors['tc_color'] == 'green':
+    if 'tc_color' in colors and row.get('fc') is not None and round(row['tc'] - row['fc'], 1) >= 0.5 and colors['tc_color'] == 'green':
         colors['tc_color'] = 'orange'
     return colors
 
 if __name__ == '__main__':
     print(test_colors({'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450}))
+    print(test_colors({'fc': 1.8, 'tc': 2.3, 'ph': 7.5, 'ta': 100, 'ch': 250, 'cya': 40, 'phos': 50}))

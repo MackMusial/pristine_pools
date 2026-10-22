@@ -58,4 +58,4 @@ def page_layout():
 
         with ui.row().classes('items-center'):
             ui.button('New Customer', icon='group_add').props('flat color=white')
-            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings paui.
+            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings panel
