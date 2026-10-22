@@ -122,6 +122,13 @@ def customer(customer_id: int):
 
                     #---------- Problems ----------
                     with ui.tab_panel(problems_tab).classes('p-1'):
+
+                        open_p = None
+                        for p in c['problems']:
+                            if p['fix'] is None:
+                                open_p = p
+                                break
+                            
                         suggestions = [
                             'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
                             'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
