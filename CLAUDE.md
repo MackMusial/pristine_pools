@@ -19,7 +19,16 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 **Next up (finish step A):**
 1. **Fix indentation in `pages/customer.py` (~lines 147–150):** the textarea + Get Suggestion row are nested inside the Log a Problem title row; Shift+Tab them out one level to be card children. Nit: `if(open_p):` → `if open_p:`.
 2. **Purchases tab per customer:** `purchase_rows` → `c['purchases']`; the Log Purchase `products` list → `[p['name'] for p in store.products]`.
-3. Cleanups: delete the unused `CUSTOMERS` dict in `layout.py`; fix the comment typo `Settings paui.` on its last line.
+3. Cleanup: delete the unused `CUSTOMERS` dict in `layout.py`.
+4. `?tab=problems` query param (`tab: str = ''`), then **0c drawer**.
+
+**Day-by-day schedule (made 2026-10-22, letters refer to the master plan below):**
+- **Thu 10/22:** finish A (items above) + 0c drawer.
+- **Fri 10/23:** 0d `schedule_retest` → 0e `save_test` → C retest chip → D Log Purchase saves.
+- **Sat 10/24:** 0f Save Fix → B New Customer → E edit records.
+- **Sun 10/25:** F Settings (AM) → G Home chat (PM).
+- **Mon 10/26:** H phone pass (AM) → I demo run-through + merge to `main` (PM).
+- **Tue 10/27 before 8:30:** buffer only, no new features.
 
 ## Master plan to the deadline (made 2026-10-21; all items are must-haves)
 - **A. Data foundation** (Thu 10/22). ✅ `rules.py` (`BANDS`, `color_for`, `test_colors` with blank guard + rounded TC rule). ✅ `store.py` sample data (Claude) + `search_options()` (Mack) feeding the header search. ✅ Contact card, Pool card (Pool vs Hot tub fields, "No pool on file"), Water Tests table (`rows = [{**t, **rules.test_colors(t)} for t in c['tests']]`, "No tests yet"), Problem history (skips open ones), open problem found (`open_p` loop + `break`) → orange "Open · logged …" badge + pre-filled textarea. ⬜ Purchases per customer, cleanups (see above). Later in A: drawer links to `/customer/{id}?tab=problems` (page opens on Problems; query param `tab: str = ''`); New Test ignores an all-blank save.
