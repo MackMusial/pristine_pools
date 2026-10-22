@@ -2,6 +2,7 @@ from nicegui import ui
 from layout import page_layout
 from datetime import date 
 import store
+import rules
 
 
 @ui.page('/customer/{customer_id}')
@@ -30,19 +31,30 @@ def customer(customer_id: int):
 
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
-                    ui.label('Pool').classes('text-lg font-semibold')
-                    ui.label('Size').classes('text-xs text-gray-500')
-                    ui.label('24 ft round · 52 in wall · 15,000 gal')
-                    ui.label('Wall / liner').classes('text-xs text-gray-500')
-                    ui.label('Hard-sided steel · 25 mil overlap liner')
-                    ui.label('Floor').classes('text-xs text-gray-500')
-                    ui.label('Sand base')
-                    ui.label('Filter').classes('text-xs text-gray-500')
-                    ui.label('Sand filter · 150 lbs sand')
-                    ui.label('Chlorinator').classes('text-xs text-gray-500')
-                    ui.label('None')
-                    ui.label('Installed').classes('text-xs text-gray-500')
-                    ui.label('June 2026 · Great Lakes Pool Install')
+                    if not c['bodies']:
+                        ui.label('Pool').classes('text-lg font-semibold')
+                        ui.label('No pool on file').classes('text-gray-500')
+                    else:
+                        b = c['bodies'][0]  # first body for now (switcher comes in step E)
+                        ui.label(b['type']).classes('text-lg font-semibold')  # 'Pool' or 'Hot tub'
+                        ui.label('Size').classes('text-xs text-gray-500')
+                        ui.label(f"{b['size']} · {b['gallons']:,} gal")  # :, adds the thousands comma
+                        if b['type'] == 'Pool':  # pools and hot tubs have different fields
+                            ui.label('Wall / liner').classes('text-xs text-gray-500')
+                            ui.label(b['wall_liner'])
+                            ui.label('Floor').classes('text-xs text-gray-500')
+                            ui.label(b['floor'])
+                            ui.label('Chlorinator').classes('text-xs text-gray-500')
+                            ui.label(b['chlorinator'])
+                        else:
+                            ui.label('Shell').classes('text-xs text-gray-500')
+                            ui.label(b['shell'])
+                            ui.label('Cover').classes('text-xs text-gray-500')
+                            ui.label(b['cover'])
+                        ui.label('Filter').classes('text-xs text-gray-500')
+                        ui.label(b['filter'])
+                        ui.label('Installed').classes('text-xs text-gray-500')
+                        ui.label(b['installed'])
 
             #----------  Water Tests ----------
 
@@ -70,7 +82,7 @@ def customer(customer_id: int):
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
-                                ui.label('Latest test · Oct 15, 2026').classes('text-lg font-semibold')
+                                ui.label(f"Latest test · {c['tests'][0]['date']}" if c['tests'] else 'No tests yet').classes('text-lg font-semibold')
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
@@ -84,22 +96,7 @@ def customer(customer_id: int):
                             {'name': 'cya',  'label': 'CYA',      'field': 'cya',  'align': 'center'},
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
-                        rows = [
-                            {'date': 'Oct 15, 2026', 'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450,
-                             'fc_color': 'red', 'tc_color': 'red', 'ph_color': 'red', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'red'},
-                            {'date': 'Oct 1, 2026',  'fc': 3.0, 'tc': 3.2, 'ph': 7.5, 'ta': 100, 'ch': 190, 'cya': 40, 'phos': 200,
-                             'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'orange'},
-                            {'date': 'Sep 17, 2026', 'fc': 2.8, 'tc': 3.0, 'ph': 7.4, 'ta': 95,  'ch': 190, 'cya': 35, 'phos': 150,
-                             'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'orange', 'cya_color': 'green', 'phos_color': 'orange'},
-                            {'date': 'Sep 2, 2026',  'fc': 1.5, 'tc': 2.0, 'ph': 7.6, 'ta': 90,  'ch': 200, 'cya': 35, 'phos': 300,
-                             'fc_color': 'green', 'tc_color': 'orange', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'orange'},
-                            {'date': 'Aug 14, 2026', 'fc': 2.5, 'tc': 2.7, 'ph': 7.5, 'ta': 100, 'ch': 200, 'cya': 30, 'phos': 100,
-                             'fc_color': 'green', 'tc_color': 'green', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'green'},
-                            {'date': 'Jul 20, 2026', 'fc': 0.8, 'tc': 1.1, 'ph': 7.6, 'ta': 110, 'ch': 210, 'cya': 30, 'phos': 100,
-                             'fc_color': 'orange', 'tc_color': 'orange', 'ph_color': 'green', 'ta_color': 'green', 'ch_color': 'green', 'cya_color': 'green', 'phos_color': 'green'},
-                            {'date': 'Jun 28, 2026', 'fc': 0.0, 'tc': 0.0, 'ph': 7.8, 'ta': 60,  'ch': 220, 'cya': 0,  'phos': 50,
-                             'fc_color': 'red', 'tc_color': 'red', 'ph_color': 'orange', 'ta_color': 'orange', 'ch_color': 'green', 'cya_color': 'red', 'phos_color': 'green'},
-                        ]
+                        rows = [{**t, **rules.test_colors(t)} for t in c['tests']] #** ** merges two dicts into a new one. 
                         table = ui.table(columns=columns, rows=rows).classes('w-full')
                         #---------- Colored cells ----------
                         # 'body-cell' slot = a custom template used for EVERY cell in the table body
