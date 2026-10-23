@@ -8,24 +8,7 @@ THEMES = {
     'aqua': {'primary': '#1e3a8a', 'secondary': '#06b6d4', 'accent': '#f59e0b'},
     'ocean': {'primary': '#0f172a', 'secondary': '#22d3ee', 'accent': '#a78bfa'},
 }
-CUSTOMERS = {  # hardcoded sample customers for the demo UI
-    1: 'Nick McArdle · (989) 555-0142',
-    2: 'Manish Shrestha · (989) 555-0185',
-    3: 'Marcelino J. Chapa · (989) 555-0136',
-    4: 'Keith Ho · (989) 555-0164',
-    5: 'Sarah Johnson · (989) 555-0118',
-    6: 'Mike Kowalski · (989) 555-0127',
-    7: 'Emily Rivera · (989) 555-0133',
-    8: 'Dave Thompson · (989) 555-0149',
-    9: 'Jessica Nguyen · (989) 555-0156',
-    10: 'Tom Brennan · (989) 555-0161',
-    11: 'Amanda Schultz · (989) 555-0172',
-    12: 'Chris Patel · (989) 555-0184',
-    13: 'Linda Kaminski · (989) 555-0190',
-    14: 'Ryan O\'Connell · (989) 555-0103',
-    15: 'Megan Fischer · (989) 555-0115',
-    16: 'Jake Wojcik · (989) 555-0138',
-}
+
 CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
 
 

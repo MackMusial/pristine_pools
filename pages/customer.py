@@ -145,7 +145,7 @@ def customer(customer_id: int):
                                     if open_p:  #if open_p true, there is a problem without a fix so display it
                                         ui.badge(f"Open · logged {open_p['date']}", color='orange')
                                     # value=open_p['text'] if open_p else '' displays the open problem if there is one (thats the if open_p else '') 
-                                problem_description = ui.textarea(placeholder="Describe the customer's problem...", value=open_p['text'] if open_p else '').props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
+                                problem_description = ui.textarea(placeholder="Describe the customer's problem...", value=open_p['text'] if open_p else '').props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
                                 with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
                                     ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
 
@@ -181,36 +181,23 @@ def customer(customer_id: int):
                             {'name': 'qty',     'label': 'Qty',     'field': 'qty', 'align': 'center'},
                             {'name': 'size',    'label': 'Size',    'field': 'size', 'align': 'center'},
                         ]
-                        purchase_rows = [
-                            {'date': 'Oct 15, 2026', 'product': 'Cal-hypo shock (73%)',     'brand': 'HTH',               'qty': 2, 'size': '1 lb bag'},
-                            {'date': 'Oct 15, 2026', 'product': 'pH reducer',               'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
-                            {'date': 'Oct 15, 2026', 'product': 'Algaecide 60',             'brand': 'BioGuard',          'qty': 1, 'size': '1 qt'},
-                            {'date': 'Sep 2, 2026',  'product': 'Clarifier',                'brand': 'Natural Chemistry', 'qty': 1, 'size': '1 qt'},
-                            {'date': 'Jul 20, 2026', 'product': 'Floating chlorinator',     'brand': 'Pool Time',         'qty': 1, 'size': '—'},
-                            {'date': 'Jul 20, 2026', 'product': '3" chlorine tabs',         'brand': 'HTH',               'qty': 1, 'size': '5 lb tub'},
-                            {'date': 'Jun 28, 2026', 'product': 'Alkalinity increaser',     'brand': 'Arm & Hammer',      'qty': 3, 'size': '1 lb box'},
-                            {'date': 'Jun 28, 2026', 'product': 'Opening kit',              'brand': 'HTH',               'qty': 1, 'size': '15k gal kit'},
-                        ]
-                        products = [
-                            'Cal-hypo shock (73%)', 'pH reducer', 'pH increaser', 'Alkalinity increaser',
-                            'Calcium hardness increaser', 'Algaecide 60', 'Clarifier', '3" chlorine tabs',
-                            'Stabilizer (CYA)', 'Phosphate remover', 'Floating chlorinator', 'Opening kit',
-                        ]
 
                         #---------- Purchase Dialog ----------
                         
                         with ui.dialog() as purchase_dialog, ui.card().classes('w-96'):
                             ui.label('Log Purchase').classes('w-full font-semibold text-lg')
-                            ui.select(products,with_input=True, label='Product').classes('w-full').props('outlined dense')
+                            ui.select([p['name'] for p in store.products],with_input=True, label='Product').classes('w-full').props('outlined dense')  #p['name'] only pulls the name out of the dict of products the store sells
                             with ui.grid(columns=2).classes('w-full gap-3'):
                                 ui.input(label='Date',value=date.today().strftime('%b %d, %Y')).props('outlined dense')
                                 ui.number(label='Qty', value=1, min=1).props('outlined dense')
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=purchase_dialog.close).props('flat')
                                 ui.button('Save', icon='check',on_click=purchase_dialog.close)
-                        #-------------------------------------
+                        #---------- Purchase History ----------
                         with ui.card().classes('w-full'):
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Purchases').classes('text-lg font-semibold')
                                 ui.button('Log Purchase', icon='add', on_click=purchase_dialog.open)
-                            ui.table(columns=purchase_columns, rows=purchase_rows).classes('w-full').props('flat bordered')
+                            ui.table(columns=purchase_columns, rows=c['purchases']).classes('w-full').props('flat bordered hide-no-date')
+                            if not c['purchases']:
+                                ui.label('No purchases yet').classes('text-gray-500')

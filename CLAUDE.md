@@ -13,21 +13,23 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - **Decisions go in the question popup (AskUserQuestion)**, never buried in a reply.
 - Check the files before claiming what's done (Mack also works on his laptop).
 
-## ▶ Current status & PICK UP HERE (2026-10-22)
+## ▶ Current status & PICK UP HERE (2026-10-23)
 **⏰ Whole GUI due Tue 2026-10-27, 8:30.** This semester = a GUI that behaves live on fake in-memory data (`store.py`); PostgreSQL + real AI in Spring 2027. Plan is ~1 day behind.
 
 **Next up (finish step A):**
 1. ✅ Log a Problem indentation fixed; Problem history filters `past` first + "No past problems".
-2. **Purchases tab per customer:** `purchase_rows` → `c['purchases']`; the Log Purchase `products` list → `[p['name'] for p in store.products]`.
-3. Cleanup: delete the unused `CUSTOMERS` dict in `layout.py`.
+2. ✅ Purchases tab reads `c['purchases']`, product select from `store.products`, "No purchases yet". Add `hide-no-data` to the table props (Quasar's own empty row doubles the label).
+3. Cleanup: delete the unused `CUSTOMERS` dict in `layout.py`; fix the stale `autogrow` comment on the Log a Problem textarea (props use `rows=5`).
+3a. Unknown customer guard: `/customer/99` crashes (KeyError); show a calm "Customer not found" label instead (`if customer_id not in store.customers:` … `return`).
+3b. **Readable badge colors** (critique 10/23): white text fails contrast on Quasar green/orange/red (2.8/2.2/3.7:1); use darker shades (e.g. `green-8`/`orange-9`/`red-8`) where the color is chosen; check F12 + scanner again.
 4. `?tab=problems` query param (`tab: str = ''`), then **0c drawer**.
 
 **Day-by-day schedule (made 2026-10-22, letters refer to the master plan below):**
 - **Thu 10/22:** finish A (items above) + 0c drawer.
-- **Fri 10/23:** 0d `schedule_retest` → 0e `save_test` → C retest chip → D Log Purchase saves.
-- **Sat 10/24:** 0f Save Fix → B New Customer → E edit records.
+- **Fri 10/23:** 0d `schedule_retest` → 0e `save_test` → C retest chip → D Log Purchase saves → **"What's off" strip** (Problems tab, top of Log a Problem: non-green readings of `c['tests'][0]` as small badges, e.g. "pH 8.0"; critique #1).
+- **Sat 10/24:** 0f Save Fix → B New Customer → E edit records. If time: `/impeccable onboard` (findings only) on empty states.
 - **Sun 10/25:** F Settings (AM) → G Home chat (PM).
-- **Mon 10/26:** H phone pass (AM) → I demo run-through + merge to `main` (PM).
+- **Mon 10/26:** H phone pass (AM) → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** start AM with `/impeccable critique` + `/impeccable adapt` on Customer (findings only → H checklist); PM `/impeccable audit` + `clarify` before the run-through.
 - **Tue 10/27 before 8:30:** buffer only, no new features.
 
 ## Master plan to the deadline (made 2026-10-21; all items are must-haves)
@@ -35,16 +37,16 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - **0c–0f. Live ☰ "needs attention" drawer + retests** (Mack builds; Claude's version was reverted):
   - 0c `ui.left_drawer(value=False).props('overlay bordered')` created **before** the header (so ☰ can use `drawer.toggle`); ☰ at the header's far left with a red `floating` count badge (hidden at 0); lists **Retests due** (sorted by date, "Overdue" red + phone line to call, "Today") and **Open problems**; rows → the customer page. `@ui.refreshable` lists + badge so saves update them live.
   - 0d `schedule_retest(cid, days, reason)`: a dialog built on demand with `ui.date` pre-filled to today + days (`timedelta`), Skip / Schedule.
-  - 0e New Test `save_test()`: readings in a dict, colors from `test_colors`, new row on top, any saved test clears the due retest; red → retest +2 days, orange only → +7.
-  - 0f Problems: Get Suggestion → open problem; Save Fix → fills `fix`, moves it to history, offers a retest (+2).
+  - 0e New Test `save_test()`: readings in a dict, colors from `test_colors`, new row on top, any saved test clears the due retest; red → retest +2 days, orange only → +7. Keyboard-first: `autofocus` on FC, Enter saves, `ui.number` `min=0`/`step=0.1`. Date strings without a zero pad (`Oct 5, 2026`, not `%d` → `Oct 05`): `f"{d:%b} {d.day}, {d.year}"`.
+  - 0f Problems: picking a suggestion must not wipe typed "Fix applied" text (append/confirm). Get Suggestion → open problem; Save Fix → fills `fix`, moves it to history, offers a retest (+2).
   - Rules: one retest per customer (`c['retest']` or None); a problem is open while `fix is None`.
 - **B. New Customer** (Fri 10/23, `layout.py`): dialog: Name (`autofocus`, required), Phone, Address, optional first body (`ui.toggle(['Pool','Hot tub'])` + `ui.grid(columns=2)`); Save → add to `store.customers` → `search.set_options(...)` → navigate to the new page.
 - **C. Retest chip** in the Customer title row: "Retest due Oct 23" (red if overdue) / "No retest" → `schedule_retest` + Clear; `@ui.refreshable`.
-- **D. Log Purchase saves:** append to `c['purchases']` + `table.add_row`, brand/size from `store.products`.
+- **D. Log Purchase saves:** brand/size from `store.products` (lookup dict `{p['name']: p for p in store.products}`); give the select/date/qty variables. ⚠ The table **shares** the `c['purchases']` list, so don't append AND `add_row` (doubles it): `c['purchases'].insert(0, row)` (newest on top) then `table.update()`. Same unpadded date format as 0e. "No purchases yet" must hide after a save (`set_visibility` or refreshable). If F12 shows duplicate-key warnings: rows need a unique `id` + `row_key=` (tests table too).
 - **E. Edit records** (Sat 10/24): Contact ✏️ dialog (`.set_text` updates); Pool card `ui.toggle` between bodies, ✏️ Edit / ➕ Add pool or hot tub (fields depend on type); edits overwrite + append a change line ("Oct 24, 2026 · Filter: Sand → Cartridge") shown in `ui.expansion('Change history')`; New Test "For" select when >1 body. No delete (ask Kara: archive vs delete).
 - **F. Settings** (Sun 10/25 AM, `pages/settings.py`): title "Settings" (remove the stray button); tabs Products (`store.products` + Add dialog; Log Purchase reads it), Water-test ranges (read-only from `rules.BANDS`), Backup (last-backup label, Back Up Now updates it, flat Restore).
 - **G. Home chat** (Sun PM, `pages/home.py`): chips post their text + `show_chat`; Send/Enter posts `chat.value` + a canned answer (`ui.markdown` numbered steps inside `with ui.chat_message(...)`); assistant `avatar=`; + → attach-customer dialog → removable chip above the bar.
-- **H. Phone pass** (Mon 10/26 AM): `flex-col md:flex-row` on two-column rows, `w-full md:w-1/3`, search `w-full md:w-96`, New Customer icon-only on phones.
+- **H. Phone pass** (Mon 10/26 AM): critique #5 polish: `no-caps` on tabs/buttons, tooltip on the Print icon, Log Purchase date → `ui.date` in a menu; `flex-col md:flex-row` on two-column rows, `w-full md:w-1/3`, search `w-full md:w-96`, New Customer icon-only on phones.
 - **I. Demo run-through + merge to `main`** (Mon PM): ☰ overdue → search → Customer → retest chip → New Test (flagged) → Problems → Save Fix → Log Purchase → edit phone → add hot tub → Print → New Customer → Home chip + send → Settings.
 - **If behind, cut in this order:** + attach → change-history expansion → Ranges tab → New Test "For" select → if-time items (tab-panel `pt-0` nit, "Log these products?" shortcut after Save Fix, theme color pick).
 - Check every step: full width, 1920×1080, phone view, F12 Console clean, Customer print still fits 1 page.
@@ -85,6 +87,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - `py -3.12 -m venv .venv` → `.venv\Scripts\Activate.ps1` → `pip install nicegui`; select the `.venv` interpreter in VS Code.
 - Run `python main.py` → http://localhost:8080. Always launch from `main.py` (a page file alone gives `No module named 'layout'`).
 - Laptop: Python 3.13 only (`python -m venv .venv`; needed `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`).
+- **Impeccable** design skill (global, installed 2026-10-23 on desktop): from `~` run `npx --yes impeccable install --providers=claude --scope=global` (`/plugin` doesn't work in the VS Code panel). Use for **review/suggestions only** (H/I polish); Mack still writes the code.
 - Windows console shows `·` as `�` (display only). Never assign `ui.icon = ...`; use `icon='...'` on buttons.
 
 ## Phase 2 (Spring 2027)
