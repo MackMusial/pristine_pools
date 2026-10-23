@@ -119,7 +119,8 @@ def customer(customer_id: int):
                         table.add_slot('body-cell', r'''
                             <q-td :props="props">
                                 <q-badge v-if="props.row[props.col.field + '_color']"
-                                        :color="props.row[props.col.field + '_color']">
+                                        :color="props.row[props.col.field + '_color'] + '-9'"
+                                        :text-color="props.row[props.col.field + '_color'] === 'orange' ? 'black' : 'white'">
                                     {{ props.value }}  
                                 </q-badge>
                                 <span v-else>{{ props.value }}</span>
@@ -149,7 +150,7 @@ def customer(customer_id: int):
                                 with ui.row().classes('w-full items-center justify-between'):    
                                     ui.label('Log a Problem').classes('text-lg font-semibold')
                                     if open_p:  #if open_p true, there is a problem without a fix so display it
-                                        ui.badge(f"Open · logged {open_p['date']}", color='orange')
+                                        ui.badge(f"Open · logged {open_p['date']}", color='orange',text_color='black')
                                     # value=open_p['text'] if open_p else '' displays the open problem if there is one (thats the if open_p else '') 
                                 problem_description = ui.textarea(placeholder="Describe the customer's problem...", value=open_p['text'] if open_p else '').props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
                                 with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
