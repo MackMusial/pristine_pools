@@ -142,12 +142,12 @@ def customer(customer_id: int):
                             with ui.card().classes('w-1/3'):
                                 with ui.row().classes('w-full items-center justify-between'):    
                                     ui.label('Log a Problem').classes('text-lg font-semibold')
-                                    if(open_p):  #if open_p true, there is a problem without a fix so display it
+                                    if open_p:  #if open_p true, there is a problem without a fix so display it
                                         ui.badge(f"Open · logged {open_p['date']}", color='orange')
                                     # value=open_p['text'] if open_p else '' displays the open problem if there is one (thats the if open_p else '') 
-                                    problem_description = ui.textarea(placeholder="Describe the customer's problem...", value=open_p['text'] if open_p else '').props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
-                                    with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
-                                        ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
+                                problem_description = ui.textarea(placeholder="Describe the customer's problem...", value=open_p['text'] if open_p else '').props('outlined rows=5 input-style="max-height: 8rem"').classes('w-full')#autogrow starts the box at one line and grows on as the user types. input-style="max-height: 8rem allows a scroll bar within the textbox so if the description of the problem becomes that long it will stay contained within that card and not flow outside causing the screen to want to scroll.
+                                with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
+                                    ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
 
                     #---------- Suggestion ----------
                             with ui.card().classes('flex-1'):
@@ -159,18 +159,18 @@ def customer(customer_id: int):
                                 fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow input-style="max-height: 8rem"').classes('w-full')
                                 with ui.row().classes('w-full justify-end mt-auto'):
                                     ui.button('Save Fix',icon='check')
-
+                        #---------- Problem History ----------
                         with ui.card().classes('w-full min-h-0'):
                             ui.label('Problem history').classes('text-lg font-semibold')
+                            past = [p for p in c['problems'] if p['fix'] is not None]
                             with ui.list().props('separator').classes('w-full flex-1 min-h-0 overflow-y-auto'):  #this allows the problem history to scroll and not making the entire screen want to scroll when data starts to get longer than the screen
-                                for p in c['problems']:  #each problem dict
-                                    if p['fix'] is None:
-                                        continue
+                                for p in past:  #each problem dict
                                     with ui.item():
                                         with ui.item_section():
                                             ui.item_label(f"{p['date']} · {p['title']}")
                                             ui.item_label(p['fix']).props('caption')
-
+                            if not past:
+                                ui.label('No past problems').classes('text-gray-500')  #if there is no past data: print that there is 'No past data'
 
                     #---------- Purchases Tab ----------
                     with ui.tab_panel(purchases_tab).classes('p-1'): #p-1 removes the padding down to 4px (tailwind's spacing scale is x4)

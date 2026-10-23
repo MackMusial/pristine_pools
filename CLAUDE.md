@@ -17,7 +17,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 **⏰ Whole GUI due Tue 2026-10-27, 8:30.** This semester = a GUI that behaves live on fake in-memory data (`store.py`); PostgreSQL + real AI in Spring 2027. Plan is ~1 day behind.
 
 **Next up (finish step A):**
-1. **Fix indentation in `pages/customer.py` (~lines 147–150):** the textarea + Get Suggestion row are nested inside the Log a Problem title row; Shift+Tab them out one level to be card children. Nit: `if(open_p):` → `if open_p:`.
+1. ✅ Log a Problem indentation fixed; Problem history filters `past` first + "No past problems".
 2. **Purchases tab per customer:** `purchase_rows` → `c['purchases']`; the Log Purchase `products` list → `[p['name'] for p in store.products]`.
 3. Cleanup: delete the unused `CUSTOMERS` dict in `layout.py`.
 4. `?tab=problems` query param (`tab: str = ''`), then **0c drawer**.
