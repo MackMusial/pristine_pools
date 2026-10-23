@@ -18,7 +18,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 
 **Step A is ✅ done** (late Thu 10/22 → Fri 10/23 session): Log a Problem fix, "No past problems", Purchases per customer + "No purchases yet", `CUSTOMERS` removed, unknown-customer guard, readable badge colors, `?tab=problems` (`tab: str = ''` → `ui.tab_panels(value=...)`). Mack now works one git branch per step (`git switch -c <step>` → commit → push → switch main → pull → merge → push).
 
-**Next up: 0c ☰ drawer** (new branch `drawer`), then Friday's list. Drawer links: Retests due → `/customer/{id}`, Open problems → `/customer/{id}?tab=problems`.
+**Next up: finish 0c ☰ drawer** (branch `home-drawer`). Done: drawer + ☰ toggle, Retests due list (sorted tuples, rows link to the customer; Claude gave the 4 item lines when Mack was stuck). Left: caption "Overdue" (red) / "Today" / unpadded date + phone on overdue rows → Open problems list (`?tab=problems`) → `@ui.refreshable` + red count badge. Drawer links: Retests due → `/customer/{id}`, Open problems → `/customer/{id}?tab=problems`.
 
 **Day-by-day schedule (re-planned 2026-10-23: Mack works Fri 11am–11pm, so Friday is lost; Mack chose to keep ALL items, no cuts). Within each day, do items in the order listed so anything unfinished is the least important:**
 - **Fri 10/23:** work. Only if there's time before 11am: start 0c drawer.

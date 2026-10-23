@@ -18,9 +18,27 @@ def page_layout():
     ui.query('body').classes('bg-slate-100 print:bg-white')
     ui.colors(**THEMES[CURRENT_THEME])
 
+    #---------- Left Drawer ----------
+
     drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')
     with drawer:
         ui.label('Needs attention')
+        cust = []
+        for cid, c in store.customers.items():
+            if c['retest'] is not None:
+                cust.append((cid, c))  #one (id,customer) tuple 
+        due = sorted(cust, key=lambda pair: pair[1]['retest']['due'])  #oldest due date first 
+        with ui.list():
+            for cid, c in due:
+                r = c['retest']
+                with ui.item(on_click=lambda cid=cid: ui.navigate.to(f'/customer/{cid}')):  #opens this customer on Water Tests
+                    with ui.item_section():
+                        ui.item_label(c['name'])
+                        ui.item_label(str(r['due'])).props('caption')
+                    
+
+
+            
     # ---------- Header ----------
 
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
