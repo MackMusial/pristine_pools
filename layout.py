@@ -18,11 +18,14 @@ def page_layout():
     ui.query('body').classes('bg-slate-100 print:bg-white')
     ui.colors(**THEMES[CURRENT_THEME])
 
+    drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')
+    with drawer:
+        ui.label('Needs attention')
     # ---------- Header ----------
 
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
-            # ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
+            ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
 
             # ---------- Logo (Home link) ----------
 
