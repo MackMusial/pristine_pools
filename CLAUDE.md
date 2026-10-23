@@ -18,9 +18,9 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 
 **Next up (finish step A):**
 1. ✅ Log a Problem indentation fixed; Problem history filters `past` first + "No past problems".
-2. ✅ Purchases tab reads `c['purchases']`, product select from `store.products`, "No purchases yet". Add `hide-no-data` to the table props (Quasar's own empty row doubles the label).
-3. Cleanup: delete the unused `CUSTOMERS` dict in `layout.py`; fix the stale `autogrow` comment on the Log a Problem textarea (props use `rows=5`).
-3a. Unknown customer guard: `/customer/99` crashes (KeyError); show a calm "Customer not found" label instead (`if customer_id not in store.customers:` … `return`).
+2. ✅ Purchases tab per customer + "No purchases yet" (`hide-no-data`).
+3. ✅ `CUSTOMERS` removed from `layout.py`; stale comment fixed.
+3a. ✅ Unknown customer → centered warning icon + "Customer does not exist".
 3b. **Readable badge colors** (critique 10/23): white text fails contrast on Quasar green/orange/red (2.8/2.2/3.7:1); use darker shades (e.g. `green-8`/`orange-9`/`red-8`) where the color is chosen; check F12 + scanner again.
 4. `?tab=problems` query param (`tab: str = ''`), then **0c drawer**.
 

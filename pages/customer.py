@@ -7,8 +7,14 @@ import rules
 
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int):
-    c = store.customers[customer_id]
     page_layout()
+    if customer_id not in store.customers:
+        with ui.column().classes('w-full justify-center items-center min-h-[calc(100vh-10rem)]'):
+            ui.icon('warning',color='orange',size='md')
+            ui.label('Customer does not exist').classes('text-gray-500 text-lg')
+        return  #handle if an employee tries to find an employee that does not exist. This simply displays that no customer exists and the return stops anything else from loading
+    c = store.customers[customer_id]
+
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(c['name']).classes('text-2xl font-bold')
@@ -198,6 +204,6 @@ def customer(customer_id: int):
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Purchases').classes('text-lg font-semibold')
                                 ui.button('Log Purchase', icon='add', on_click=purchase_dialog.open)
-                            ui.table(columns=purchase_columns, rows=c['purchases']).classes('w-full').props('flat bordered hide-no-date')
+                            ui.table(columns=purchase_columns, rows=c['purchases']).classes('w-full').props('flat bordered hide-no-data')
                             if not c['purchases']:
                                 ui.label('No purchases yet').classes('text-gray-500')
