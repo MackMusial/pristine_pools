@@ -14,23 +14,19 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - Check the files before claiming what's done (Mack also works on his laptop).
 
 ## ▶ Current status & PICK UP HERE (2026-10-23)
-**⏰ Whole GUI due Tue 2026-10-27, 8:30.** This semester = a GUI that behaves live on fake in-memory data (`store.py`); PostgreSQL + real AI in Spring 2027. Plan is ~1 day behind.
+**⏰ Whole GUI due Tue 2026-10-27, 8:30.** This semester = a GUI that behaves live on fake in-memory data (`store.py`); PostgreSQL + real AI in Spring 2027. Step A done; Friday lost to work, so Sat–Mon are packed (see schedule).
 
-**Next up (finish step A):**
-1. ✅ Log a Problem indentation fixed; Problem history filters `past` first + "No past problems".
-2. ✅ Purchases tab per customer + "No purchases yet" (`hide-no-data`).
-3. ✅ `CUSTOMERS` removed from `layout.py`; stale comment fixed.
-3a. ✅ Unknown customer → centered warning icon + "Customer does not exist".
-3b. **Readable badge colors** (critique 10/23): white text fails contrast on Quasar green/orange/red (2.8/2.2/3.7:1); use darker shades (e.g. `green-8`/`orange-9`/`red-8`) where the color is chosen; check F12 + scanner again.
-4. `?tab=problems` query param (`tab: str = ''`), then **0c drawer**.
+**Step A is ✅ done** (late Thu 10/22 → Fri 10/23 session): Log a Problem fix, "No past problems", Purchases per customer + "No purchases yet", `CUSTOMERS` removed, unknown-customer guard, readable badge colors, `?tab=problems` (`tab: str = ''` → `ui.tab_panels(value=...)`). Mack now works one git branch per step (`git switch -c <step>` → commit → push → switch main → pull → merge → push).
 
-**Day-by-day schedule (made 2026-10-22, letters refer to the master plan below):**
-- **Thu 10/22:** finish A (items above) + 0c drawer.
-- **Fri 10/23:** 0d `schedule_retest` → 0e `save_test` → C retest chip → D Log Purchase saves → **"What's off" strip** (Problems tab, top of Log a Problem: non-green readings of `c['tests'][0]` as small badges, e.g. "pH 8.0"; critique #1).
-- **Sat 10/24:** 0f Save Fix → B New Customer → E edit records. If time: `/impeccable onboard` (findings only) on empty states.
-- **Sun 10/25:** F Settings (AM) → G Home chat (PM).
-- **Mon 10/26:** H phone pass (AM) → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** start AM with `/impeccable critique` + `/impeccable adapt` on Customer (findings only → H checklist); PM `/impeccable audit` + `clarify` before the run-through.
-- **Tue 10/27 before 8:30:** buffer only, no new features.
+**Next up: 0c ☰ drawer** (new branch `drawer`), then Friday's list. Drawer links: Retests due → `/customer/{id}`, Open problems → `/customer/{id}?tab=problems`.
+
+**Day-by-day schedule (re-planned 2026-10-23: Mack works Fri 11am–11pm, so Friday is lost; Mack chose to keep ALL items, no cuts). Within each day, do items in the order listed so anything unfinished is the least important:**
+- **Fri 10/23:** work. Only if there's time before 11am: start 0c drawer.
+- **Sat 10/24 (core live loop, the demo's heart):** 0c drawer → 0d `schedule_retest` → 0e `save_test` → C retest chip → D Log Purchase saves → 0f Save Fix.
+- **Sun 10/25:** B New Customer → E edit records (Contact ✏️ first, then pool/hot tub edit + add, then change history) → F Settings (Products + Backup first, Ranges tab last).
+- **Mon 10/26:** G Home chat (AM) → "What's off" strip → H phone pass + critique #5 polish → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** `/impeccable critique` + `adapt` on Customer before H (findings only); `/impeccable audit` + `clarify` + `/code-review` before I. Sat if time: `/impeccable onboard` (findings only) on empty states.
+- **Tue 10/27 before 8:30:** buffer; finish only what's half-done, no new features.
+- **If Sunday night shows we're behind:** fall back to the cut list below (Mack decides; ask via popup).
 
 ## Master plan to the deadline (made 2026-10-21; all items are must-haves)
 - **A. Data foundation** (Thu 10/22). ✅ `rules.py` (`BANDS`, `color_for`, `test_colors` with blank guard + rounded TC rule). ✅ `store.py` sample data (Claude) + `search_options()` (Mack) feeding the header search. ✅ Contact card, Pool card (Pool vs Hot tub fields, "No pool on file"), Water Tests table (`rows = [{**t, **rules.test_colors(t)} for t in c['tests']]`, "No tests yet"), Problem history (skips open ones), open problem found (`open_p` loop + `break`) → orange "Open · logged …" badge + pre-filled textarea. ⬜ Purchases per customer, cleanups (see above). Later in A: drawer links to `/customer/{id}?tab=problems` (page opens on Problems; query param `tab: str = ''`); New Test ignores an all-blank save.
@@ -64,7 +60,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - **No page scrolling on desktop; scrolling inside a card/column is fine.** No stretched white-space filler (cards at natural height). Target 1920×1080; laptop ~1536×740.
 - **Light mode.** Themes `pool`/`aqua`/`ocean` in `THEMES`; color pick deferred to Kara.
 - **No `ui.notify` toasts** as placeholders (Mack dislikes them).
-- **Readings colored in the table** (green OK / orange watch / red act), not a badge row. Placeholder bands (Kara's real ranges TBD; hot tubs use pool bands for now):
+- **Readings colored in the table** (green OK / orange watch / red act), not a badge row. Drawn as solid `-9` shade badges on every reading (orange gets black text) for WCAG contrast; decided 2026-10-23 to keep badges on all readings (not only flagged ones). `rules.py` keeps the plain color words (meanings). Placeholder bands (Kara's real ranges TBD; hot tubs use pool bands for now):
 
 | Reading | green | orange | red |
 |---|---|---|---|

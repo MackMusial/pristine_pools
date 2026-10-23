@@ -6,7 +6,7 @@ import rules
 
 
 @ui.page('/customer/{customer_id}')
-def customer(customer_id: int):
+def customer(customer_id: int, tab: str = ''):
     page_layout()
     if customer_id not in store.customers:
         with ui.column().classes('w-full justify-center items-center min-h-[calc(100vh-10rem)]'):
@@ -65,7 +65,7 @@ def customer(customer_id: int):
             #----------  Water Tests ----------
 
             with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
-                with ui.tab_panels(tabs, value=test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
+                with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab).classes('p-1'):
 
                         #---------- New Test Dialog ----------
