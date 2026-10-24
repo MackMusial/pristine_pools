@@ -45,8 +45,24 @@ def page_layout():
                         ui.item_label(when).props('caption').classes('text-red-9' if when == 'Overdue' else '') 
                         if when == 'Overdue':
                             ui.item_label(c['phone']).props('caption')
-                    
+        open_list = []
+        for cid, c in store.customers.items():
+            open_p = None
+            for p in c["problems"]:
+                if p['fix'] is None:
+                    open_p = p 
+                    break
+            if open_p:
+                open_list.append((cid, c, open_p))
+        ui.label('Open problems').classes('text-sm font-bold')
+        with ui.list():
+            for cid, c, p in open_list:
+                with ui.item(on_click=lambda cid=cid: ui.navigate.to(f"/customer/{cid}?tab=problems")):
+                    with ui.item_section():
+                        ui.item_label(c['name'])
+                        ui.item_label(p['title']).props('caption')
 
+                    
 
             
     # ---------- Header ----------
