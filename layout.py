@@ -28,13 +28,23 @@ def page_layout():
             if c['retest'] is not None:
                 cust.append((cid, c))  #one (id,customer) tuple 
         due = sorted(cust, key=lambda pair: pair[1]['retest']['due'])  #oldest due date first 
+        ui.label('Retests due').classes('text-sm font-bold')
         with ui.list():
             for cid, c in due:
                 r = c['retest']
+                if r['due'] < store.TODAY:
+                    when = 'Overdue'
+                elif r['due'] == store.TODAY:
+                    when = 'Today'
+                else:
+                    when = f"{r['due']:%b} {r['due'].day}"
+
                 with ui.item(on_click=lambda cid=cid: ui.navigate.to(f'/customer/{cid}')):  #opens this customer on Water Tests
                     with ui.item_section():
                         ui.item_label(c['name'])
-                        ui.item_label(str(r['due'])).props('caption')
+                        ui.item_label(when).props('caption').classes('text-red-9' if when == 'Overdue' else '') 
+                        if when == 'Overdue':
+                            ui.item_label(c['phone']).props('caption')
                     
 
 

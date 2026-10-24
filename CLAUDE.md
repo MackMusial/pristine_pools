@@ -9,6 +9,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 - **Mack writes ALL the code.** Claude explains the concept, names the NiceGUI pieces and new syntax, Mack types it, Claude reviews. Full snippets only for brand-new syntax or when Mack is stuck and asks. Explain **why**, not just what.
 - **If Mack asks Claude to "just write it" (usually when stressed), remind him of this rule and offer a smaller step first.** On 2026-10-21 Claude's written try-out was reverted at his request.
 - Claude MAY write: **sample/placeholder data** (realistic pool-store data, 555-01xx phones), pure block-moving restructures when asked, docs, and restoring files Claude broke.
+- **Be stern and real** (Mack's ask, 2026-10-24): blunt, no sugarcoating; call out stalling, sloppy code and schedule slips.
 - One concept per step; Mack commits small steps. Concise, structured answers; skip basics (running, saving, VS Code clicks).
 - **Decisions go in the question popup (AskUserQuestion)**, never buried in a reply.
 - Check the files before claiming what's done (Mack also works on his laptop).
@@ -21,10 +22,9 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 **Next up: finish 0c ☰ drawer** (branch `home-drawer`). Done: drawer + ☰ toggle, Retests due list (sorted tuples, rows link to the customer; Claude gave the 4 item lines when Mack was stuck). Left: caption "Overdue" (red) / "Today" / unpadded date + phone on overdue rows → Open problems list (`?tab=problems`) → `@ui.refreshable` + red count badge. Drawer links: Retests due → `/customer/{id}`, Open problems → `/customer/{id}?tab=problems`.
 
 **Day-by-day schedule (re-planned 2026-10-23: Mack works Fri 11am–11pm, so Friday is lost; Mack chose to keep ALL items, no cuts). Within each day, do items in the order listed so anything unfinished is the least important:**
-- **Fri 10/23:** work. Only if there's time before 11am: start 0c drawer.
-- **Sat 10/24 (core live loop, the demo's heart):** 0c drawer → 0d `schedule_retest` → 0e `save_test` → C retest chip → D Log Purchase saves → 0f Save Fix.
-- **Sun 10/25:** B New Customer → E edit records (Contact ✏️ first, then pool/hot tub edit + add, then change history) → F Settings (Products + Backup first, Ranges tab last).
-- **Mon 10/26:** G Home chat (AM) → "What's off" strip → H phone pass + critique #5 polish → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** `/impeccable critique` + `adapt` on Customer before H (findings only); `/impeccable audit` + `clarify` + `/code-review` before I. Sat if time: `/impeccable onboard` (findings only) on empty states.
+- **Sat 10/24 (re-planned: only the morning, Mack works at 1pm):** finish 0c drawer → 0d `schedule_retest`.
+- **Sun 10/25 (free, but chemistry due Sunday: do it FIRST):** chemistry → 0e `save_test` → C retest chip → D Log Purchase saves → 0f Save Fix → B New Customer → E edit records (Contact ✏️ first, then pool/hot tub edit + add, then change history).
+- **Mon 10/26 (lots of time):** F Settings (Products + Backup first, Ranges tab last) → G Home chat → "What's off" strip → H phone pass + critique #5 polish → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** `/impeccable critique` + `adapt` on Customer before H (findings only); `/impeccable audit` + `clarify` + `/code-review` before I. Sat if time: `/impeccable onboard` (findings only) on empty states.
 - **Tue 10/27 before 8:30:** buffer; finish only what's half-done, no new features.
 - **If Sunday night shows we're behind:** fall back to the cut list below (Mack decides; ask via popup).
 
@@ -82,6 +82,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 ## Dev setup (per machine)
 - `py -3.12 -m venv .venv` → `.venv\Scripts\Activate.ps1` → `pip install nicegui`; select the `.venv` interpreter in VS Code.
 - Run `python main.py` → http://localhost:8080. Always launch from `main.py` (a page file alone gives `No module named 'layout'`).
+- **Which machine?** Claude runs `hostname` at the start: laptop = `MacksWaterFountain` (desktop name not recorded yet; add it next desktop session).
 - Laptop: Python 3.13 only (`python -m venv .venv`; needed `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`).
 - **Impeccable** design skill (global, installed 2026-10-23 on desktop): from `~` run `npx --yes impeccable install --providers=claude --scope=global` (`/plugin` doesn't work in the VS Code panel). Use for **review/suggestions only** (H/I polish); Mack still writes the code.
 - Windows console shows `·` as `�` (display only). Never assign `ui.icon = ...`; use `icon='...'` on buttons.
