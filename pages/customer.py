@@ -4,6 +4,11 @@ from datetime import date, timedelta
 import store
 import rules
 
+SUGGESTIONS = [
+    'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
+    'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
+    'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
+]
 
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int, tab: str = ''):
@@ -14,14 +19,17 @@ def customer(customer_id: int, tab: str = ''):
             ui.label('Customer does not exist').classes('text-gray-500 text-lg')
         return  #handle if an employee tries to find an employee that does not exist. This simply displays that no customer exists and the return stops anything else from loading
     c = store.customers[customer_id]
-    
+
+    # ---------- schedule_retest func ----------
     def schedule_retest(days, reason):
         with ui.dialog() as dialog, ui.card():
-
             ui.label('Schedule retest').classes('text-lg font-semibold')
             ui.label(reason)
             picker = ui.date(value=(store.TODAY + timedelta(days=days)).isoformat())
             def save(): 
+                '''Saves the date chosen and reason for the retest to the customers retest dict
+                
+                This will be used for updating the left drawer's customers retest dates'''
                 c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}  #save the retest date and reason to be display in the left drawer
                 dialog.close()  #close the dialog box 
             with ui.row().classes('w-full justify-end'):
@@ -29,6 +37,7 @@ def customer(customer_id: int, tab: str = ''):
                 ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
         dialog.open()
 
+    # ---------- Title row ----------
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(c['name']).classes('text-2xl font-bold')
@@ -41,7 +50,6 @@ def customer(customer_id: int, tab: str = ''):
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
-                    #ui.button('retest test', on_click=lambda: schedule_retest(0, 'Test'))  #Use lambda when you are passing arguments, () will cause the func to fire as its being loaded
                     ui.label('Contact').classes('text-lg font-semibold')
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
@@ -86,24 +94,33 @@ def customer(customer_id: int, tab: str = ''):
                         #---------- New Test Dialog ----------
                         with ui.dialog() as test_dialog, ui.card().classes('w-96'):  #Create Dialog box for when user wants to create a new water test
                             ui.label('New Water Test').classes('text-lg font-semibold')
+                            inputs = {}
                             with ui.grid(columns=2).classes('w-full gap-3'):
-                                ui.number(label='FC').props('outlined dense')
-                                ui.number(label='TC').props('outlined dense')
-                                ui.number(label='pH').props('outlined dense')
-                                ui.number(label='Alk').props('outlined dense')
-                                ui.number(label='Hardness').props('outlined dense')
-                                ui.number(label='CYA').props('outlined dense')
-                                ui.number(label='Phosphates').props('outlined dense')
+                                for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
+                                    inputs[key] = ui.number(label=label).props('outlined dense')
+                                    
+                            #---------- Save_test func ----------
+                            def save_test():
+                                reading = {k: box.value for k, box in inputs.items()}
+                                if all(v is None for v in reading.values()):
+                                    return
+                                test = {'date': f"{store.TODAY:%b} {store.TODAY.day}, {store.TODAY.year}", 'body': 0, **reading}
+                                c['tests'].insert(0, test)
+                                table.rows.insert(0, {**test, **rules.test_colors(test)})      
+                                table.update()
+                                latest.set_text(f"Latest test · {test['date']}")
+                                for box in inputs.values():  #clear the input box's 
+                                    box.set_value(None)
+                                test_dialog.close()
+
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=test_dialog.close).props('flat')
-                                ui.button('Save', icon='check',on_click=test_dialog.close)
+                                ui.button('Save', icon='check',on_click=save_test)  #don't put () because that will cause the func to fire as initalization time. we only want the func to fire up when the button is clicked
                                     
-
-
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
-                                ui.label(f"Latest test · {c['tests'][0]['date']}" if c['tests'] else 'No tests yet').classes('text-lg font-semibold')
+                                latest = ui.label(f"Latest test · {c['tests'][0]['date']}" if c['tests'] else 'No tests yet').classes('text-lg font-semibold')
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
@@ -153,12 +170,6 @@ def customer(customer_id: int, tab: str = ''):
                             if p['fix'] is None:
                                 open_p = p
                                 break
-                            
-                        suggestions = [
-                            'Lower pH first: add about 1.5 lbs of pH reducer (sodium bisulfate), circulate 4 hours, retest. Target pH 7.4–7.6.',
-                            'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
-                            'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
-                        ]
 
                         with ui.row().classes('w-full no-wrap gap-4 items-stretch'):
                             with ui.card().classes('w-1/3'):
@@ -176,7 +187,7 @@ def customer(customer_id: int, tab: str = ''):
                                 ui.label('Fix').classes('text-lg font-semibold')
                                 with ui.column().classes('w-full') as suggestion_box:
                                     ui.label('Suggestions').classes('text-lg text-gray-500')
-                                    selection = ui.radio(suggestions,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
+                                    selection = ui.radio(SUGGESTIONS,on_change=lambda e: fix_box.set_value(e.value))#e.value is the suggestion text that was picked. .set value is how you change an elements value from code
                                 suggestion_box.set_visibility(False)
                                 fix_box = ui.textarea(label='Fix applied').props('outlined clearable autogrow input-style="max-height: 8rem"').classes('w-full')
                                 with ui.row().classes('w-full justify-end mt-auto'):
