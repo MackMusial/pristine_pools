@@ -17,15 +17,16 @@ def customer(customer_id: int, tab: str = ''):
     
     def schedule_retest(days, reason):
         with ui.dialog() as dialog, ui.card():
-            def save(): 
-                c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}
-                dialog.close()
+
             ui.label('Schedule retest').classes('text-lg font-semibold')
             ui.label(reason)
             picker = ui.date(value=(store.TODAY + timedelta(days=days)).isoformat())
-            with ui.row().classes('w-full'):
+            def save(): 
+                c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}  #save the retest date and reason to be display in the left drawer
+                dialog.close()  #close the dialog box 
+            with ui.row().classes('w-full justify-end'):
                 ui.button('Skip', on_click=dialog.close).props('flat')
-                ui.button('Save',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
+                ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
         dialog.open()
 
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
@@ -40,6 +41,7 @@ def customer(customer_id: int, tab: str = ''):
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
+                    #ui.button('retest test', on_click=lambda: schedule_retest(0, 'Test'))  #Use lambda when you are passing arguments, () will cause the func to fire as its being loaded
                     ui.label('Contact').classes('text-lg font-semibold')
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
