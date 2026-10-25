@@ -1,6 +1,6 @@
 from nicegui import ui
 from layout import page_layout
-from datetime import date 
+from datetime import date, timedelta
 import store
 import rules
 
@@ -14,6 +14,19 @@ def customer(customer_id: int, tab: str = ''):
             ui.label('Customer does not exist').classes('text-gray-500 text-lg')
         return  #handle if an employee tries to find an employee that does not exist. This simply displays that no customer exists and the return stops anything else from loading
     c = store.customers[customer_id]
+    
+    def schedule_retest(days, reason):
+        with ui.dialog() as dialog, ui.card():
+            def save(): 
+                c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}
+                dialog.close()
+            ui.label('Schedule retest').classes('text-lg font-semibold')
+            ui.label(reason)
+            picker = ui.date(value=(store.TODAY + timedelta(days=days)).isoformat())
+            with ui.row().classes('w-full'):
+                ui.button('Skip', on_click=dialog.close).props('flat')
+                ui.button('Save',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
+        dialog.open()
 
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):

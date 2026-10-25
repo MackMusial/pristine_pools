@@ -19,7 +19,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 
 **Step A is ✅ done** (late Thu 10/22 → Fri 10/23 session): Log a Problem fix, "No past problems", Purchases per customer + "No purchases yet", `CUSTOMERS` removed, unknown-customer guard, readable badge colors, `?tab=problems` (`tab: str = ''` → `ui.tab_panels(value=...)`). Mack now works one git branch per step (`git switch -c <step>` → commit → push → switch main → pull → merge → push).
 
-**Next up (Sun 10/25): merge `drawer-badge` into main → chemistry FIRST → 0d `schedule_retest`** → rest of Sunday's list. 0c ✅ done: ☰ red `attention_count` badge (`floating`, hidden at 0) + drawer title row (red icon + `text-lg` title, quiet grey caps section labels). Earlier in 0c (branch `drawer-finish`, 2026-10-24 ~2am): drawer + ☰ toggle, Retests due (sorted, Overdue red + phone / Today / unpadded date), Open problems (links `?tab=problems`), empty stub pages removed. `@ui.refreshable` waits for 0e. Drawer links: Retests due → `/customer/{id}`, Open problems → `/customer/{id}?tab=problems`.
+**Next up (Sun 10/25): chemistry FIRST → 0d `schedule_retest`** → rest of Sunday's list. (`drawer-badge` ✅ merged into main.) 0c ✅ done: ☰ red `attention_count` badge (`floating`, hidden at 0) + drawer title row (red icon + `text-lg` title, quiet grey caps section labels). Earlier in 0c (branch `drawer-finish`, 2026-10-24 ~2am): drawer + ☰ toggle, Retests due (sorted, Overdue red + phone / Today / unpadded date), Open problems (links `?tab=problems`), empty stub pages removed. `@ui.refreshable` waits for 0e. Drawer links: Retests due → `/customer/{id}`, Open problems → `/customer/{id}?tab=problems`.
 
 **Day-by-day schedule (re-planned 2026-10-23: Mack works Fri 11am–11pm, so Friday is lost; Mack chose to keep ALL items, no cuts). Within each day, do items in the order listed so anything unfinished is the least important:**
 - **Sat 10/24 (re-planned: only the morning, Mack works at 1pm):** finish 0c drawer → 0d `schedule_retest`.
@@ -82,7 +82,7 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 ## Dev setup (per machine)
 - `py -3.12 -m venv .venv` → `.venv\Scripts\Activate.ps1` → `pip install nicegui`; select the `.venv` interpreter in VS Code.
 - Run `python main.py` → http://localhost:8080. Always launch from `main.py` (a page file alone gives `No module named 'layout'`).
-- **Which machine?** Claude runs `hostname` at the start: laptop = `MacksWaterFountain` (desktop name not recorded yet; add it next desktop session).
+- **Which machine?** Claude runs `hostname` at the start: laptop = `MacksWaterFountain`, desktop = `Mack`.
 - Laptop: Python 3.13 only (`python -m venv .venv`; needed `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`).
 - **Impeccable** design skill (global, installed 2026-10-23 on desktop): from `~` run `npx --yes impeccable install --providers=claude --scope=global` (`/plugin` doesn't work in the VS Code panel). Use for **review/suggestions only** (H/I polish); Mack still writes the code.
 - Windows console shows `·` as `�` (display only). Never assign `ui.icon = ...`; use `icon='...'` on buttons.
