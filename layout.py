@@ -54,6 +54,7 @@ def page_layout():
                     break
             if open_p:
                 open_list.append((cid, c, open_p))
+        attention_count = len(cust) + len(open_list)
         ui.label('Open problems').classes('text-sm font-bold')
         with ui.list():
             for cid, c, p in open_list:
@@ -62,6 +63,7 @@ def page_layout():
                         ui.item_label(c['name'])
                         ui.item_label(p['title']).props('caption')
 
+
                     
 
             
@@ -69,8 +71,9 @@ def page_layout():
 
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
-            ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white')  # opens/closes the left drawer
-
+            with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white'):
+                if attention_count:
+                    ui.badge(str(attention_count)).props('floating color=red')
             # ---------- Logo (Home link) ----------
 
             with ui.row().classes('items-center gap-2 cursor-pointer') as logo:  # icon + title act as one clickable Home link
