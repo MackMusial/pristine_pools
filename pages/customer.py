@@ -95,9 +95,6 @@ def customer(customer_id: int, tab: str = ''):
                         with ui.dialog() as test_dialog, ui.card().classes('w-96'):  #Create Dialog box for when user wants to create a new water test
                             ui.label('New Water Test').classes('text-lg font-semibold')
                             inputs = {}
-                            with ui.grid(columns=2).classes('w-full gap-3'):
-                                for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
-                                    inputs[key] = ui.number(label=label).props('outlined dense')
 
                             #---------- Save_test func ----------
                             def save_test():
@@ -119,6 +116,10 @@ def customer(customer_id: int, tab: str = ''):
                                 elif 'orange' in colors:  #if there is any chemicals that are slightly off
                                     schedule_retest(7, 'Orange reading')
 
+                            with ui.grid(columns=2).classes('w-full gap-3'):
+                                for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
+                                    inputs[key] = ui.number(label=label, min=0, step=0.1).props('outlined dense').on('keydown.enter', save_test)
+                                    inputs['fc'].props('autofocus')
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=test_dialog.close).props('flat')
                                 ui.button('Save', icon='check',on_click=save_test)  #don't put () because that will cause the func to fire as initalization time. we only want the func to fire up when the button is clicked

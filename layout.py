@@ -30,7 +30,7 @@ def page_layout():
             if c['retest'] is not None:
                 cust.append((cid, c))  #one (id,customer) tuple 
         due = sorted(cust, key=lambda pair: pair[1]['retest']['due'])  #oldest due date first 
-        ui.label('Retests due').classes('text-sm uppercase tracking-wide text-gray-t mt-4')
+        ui.label('Retests due').classes('text-sm uppercase tracking-wide text-gray-500 mt-4')
         with ui.list():
             for cid, c in due:
                 r = c['retest']
@@ -57,7 +57,7 @@ def page_layout():
             if open_p:
                 open_list.append((cid, c, open_p))
         attention_count = len(cust) + len(open_list)
-        ui.label('Open problems').classes('text-sm uppercase tracking-wide text-gray-t mt-4')
+        ui.label('Open problems').classes('text-sm uppercase tracking-wide text-gray-500 mt-4')
         with ui.list():
             for cid, c, p in open_list:
                 with ui.item(on_click=lambda cid=cid: ui.navigate.to(f"/customer/{cid}?tab=problems")):
