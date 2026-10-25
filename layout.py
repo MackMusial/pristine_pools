@@ -22,13 +22,15 @@ def page_layout():
 
     drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')
     with drawer:
-        ui.label('Needs attention')
+        with ui.row().classes('items-center gap-2'):
+            ui.icon('notifications_active', color='red')
+            ui.label('Needs attention').classes('text-lg font-semibold')
         cust = []
         for cid, c in store.customers.items():
             if c['retest'] is not None:
                 cust.append((cid, c))  #one (id,customer) tuple 
         due = sorted(cust, key=lambda pair: pair[1]['retest']['due'])  #oldest due date first 
-        ui.label('Retests due').classes('text-sm font-bold')
+        ui.label('Retests due').classes('text-sm uppercase tracking-wide text-gray-t mt-4')
         with ui.list():
             for cid, c in due:
                 r = c['retest']
@@ -55,7 +57,7 @@ def page_layout():
             if open_p:
                 open_list.append((cid, c, open_p))
         attention_count = len(cust) + len(open_list)
-        ui.label('Open problems').classes('text-sm font-bold')
+        ui.label('Open problems').classes('text-sm uppercase tracking-wide text-gray-t mt-4')
         with ui.list():
             for cid, c, p in open_list:
                 with ui.item(on_click=lambda cid=cid: ui.navigate.to(f"/customer/{cid}?tab=problems")):
