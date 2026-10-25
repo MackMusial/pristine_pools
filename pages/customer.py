@@ -98,7 +98,7 @@ def customer(customer_id: int, tab: str = ''):
                             with ui.grid(columns=2).classes('w-full gap-3'):
                                 for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
                                     inputs[key] = ui.number(label=label).props('outlined dense')
-                                    
+
                             #---------- Save_test func ----------
                             def save_test():
                                 reading = {k: box.value for k, box in inputs.items()}
@@ -111,7 +111,13 @@ def customer(customer_id: int, tab: str = ''):
                                 latest.set_text(f"Latest test · {test['date']}")
                                 for box in inputs.values():  #clear the input box's 
                                     box.set_value(None)
+                                c['retest'] = None  #clear the customers retest because this is the retest
+                                colors = rules.test_colors(test).values()  #find the worst color
                                 test_dialog.close()
+                                if 'red' in colors:  #if there is any chemicals that are extreamly off
+                                    schedule_retest(2, 'Red reading')
+                                elif 'orange' in colors:  #if there is any chemicals that are slightly off
+                                    schedule_retest(7, 'Orange reading')
 
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=test_dialog.close).props('flat')
