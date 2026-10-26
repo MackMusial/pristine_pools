@@ -79,7 +79,7 @@ def page_layout():
         zip_code = ui.input(label='Zipcode').props('outlined dense').classes('w-full')
 
         def save_customer():
-            if not all ([name.validate(), phone.validate]):  # validate() runs the check shows the red error under the box, and returns False when it fails. 
+            if not all ([name.validate(), phone.validate()]):  # validate() runs the check shows the red error under the box, and returns False when it fails. 
                 return
             full_address = f"{address.value}, {zip_code.value}" if zip_code.value else address.value  #add the zipcode only if one was typed, otherwise you get a trailing comma.  
             new_id = max(store.customers) + 1  #max() of a dict, looks at its keys, which are customer ID's
