@@ -10,6 +10,7 @@ THEMES = {
 }
 
 CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
+
 def needs_attention():
     cust = []
     for cid, c in store.customers.items():
@@ -26,6 +27,7 @@ def needs_attention():
         if open_p:
             open_list.append((cid, c, open_p))
     return due, open_list
+
 def page_layout():
     ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
     ui.add_css('.customer-menu { max-height: 200px !important; }')
@@ -65,10 +67,35 @@ def page_layout():
                         ui.item_label(c['name'])
                         ui.item_label(p['title']).props('caption')
     with drawer:
-        drawer_content()
+        drawer_content() 
+
+    #---------- New Customer Dialog ----------
+    with ui.dialog() as new_cust_dialog, ui.card().classes('w-96'):
+        ui.label('New Customer').classes('w-full text-lg font-semibold')
+
+        name = ui.input(label='Name', validation={'Required': lambda v: bool(v.strip())}).props('outlined dense autofocus hide-bottom-space').classes('w-full')  #the lambda: v: bool(v.strip()) forces the employee to enter a name. even if the name is full of spaces
+        phone = ui.input(label='Phone', validation={'Required': lambda v: bool(v.strip())}).props('outlined dense hide-bottom-space').classes('w-full')
+        address = ui.input(label='Address').props('outlined dense').classes('w-full')
+        zip_code = ui.input(label='Zipcode').props('outlined dense').classes('w-full')
+
+        def save_customer():
+            if not all ([name.validate(), phone.validate]):  # validate() runs the check shows the red error under the box, and returns False when it fails. 
+                return
+            full_address = f"{address.value}, {zip_code.value}" if zip_code.value else address.value  #add the zipcode only if one was typed, otherwise you get a trailing comma.  
+            new_id = max(store.customers) + 1  #max() of a dict, looks at its keys, which are customer ID's
+            store.customers[new_id] = {
+                'name': name.value.strip(), 'phone': phone.value.strip(), 'address': full_address,
+                'since': f"{store.TODAY:%B %Y}",          # 'October 2026'
+                'bodies': [], 'tests': [], 'problems': [], 'purchases': [],
+                'retest': None,
+            }
+            search.set_options(store.search_options())  #set_options replaces the list of choices that a ui.select shows in its dropdown
+            ui.navigate.to(f'/customer/{new_id}')
+        with ui.row().classes('w-full justify-end'):  #row for save and cancel buttons 
+            ui.button('Cancel', on_click=new_cust_dialog.close).props('flat')
+            ui.button('Save', icon='check', on_click=save_customer)
 
     # ---------- Header ----------
-
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
             with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white'):
@@ -80,8 +107,6 @@ def page_layout():
                     if count:
                         ui.badge(str(count)).props('floating color=red')
                 badge()
-                if False:
-                    ui.badge(str(False)).props('floating color=red')
             # ---------- Logo (Home link) ----------
 
             with ui.row().classes('items-center gap-2 cursor-pointer') as logo:  # icon + title act as one clickable Home link
@@ -98,7 +123,7 @@ def page_layout():
         # ---------- Action Buttons ----------
 
         with ui.row().classes('items-center'):
-            ui.button('New Customer', icon='group_add').props('flat color=white')
+            ui.button('New Customer', icon='group_add', on_click=lambda: new_cust_dialog.open()).props('flat color=white')
             ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings panel
 
     def refresh_attention():
