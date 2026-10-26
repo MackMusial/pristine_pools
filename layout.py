@@ -33,9 +33,10 @@ def page_layout():
     ui.colors(**THEMES[CURRENT_THEME])
 
     #---------- Left Drawer ----------
-    due, open_list = needs_attention()
     drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')
-    with drawer:
+    @ui.refreshable
+    def drawer_content():
+        due, open_list = needs_attention()
         with ui.row().classes('items-center gap-2'):
             ui.icon('notifications_active', color='red')
             ui.label('Needs attention').classes('text-lg font-semibold')
@@ -63,11 +64,9 @@ def page_layout():
                     with ui.item_section():
                         ui.item_label(c['name'])
                         ui.item_label(p['title']).props('caption')
+    with drawer:
+        drawer_content()
 
-
-                    
-
-            
     # ---------- Header ----------
 
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
