@@ -72,10 +72,18 @@ def page_layout():
         pass
     def send_message():
         pass
-    def 
+    def ask_chip(text):
+        pass
     # ---------- Ai Drawer ----------
     ai_drawer = ui.right_drawer(value=False).props('overlay bordered width=400').classes('print:hidden')
+    with ai_drawer:
+        with ui.row().classes('w-full items-center justify-between'):  #but x button on the right
+            ui.label('Pool assistant').classes('text-lg font-semibold')
+            ui.button(icon='close', on_click=ai_drawer.hide).props('flat round dense')  #button to escape the AI Agent
 
+    #---------- Sticky AI Button ----------
+    with ui.page_sticky(position='bottom-right', x_offset=24, y_offset=24):
+        ui.button(icon='auto_awesome', on_click=ai_drawer.toggle).props('fab color=primary').classes('print:hidden').tooltip('Pool Assistant')  
 
     #---------- New Customer Dialog ----------
     with ui.dialog() as new_cust_dialog, ui.card().classes('w-96'):
