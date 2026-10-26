@@ -16,17 +16,35 @@ def settings():
 
             #---------- Products Tab ----------
             with ui.tab_panel('Products'):
-                ui.button('Click me!', on_click=lambda: add_product_dialog.open())
+                with ui.row().classes('w-full justify-end'):
+                    ui.button('Add product',icon='add', on_click=lambda: add_product_dialog.open()).props('rounded')
                 columns = [
                     {'name': 'name', 'label': 'Product', 'field': 'name', 'align': 'left'},
                     {'name': 'brand', 'label': 'Brand', 'field': 'brand', 'align': 'left'},
                     {'name': 'size', 'label': 'Size', 'field': 'size', 'align': 'left'},
                 ]
                 table = ui.table(rows=store.products, columns=columns, row_key='name').classes('w-full').props('flat bordered')
-                with ui.dialog() as add_product_dialog, ui.card():
-                    new_name = ui.input(label='Name')
-                    new_brand = ui.input(label='Brand')
-                    new_size = ui.input(label='Size')
+                with ui.dialog() as add_product_dialog, ui.card().classes('w-full'):
+                    new_name = ui.input(label='Name',validation={'Required': lambda v: bool(v.strip())}).classes('w-full').props('outlined dense autofocus hide-bottom-space')
+                    new_brand = ui.input(label='Brand').classes('w-full').props('outlined dense hide-bottom-space')
+                    new_size = ui.input(label='Size').classes('w-full').props('outlined dense hide-bottom-space')
+                    
+                    #---------- save_product func -----------
+                    def save_product():
+                        if not new_name.validate():
+                            return
+                        product = {'name': new_name.value, 'brand': new_brand.value, 'size': new_size.value}
+                        store.products.insert(0, product)  #insert the new product into the database
+                        table.rows.insert(0, product)  #insert the new 
+                        table.update()  #redraw the table 
+                        new_name.set_value('')  #set all the variables back to blank
+                        new_brand.set_value('')
+                        new_size.set_value('')
+                        add_product_dialog.close()  #close the dialog box after saving because otherwise it would say open
+
+                    with ui.row().classes('w-full justify-end'):
+                        ui.button('Cancel',on_click=add_product_dialog.close).props('flat')
+                        ui.button('Save',on_click=save_product)
 
             #---------- Backup Tab ----------
             with ui.tab_panel('Backup'):
