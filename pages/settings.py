@@ -16,12 +16,17 @@ def settings():
 
             #---------- Products Tab ----------
             with ui.tab_panel('Products'):
+                ui.button('Click me!', on_click=lambda: add_product_dialog.open())
                 columns = [
                     {'name': 'name', 'label': 'Product', 'field': 'name', 'align': 'left'},
                     {'name': 'brand', 'label': 'Brand', 'field': 'brand', 'align': 'left'},
                     {'name': 'size', 'label': 'Size', 'field': 'size', 'align': 'left'},
                 ]
                 table = ui.table(rows=store.products, columns=columns, row_key='name').classes('w-full').props('flat bordered')
+                with ui.dialog() as add_product_dialog, ui.card():
+                    new_name = ui.input(label='Name')
+                    new_brand = ui.input(label='Brand')
+                    new_size = ui.input(label='Size')
 
             #---------- Backup Tab ----------
             with ui.tab_panel('Backup'):
