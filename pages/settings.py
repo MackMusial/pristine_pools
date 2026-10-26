@@ -1,6 +1,7 @@
 from nicegui import ui
 from layout import page_layout
 import store
+from datetime import timedelta
 
 @ui.page('/settings')
 def settings():
@@ -12,7 +13,7 @@ def settings():
                 ui.tab('Products')
                 ui.tab('Backup')
                 ui.tab('Water-test ranges')
-        with ui.tab_panels(tabs, value='Products').classes('w-full'):
+        with ui.tab_panels(tabs, value='Products').classes('w-full bg-transparent'):
 
             #---------- Products Tab ----------
             with ui.tab_panel('Products'):
@@ -48,7 +49,24 @@ def settings():
 
             #---------- Backup Tab ----------
             with ui.tab_panel('Backup'):
-                ui.label('Backups go here')
+                with ui.card().classes('w-full'):
+                    ui.label('Automatic Backups').classes('text-lg font-semibold text-gray-600')
+                    last = store.TODAY - timedelta(days=1)
+                    with ui.row().classes('items-center'):
+                        ui.icon('check_circle', color='positive')
+                        ui.label(f"Last backup: {last:%b} {last.day}, {last.year} at 2:00 AM")
+                    ui.label('Backups run automatically every night to the USB drive.').classes('text-gray-600')
+                    
+                    #---------- Restore Database Dialog ----------
+                    with ui.dialog() as restore_dialog, ui.card().classes('w-full'):
+                        ui.label(f"Restore the {last:%b} {last.day} backup? Anything entered since then will be lost.")
+                        with ui.row().classes('w-full justify-end'):
+                            ui.button('Cancel',on_click=restore_dialog.close).props('flat')
+                            ui.button('Restore',on_click=restore_dialog.close,color='negative')
+
+                    with ui.row().classes('w-full justify-end'):
+                        ui.button('Restore…',on_click=restore_dialog.open).props('flat no-caps')
+                
 
             #---------- Water-test ranges Tab ----------
             with ui.tab_panel('Water-test ranges'):
