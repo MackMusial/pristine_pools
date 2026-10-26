@@ -53,7 +53,9 @@ def customer(customer_id: int, tab: str = ''):
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
-                    ui.label('Contact').classes('text-lg font-semibold')
+                    with ui.row().classes('gap-0 items-center justify-between w-full'):
+                        ui.label('Contact').classes('text-lg font-semibold')
+                        ui.button(icon='edit').props('flat round dense').tooltip('Edit customer')
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
                     ui.label('Phone').classes('text-xs text-gray-500')
@@ -63,12 +65,18 @@ def customer(customer_id: int, tab: str = ''):
 
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
+                    with ui.row().classes('w-full items-center justify-between'):
+                        if c['bodies']:
+                            ui.label(c['bodies'][0]['type']).classes('text-lg font-semibold')
+                        else: 
+                            ui.label('Pool').classes('text-lg font-semibold')
+                        with ui.row().classes('gap-0'):
+                            ui.button(icon='edit').props('flat round dense').tooltip('Edit pool')
+                            ui.button(icon='add').props('flat round dense').tooltip('Add pool')
                     if not c['bodies']:
-                        ui.label('Pool').classes('text-lg font-semibold')
                         ui.label('No pool on file').classes('text-gray-500')
                     else:
                         b = c['bodies'][0]  # first body for now (switcher comes in step E)
-                        ui.label(b['type']).classes('text-lg font-semibold')  # 'Pool' or 'Hot tub'
                         ui.label('Size').classes('text-xs text-gray-500')
                         ui.label(f"{b['size']} · {b['gallons']:,} gal")  # :, adds the thousands comma
                         if b['type'] == 'Pool':  # pools and hot tubs have different fields
