@@ -68,6 +68,14 @@ def page_layout():
                         ui.item_label(p['title']).props('caption')
     with drawer:
         drawer_content() 
+    def show_chat():
+        pass
+    def send_message():
+        pass
+    def 
+    # ---------- Ai Drawer ----------
+    ai_drawer = ui.right_drawer(value=False).props('overlay bordered width=400').classes('print:hidden')
+
 
     #---------- New Customer Dialog ----------
     with ui.dialog() as new_cust_dialog, ui.card().classes('w-96'):
@@ -125,6 +133,7 @@ def page_layout():
         with ui.row().classes('items-center'):
             ui.button('New Customer', icon='group_add', on_click=lambda: new_cust_dialog.open()).props('flat color=white')
             ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings panel
+
 
     def refresh_attention():
         drawer_content.refresh()
