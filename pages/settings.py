@@ -2,6 +2,7 @@ from nicegui import ui
 from layout import page_layout
 import store
 from datetime import timedelta
+import rules
 
 @ui.page('/settings')
 def settings():
@@ -70,4 +71,22 @@ def settings():
 
             #---------- Water-test ranges Tab ----------
             with ui.tab_panel('Water-test ranges'):
-                ui.label('Water-test Ranges go here')
+                NAMES = {'fc': 'Free chlorine', 'tc': 'Total chlorine', 'ph': 'pH', 'ta': 'Alkalinity', 'ch': 'Hardness', 'cya': 'CYA', 'phos': 'Phosphates'}
+                rows = []
+                for key, band in rules.BANDS.items():  #iterate through each band in rules.py
+                    red_low, green_from, green_to, red_high = band  #unpack tuples
+                    row = {
+                        'name': NAMES[key],
+                        'green': f"{green_from}-{green_to}",
+                        'orange': f"below {green_from} or above {green_to}",
+                        'red': f"below {red_low} or above {red_high}",
+                    }
+                    rows.append(row)
+                columns = [
+                    {'name': 'name', 'label': 'Reading', 'field': 'name', 'align': 'left'},
+                    {'name': 'green', 'label': 'Green (OK)', 'field': 'green', 'align': 'left'},
+                    {'name': 'orange', 'label': 'Orange (watch)', 'field': 'orange', 'align': 'left'},
+                    {'name': 'red', 'label': 'Red (act)', 'field': 'red', 'align': 'left'},
+                ]
+                ui.label('Read-only for now. Ranges come from the store owner').classes('text-gray-600')  #display that readings are read only for now but will be modifiable in the future
+                ui.table(rows=rows,columns=columns,row_key='name')  #display the current settings for the colored readings

@@ -230,18 +230,37 @@ def customer(customer_id: int, tab: str = ''):
                         
                         with ui.dialog() as purchase_dialog, ui.card().classes('w-96'):
                             ui.label('Log Purchase').classes('w-full font-semibold text-lg')
-                            ui.select([p['name'] for p in store.products],with_input=True, label='Product').classes('w-full').props('outlined dense')  #p['name'] only pulls the name out of the dict of products the store sells
+                            product_select = ui.select([p['name'] for p in store.products],with_input=True, label='Product',
+                                                       validation={'Pick a product': lambda v: bool(v)}).classes('w-full').props('outlined dense hide-bottom-space')  #p['name'] only pulls the name out of the dict of products the store sells
+                            today_text = f"{store.TODAY:%b} {store.TODAY.day}, {store.TODAY.year}"
                             with ui.grid(columns=2).classes('w-full gap-3'):
-                                ui.input(label='Date',value=date.today().strftime('%b %d, %Y')).props('outlined dense')
-                                ui.number(label='Qty', value=1, min=1).props('outlined dense')
+                                purchase_date = ui.input(label='Date',value=today_text).props('outlined dense')
+                                purchase_qty = ui.number(label='Qty', value=1, min=1, step=1).props('outlined dense')
+
+                            #---------- save_purchase func ----------
+                            def save_purchase():
+                                if not product_select.validate():
+                                    return
+                                product = {p['name']: p for p in store.products}[product_select.value]  # look up brand + size by name
+                                purchase = {'date': purchase_date.value, 'product': product['name'], 'brand': product['brand'],
+                                            'qty': int(purchase_qty.value or 1), 'size': product['size']}
+                                c['purchases'].insert(0, purchase)  # the data
+                                purchase_table.rows.insert(0, purchase)  # the display (the table keeps its own copy)
+                                purchase_table.update()
+                                no_purchases.set_visibility(False)
+                                product_select.set_value(None)  # reset the boxes for next time
+                                purchase_date.set_value(today_text)
+                                purchase_qty.set_value(1)
+                                purchase_dialog.close()
+
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=purchase_dialog.close).props('flat')
-                                ui.button('Save', icon='check',on_click=purchase_dialog.close)
+                                ui.button('Save', icon='check',on_click=save_purchase)
                         #---------- Purchase History ----------
                         with ui.card().classes('w-full'):
                             with ui.row().classes('w-full items-center justify-between'):
                                 ui.label('Purchases').classes('text-lg font-semibold')
                                 ui.button('Log Purchase', icon='add', on_click=purchase_dialog.open)
-                            ui.table(columns=purchase_columns, rows=c['purchases']).classes('w-full').props('flat bordered hide-no-data')
-                            if not c['purchases']:
-                                ui.label('No purchases yet').classes('text-gray-500')
+                            purchase_table = ui.table(columns=purchase_columns, rows=c['purchases']).classes('w-full').props('flat bordered hide-no-data')
+                            no_purchases = ui.label('No purchases yet').classes('text-gray-500')
+                            no_purchases.set_visibility(not c['purchases'])
