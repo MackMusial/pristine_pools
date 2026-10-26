@@ -10,8 +10,22 @@ THEMES = {
 }
 
 CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
-
-
+def needs_attention():
+    cust = []
+    for cid, c in store.customers.items():
+        if c['retest'] is not None:
+            cust.append((cid, c))  #one (id,customer) tuple 
+    due = sorted(cust, key=lambda pair: pair[1]['retest']['due'])  #oldest due date first 
+    open_list = []
+    for cid, c in store.customers.items():
+        open_p = None
+        for p in c["problems"]:
+            if p['fix'] is None:
+                open_p = p 
+                break
+        if open_p:
+            open_list.append((cid, c, open_p))
+    return due, open_list
 def page_layout():
     ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
     ui.add_css('.customer-menu { max-height: 200px !important; }')
@@ -19,17 +33,12 @@ def page_layout():
     ui.colors(**THEMES[CURRENT_THEME])
 
     #---------- Left Drawer ----------
-
+    due, open_list = needs_attention()
     drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')
     with drawer:
         with ui.row().classes('items-center gap-2'):
             ui.icon('notifications_active', color='red')
             ui.label('Needs attention').classes('text-lg font-semibold')
-        cust = []
-        for cid, c in store.customers.items():
-            if c['retest'] is not None:
-                cust.append((cid, c))  #one (id,customer) tuple 
-        due = sorted(cust, key=lambda pair: pair[1]['retest']['due'])  #oldest due date first 
         ui.label('Retests due').classes('text-sm uppercase tracking-wide text-gray-500 mt-4')
         with ui.list():
             for cid, c in due:
@@ -47,16 +56,6 @@ def page_layout():
                         ui.item_label(when).props('caption').classes('text-red-9' if when == 'Overdue' else '') 
                         if when == 'Overdue':
                             ui.item_label(c['phone']).props('caption')
-        open_list = []
-        for cid, c in store.customers.items():
-            open_p = None
-            for p in c["problems"]:
-                if p['fix'] is None:
-                    open_p = p 
-                    break
-            if open_p:
-                open_list.append((cid, c, open_p))
-        attention_count = len(cust) + len(open_list)
         ui.label('Open problems').classes('text-sm uppercase tracking-wide text-gray-500 mt-4')
         with ui.list():
             for cid, c, p in open_list:
@@ -74,8 +73,16 @@ def page_layout():
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
             with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white'):
-                if attention_count:
-                    ui.badge(str(attention_count)).props('floating color=red')
+                @ui.refreshable
+                def badge():
+                    due, open_list = needs_attention()  #get fresh data
+                    due_now = [cid for cid, c in due if c['retest']['due'] <= store.TODAY]  #keep only the ones that are due today or overdue
+                    count = len(due_now) + len(open_list)  #total number of due now and open problems
+                    if count:
+                        ui.badge(str(count)).props('floating color=red')
+                badge()
+                if False:
+                    ui.badge(str(False)).props('floating color=red')
             # ---------- Logo (Home link) ----------
 
             with ui.row().classes('items-center gap-2 cursor-pointer') as logo:  # icon + title act as one clickable Home link

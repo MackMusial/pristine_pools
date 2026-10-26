@@ -23,8 +23,8 @@ Run by **Dr. Scott James** (also Mack's CIS 422 professor). Mack's group has 5 p
 
 **Day-by-day schedule (re-planned 2026-10-23: Mack works Fri 11am–11pm, so Friday is lost; Mack chose to keep ALL items, no cuts). Within each day, do items in the order listed so anything unfinished is the least important:**
 - **Sat 10/24 (re-planned: only the morning, Mack works at 1pm):** finish 0c drawer → 0d `schedule_retest`.
-- **Sun 10/25 (free, but chemistry due Sunday: do it FIRST):** chemistry → 0e `save_test` → C retest chip → D Log Purchase saves → 0f Save Fix → B New Customer → E edit records (Contact ✏️ first, then pool/hot tub edit + add, then change history).
-- **Mon 10/26 (lots of time):** F Settings (Products + Backup first, Ranges tab last) → G Home chat → "What's off" strip → H phone pass + critique #5 polish → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** `/impeccable critique` + `adapt` on Customer before H (findings only); `/impeccable audit` + `clarify` + `/code-review` before I. Sat if time: `/impeccable onboard` (findings only) on empty states.
+- **Sun 10/25 (re-ordered 2026-10-25 by Mack: header buttons first):** ✅ chemistry → 0e `save_test` (finish live drawer 5b–5d) → B New Customer → F Settings (Products + Backup first, Ranges tab last) → C retest chip → D Log Purchase saves → 0f Save Fix. Mack: no cuts until the last moment (Claude: decide by Mon evening at the latest).
+- **Mon 10/26 (lots of time):** E edit records (Contact ✏️ first, then pool/hot tub edit + add, then change history) → G Home chat → "What's off" strip → H phone pass + critique #5 polish → I demo run-through + merge to `main` (PM). **Claude reminds Mack:** `/impeccable critique` + `adapt` on Customer before H (findings only); `/impeccable audit` + `clarify` + `/code-review` before I. Sat if time: `/impeccable onboard` (findings only) on empty states.
 - **Tue 10/27 before 8:30:** buffer; finish only what's half-done, no new features.
 - **If Sunday night shows we're behind:** fall back to the cut list below (Mack decides; ask via popup).
 
