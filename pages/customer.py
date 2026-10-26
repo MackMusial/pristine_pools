@@ -12,7 +12,7 @@ SUGGESTIONS = [
 
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int, tab: str = ''):
-    page_layout()
+    refresh_attention = page_layout()
     if customer_id not in store.customers:
         with ui.column().classes('w-full justify-center items-center min-h-[calc(100vh-10rem)]'):
             ui.icon('warning',color='orange',size='md')
@@ -26,6 +26,8 @@ def customer(customer_id: int, tab: str = ''):
             ui.label('Schedule retest').classes('text-lg font-semibold')
             ui.label(reason)
             picker = ui.date(value=(store.TODAY + timedelta(days=days)).isoformat())
+
+            # ---------- Save ----------
             def save(): 
                 '''Saves the date chosen and reason for the retest to the customers retest dict
                 
@@ -35,6 +37,7 @@ def customer(customer_id: int, tab: str = ''):
             with ui.row().classes('w-full justify-end'):
                 ui.button('Skip', on_click=dialog.close).props('flat')
                 ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
+            refresh_attention()
         dialog.open()
 
     # ---------- Title row ----------
@@ -115,6 +118,7 @@ def customer(customer_id: int, tab: str = ''):
                                     schedule_retest(2, 'Red reading')
                                 elif 'orange' in colors:  #if there is any chemicals that are slightly off
                                     schedule_retest(7, 'Orange reading')
+                                refresh_attention()
 
                             with ui.grid(columns=2).classes('w-full gap-3'):
                                 for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
