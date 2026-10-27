@@ -84,7 +84,7 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
         
         #---------- Welcome ----------
         with ui.column().classes('w-full h-full no-wrap'):  #full the drawer's height, stack top to bottom
-            with ui.column().classes('w-full flex-1 overflow-y-auto'):  #take all the free space, scroll if chat gets long
+            with ui.column().classes('w-full flex-1 min-w-0 overflow-y-auto overflow-x-hidden'):  #take all the free space, scroll if chat gets long (vertical only)
                 with ui.column().classes('w-full gap-2') as welcome:
                     ui.label('How can I help today?').classes('text-3xl font-bold')
                     ui.label("Describe a customer's pool problem").classes('text-gray-500')
@@ -92,7 +92,7 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
                 # ---------- Chat Messages ----------
                 with ui.column().classes('w-full') as messages:
                         ui.chat_message("Customer's pool turned green overnight. 15,000 gal, free chlorine 0.5, pH 7.9. What should I recommend?", name='Staff', sent=True).props('bg-color=primary text-color=white')
-                        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False).props('bg-color=white')
+                        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False).props('bg-color=grey-3 text-color=black')  # grey so it shows on the white drawer; black text stays readable in dark mode too
                 messages.set_visibility(False)
             chat = ui.input(placeholder='Ask about a pool problem...').classes('w-full').props('outlined rounded')
             with chat.add_slot('prepend'):
