@@ -88,7 +88,7 @@ def page_layout():
                     ui.label('How can I help today?').classes('text-3xl font-bold')
                     ui.label("Describe a customer's pool problem").classes('text-gray-500')
             
-            # ---------- Chat Messages ----------
+                # ---------- Chat Messages ----------
                 with ui.column().classes('w-full') as messages:
                         ui.chat_message("Customer's pool turned green overnight. 15,000 gal, free chlorine 0.5, pH 7.9. What should I recommend?", name='Staff', sent=True).props('bg-color=primary text-color=white')
                         ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False).props('bg-color=white')
@@ -100,7 +100,7 @@ def page_layout():
                 ui.button(icon='send',on_click=show_chat).props('flat round dense')
         
     #---------- Sticky AI Button ----------
-    with ui.page_sticky(position='bottom-right', x_offset=24, y_offset=24):
+    with ui.page_sticky(position='bottom-right', x_offset=24, y_offset=24).classes('z-50'):
         ui.button(icon='auto_awesome', on_click=ai_drawer.toggle).props('fab color=primary').classes('print:hidden').tooltip('Pool Assistant')  
 
     #---------- New Customer Dialog ----------
