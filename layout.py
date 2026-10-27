@@ -7,8 +7,7 @@ THEMES = {
     'pool': {'primary': '#0369a1', 'secondary': '#0d9488', 'accent': '#38bdf8'},
     'aqua': {'primary': '#1e3a8a', 'secondary': '#06b6d4', 'accent': '#f59e0b'},
     'ocean': {'primary': '#0f172a', 'secondary': '#22d3ee', 'accent': '#a78bfa'},
-}
-
+} 
 CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
 
 def needs_attention():
@@ -29,6 +28,8 @@ def needs_attention():
     return due, open_list
 
 def page_layout():
+    dark = ui.dark_mode(True)  #DEV ONLY
+    ui.add_css('.body--dark { background: #121212 !important; }')  #DEV ONLY
     ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
     ui.add_css('.customer-menu { max-height: 200px !important; }')
     ui.query('body').classes('bg-slate-100 print:bg-white')
@@ -69,18 +70,35 @@ def page_layout():
     with drawer:
         drawer_content() 
     def show_chat():
-        pass
+        welcome.set_visibility(False)
+        messages.set_visibility(True)
     def send_message():
-        pass
-    def ask_chip(text):
-        pass
+        ...
     # ---------- Ai Drawer ----------
     ai_drawer = ui.right_drawer(value=False).props('overlay bordered width=400').classes('print:hidden')
     with ai_drawer:
         with ui.row().classes('w-full items-center justify-between'):  #but x button on the right
             ui.label('Pool assistant').classes('text-lg font-semibold')
             ui.button(icon='close', on_click=ai_drawer.hide).props('flat round dense')  #button to escape the AI Agent
-
+        
+        #---------- Welcome ----------
+        with ui.column().classes('w-full h-full no-wrap'):  #full the drawer's height, stack top to bottom
+            with ui.column().classes('w-full flex-1 overflow-y-auto'):  #take all the free space, scroll if chat gets long
+                with ui.column().classes('w-full gap-2') as welcome:
+                    ui.label('How can I help today?').classes('text-3xl font-bold')
+                    ui.label("Describe a customer's pool problem").classes('text-gray-500')
+            
+            # ---------- Chat Messages ----------
+                with ui.column().classes('w-full') as messages:
+                        ui.chat_message("Customer's pool turned green overnight. 15,000 gal, free chlorine 0.5, pH 7.9. What should I recommend?", name='Staff', sent=True).props('bg-color=primary text-color=white')
+                        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False).props('bg-color=white')
+                messages.set_visibility(False)
+            chat = ui.input(placeholder='Ask about a pool problem...').classes('w-full').props('outlined rounded')
+            with chat.add_slot('prepend'):
+                ui.button(icon='add').props('flat round dense')
+            with chat.add_slot('append'):
+                ui.button(icon='send',on_click=show_chat).props('flat round dense')
+        
     #---------- Sticky AI Button ----------
     with ui.page_sticky(position='bottom-right', x_offset=24, y_offset=24):
         ui.button(icon='auto_awesome', on_click=ai_drawer.toggle).props('fab color=primary').classes('print:hidden').tooltip('Pool Assistant')  
@@ -141,6 +159,7 @@ def page_layout():
         with ui.row().classes('items-center'):
             ui.button('New Customer', icon='group_add', on_click=lambda: new_cust_dialog.open()).props('flat color=white')
             ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings panel
+            ui.button(icon='dark_mode',on_click=dark.toggle).props('flat round color=white')  #DEV ONLY
 
 
     def refresh_attention():
