@@ -80,29 +80,29 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
     with ai_drawer:
         with ui.row().classes('w-full items-center justify-between'):  #but x button on the right
             ui.label('Pool assistant').classes('text-lg font-semibold')
-            ui.button(icon='close', on_click=ai_drawer.hide).props('flat round dense')  #button to escape the AI Agent
+            ui.button(icon='close', on_click=ai_drawer.hide).props('flat round dense aria-label="Close assistant"')  #button to escape the AI Agent
         
         #---------- Welcome ----------
         with ui.column().classes('w-full h-full no-wrap'):  #full the drawer's height, stack top to bottom
             with ui.column().classes('w-full flex-1 min-w-0 overflow-y-auto overflow-x-hidden'):  #take all the free space, scroll if chat gets long (vertical only)
                 with ui.column().classes('w-full gap-2') as welcome:
-                    ui.label('How can I help today?').classes('text-3xl font-bold')
+                    ui.label('How can I help today?').classes('text-xl font-bold')
                     ui.label("Describe a customer's pool problem").classes('text-gray-500')
             
                 # ---------- Chat Messages ----------
                 with ui.column().classes('w-full') as messages:
                         ui.chat_message("Customer's pool turned green overnight. 15,000 gal, free chlorine 0.5, pH 7.9. What should I recommend?", name='Staff', sent=True).props('bg-color=primary text-color=white')
-                        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool Assistant', sent=False).props('bg-color=grey-3 text-color=black')  # grey so it shows on the white drawer; black text stays readable in dark mode too
+                        ui.chat_message('Recommend shocking the pool tonight with 3 lbs of cal-hypo, then lower pH to 7.4–7.6 with pH reducer. Run the filter 24 hours and retest in 2 days.', name='Pool assistant', sent=False).props('bg-color=grey-3 text-color=black')  # grey so it shows on the white drawer; black text stays readable in dark mode too
                 messages.set_visibility(False)
             chat = ui.input(placeholder='Ask about a pool problem...').classes('w-full').props('outlined rounded')
             with chat.add_slot('prepend'):
-                ui.button(icon='add').props('flat round dense')
+                ui.button(icon='add').props('flat round dense aria-label="Attach a customer"')
             with chat.add_slot('append'):
-                ui.button(icon='send',on_click=show_chat).props('flat round dense')
+                ui.button(icon='send',on_click=show_chat).props('flat round dense aria-label="Send"')
         
     #---------- Sticky AI Button ----------
     with ui.page_sticky(position='bottom-right', x_offset=24, y_offset=24).classes('z-50'):
-        ui.button(icon='auto_awesome', on_click=ai_drawer.toggle).props('fab color=primary').classes('print:hidden').tooltip('Pool Assistant')  
+        ui.button(icon='auto_awesome', on_click=ai_drawer.toggle).props('fab color=primary aria-label="Pool assistant"').classes('print:hidden').tooltip('Pool assistant')  
 
     #---------- New Customer Dialog ----------
     with ui.dialog() as new_cust_dialog, ui.card().classes('w-96'):
@@ -133,14 +133,14 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
     # ---------- Header ----------
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
-            with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white'):
+            with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white aria-label="Needs attention"'):
                 @ui.refreshable
                 def badge():
                     due, open_list = needs_attention()  #get fresh data
                     due_now = [cid for cid, c in due if c['retest']['due'] <= store.TODAY]  #keep only the ones that are due today or overdue
                     count = len(due_now) + len(open_list)  #total number of due now and open problems
                     if count:
-                        ui.badge(str(count)).props('floating color=red')
+                        ui.badge(str(count)).props('floating color=red-9')  # red-9: white text passes contrast (red was 3.7:1)
                 badge()
             # ---------- Logo (Home link) ----------
 
@@ -159,8 +159,8 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
         # ---------- Action Buttons ----------
 
         with ui.row().classes('items-center'):
-            ui.button('New Customer', icon='group_add', on_click=lambda: new_cust_dialog.open()).props('flat color=white')
-            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings panel
+            ui.button('New Customer', icon='group_add', on_click=lambda: new_cust_dialog.open()).props('flat no-caps color=white')
+            ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white aria-label="Settings"').tooltip('Settings')  # opens the Settings panel
 
     def refresh_attention():
         drawer_content.refresh()

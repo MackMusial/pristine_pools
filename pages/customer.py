@@ -44,7 +44,7 @@ def customer(customer_id: int, tab: str = ''):
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
             ui.label(c['name']).classes('text-2xl font-bold')
-            with ui.tabs().props('inline-label dense').classes('print:hidden') as tabs:
+            with ui.tabs().props('inline-label dense no-caps').classes('print:hidden') as tabs:
                 test_tab = ui.tab('Water Tests', icon='science')
                 problems_tab = ui.tab('Problems', icon='report_problem')
                 purchases_tab = ui.tab('Purchases',icon='shopping_cart')
