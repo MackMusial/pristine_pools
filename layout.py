@@ -9,6 +9,7 @@ THEMES = {
     'ocean': {'primary': '#0f172a', 'secondary': '#22d3ee', 'accent': '#a78bfa'},
 } 
 CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
+DARK_MODE = True  # DEV ONLY: set to False for light mode True for dark mode
 
 def needs_attention():
     cust = []
@@ -27,9 +28,9 @@ def needs_attention():
             open_list.append((cid, c, open_p))
     return due, open_list
 
-def page_layout():
-    dark = ui.dark_mode(True)  #DEV ONLY
-    ui.add_css('.body--dark { background: #121212 !important; }')  #DEV ONLY
+def page_layout(show_search=True):  # Home passes False because it has its own big search
+    ui.dark_mode(DARK_MODE)
+    ui.add_css('.body--dark { background: #121212 !important; }')  # dark page background (only applies when DARK_MODE is on)
     ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
     ui.add_css('.customer-menu { max-height: 200px !important; }')
     ui.query('body').classes('bg-slate-100 print:bg-white')
@@ -153,14 +154,13 @@ def page_layout():
         search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
+        search.set_visibility(show_search)  # hidden, not removed: save_customer still updates its options
 
         # ---------- Action Buttons ----------
 
         with ui.row().classes('items-center'):
             ui.button('New Customer', icon='group_add', on_click=lambda: new_cust_dialog.open()).props('flat color=white')
             ui.button(icon='settings',on_click=lambda: ui.navigate.to('/settings')).props('flat round color=white')  # opens the Settings panel
-            ui.button(icon='dark_mode',on_click=dark.toggle).props('flat round color=white')  #DEV ONLY
-
 
     def refresh_attention():
         drawer_content.refresh()
