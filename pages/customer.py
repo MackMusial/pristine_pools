@@ -72,7 +72,7 @@ def customer(customer_id: int, tab: str = ''):
                 with ui.dialog() as add_pool, ui.card().classes('w-96'):
                     #TODO: Implement the add pool dialog content here
                     ...
-
+                #---------- Edit Pool Dialog ----------
                 with ui.dialog() as edit_pool, ui.card().classes('w-96'):
                     #TODO: Implement the edit pool dialog content here
                     ...  #This ... just tells python that there will be coding replacing it. It simply just stops it from erroring. It will let you compile even though the function is not finished
