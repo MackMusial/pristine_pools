@@ -51,11 +51,16 @@ def customer(customer_id: int, tab: str = ''):
         with ui.row().classes('w-full no-wrap gap-6 items-stretch print:flex-col print:gap-3 md:min-h-[calc(100vh-11.5rem)] print:min-h-0'):  # items-stretch: both columns get the same height (the row's)
             with ui.column().classes('w-1/3 print:w-full print:flex-row'):  # the info cards set the row's height
 
+                #---------- Edit Customer Dialog ----------
+                with ui.dialog() as edit_customer, ui.card().classes('w-96'):
+                    #TODO
+                    ...
+
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('gap-0 items-center justify-between w-full'):
                         ui.label('Contact').classes('text-lg font-semibold')
-                        ui.button(icon='edit').props('flat round dense size=sm').classes('-my-1').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
+                        ui.button(icon='edit',on_click=edit_customer.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
                     ui.label('Phone').classes('text-xs text-gray-500')
@@ -63,6 +68,14 @@ def customer(customer_id: int, tab: str = ''):
                     ui.label('Customer since').classes('text-xs text-gray-500')
                     ui.label(c['since'])
 
+                #---------- Add Pool Dialog ----------
+                with ui.dialog() as add_pool, ui.card().classes('w-96'):
+                    #TODO 
+                    ...
+
+                with ui.dialog() as edit_pool, ui.card().classes('w-96'):
+                    #TODO
+                    ...  #This ... just tells python that there will be coding replacing it. It simply just stops it from erroring. It will let you compile even though the function is not finished
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('w-full items-center justify-between'):
@@ -71,8 +84,9 @@ def customer(customer_id: int, tab: str = ''):
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
-                            ui.button(icon='edit').props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')
-                            ui.button(icon='add').props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
+                            ui.button(icon='edit',on_click=edit_pool.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
+                            ui.button(icon='add', on_click=add_pool.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
+
                     if not c['bodies']:
                         ui.label('No pool on file').classes('text-gray-500')
                     else:
@@ -201,7 +215,7 @@ def customer(customer_id: int, tab: str = ''):
                                 with ui.row().classes('w-full justify-end mt-auto'): #mt-auto pushes the button the the bottom of the card
                                     ui.button('Get Suggestion',on_click=lambda: suggestion_box.set_visibility(True))
 
-                    #---------- Suggestion ----------
+                            #---------- Suggestion ----------
                             with ui.card().classes('flex-1'):
                                 ui.label('Fix').classes('text-lg font-semibold')
                                 with ui.column().classes('w-full') as suggestion_box:
@@ -235,7 +249,6 @@ def customer(customer_id: int, tab: str = ''):
                         ]
 
                         #---------- Purchase Dialog ----------
-                        
                         with ui.dialog() as purchase_dialog, ui.card().classes('w-96'):
                             ui.label('Log Purchase').classes('w-full font-semibold text-lg')
                             product_select = ui.select([p['name'] for p in store.products],with_input=True, label='Product',
@@ -264,6 +277,7 @@ def customer(customer_id: int, tab: str = ''):
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=purchase_dialog.close).props('flat')
                                 ui.button('Save', icon='check',on_click=save_purchase)
+                      
                         #---------- Purchase History ----------
                         with ui.card().classes('w-full'):
                             with ui.row().classes('w-full items-center justify-between'):
