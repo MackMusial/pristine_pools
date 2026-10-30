@@ -91,7 +91,7 @@ def customer(customer_id: int, tab: str = ''):
 
                 #---------- Add Pool Dialog ----------
                 with ui.dialog() as add_pool_dialog, ui.card().classes('w-96'):
-                    ui.label('Edit Pool').classes('font-semibold text-lg w-full')
+                    ui.label('Add Pool').classes('font-semibold text-lg w-full')
                     ...
 
                 #---------- Edit Pool Dialog ----------
@@ -99,19 +99,16 @@ def customer(customer_id: int, tab: str = ''):
                     ui.label('Edit Pool').classes('font-semibold text-lg w-full')
                     if c['bodies']:  #make sure there is a pool to edit. without this we get a IndexError: list index out of range error
                         b = c['bodies'][0]
-                        if b['type'] == 'Pool':
-                            size = ui.input(label="Size",value=b['size']).props('outlined dense').classes('w-full')
+                        size = ui.input(label="Size",value=b['size']).props('outlined dense').classes('w-full')
+                        filter_box = ui.input(label="Filter",value=b['filter']).props('outlined dense').classes('w-full')  #named filter filter_box because filter is a built in python function
+                        installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
+                        if b['type'] == 'Pool':  #if the customer has a pool
                             wall_liner = ui.input(label="Wall / liner",value=b['wall_liner']).props('outlined dense').classes('w-full')
                             floor = ui.input(label="Floor",value=b['floor']).props('outlined dense').classes('w-full')
                             chlorinator = ui.input(label="Chlorinator",value=b['chlorinator']).props('outlined dense').classes('w-full')
-                            filter_box = ui.input(label="Filter",value=b['filter']).props('outlined dense').classes('w-full')  #named filter filter_box because filter is a built in python function
-                            installed_date = ui.input(label="Installed",value=b['installed']).props('outlined dense').classes('w-full')
-                        else:
-                            size = ui.input(label="Size",value=b['size']).props('outlined dense').classes('w-full')
+                        else:  #customer has a hottub
                             shell = ui.input(label='Shell',value=b['shell']).props('outlined dense').classes('w-full')
                             cover = ui.input(label='Cover',value=b['cover']).props('outlined dense').classes('w-full')
-                            filter_box = ui.input(label='Filter',value=b['filter']).props('outlined dense').classes('w-full')
-                            installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
                             
                     #---------- Edit Pool Func ----------
                     def edit_pool():
