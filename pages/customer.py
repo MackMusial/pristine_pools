@@ -90,13 +90,30 @@ def customer(customer_id: int, tab: str = ''):
                     ui.label(c['since'])
 
                 #---------- Add Pool Dialog ----------
-                with ui.dialog() as add_pool, ui.card().classes('w-96'):
-                    #TODO: Implement the add pool dialog content here
+                with ui.dialog() as add_pool_dialog, ui.card().classes('w-96'):
+                    ui.label('Edit Pool').classes('font-semibold text-lg w-full')
                     ...
+
                 #---------- Edit Pool Dialog ----------
-                with ui.dialog() as edit_pool, ui.card().classes('w-96'):
-                    #TODO: Implement the edit pool dialog content here
-                    ...  #This ... just tells python that there will be coding replacing it. It simply just stops it from erroring. It will let you compile even though the function is not finished
+                with ui.dialog() as edit_pool_dialog, ui.card().classes('w-96'):
+                    ui.label('Edit Pool').classes('font-semibold text-lg w-full')
+                    if c['bodies']:  #make sure there is a pool to edit. without this we get a IndexError: list index out of range error
+                        b = c['bodies'][0]
+                        if b['type'] == 'Pool':
+                            size = ui.input(label="Size",value=b['size']).props('outlined dense').classes('w-full')
+                            wall_liner = ui.input(label="Wall / liner",value=b['wall_liner']).props('outlined dense').classes('w-full')
+                            floor = ui.input(label="Floor",value=b['floor']).props('outlined dense').classes('w-full')
+                            chlorinator = ui.input(label="Chlorinator",value=b['chlorinator']).props('outlined dense').classes('w-full')
+                            filter_box = ui.input(label="Filter",value=b['filter']).props('outlined dense').classes('w-full')  #named filter filter_box because filter is a built in python function
+                            installed_date = ui.input(label="Installed",value=b['installed']).props('outlined dense').classes('w-full')
+                        else:
+                            size = ui.input(label="Size",value=b['size']).props('outlined dense').classes('w-full')
+                            shell = ui.input(label='Shell',value=b['shell']).props('outlined dense').classes('w-full')
+                            cover = ui.input(label='Cover',value=b['cover']).props('outlined dense').classes('w-full')
+                            filter_box = ui.input(label='Filter',value=b['filter']).props('outlined dense').classes('w-full')
+                            installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
+
+
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('w-full items-center justify-between'):
@@ -105,8 +122,8 @@ def customer(customer_id: int, tab: str = ''):
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
-                            ui.button(icon='edit',on_click=edit_pool.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
-                            ui.button(icon='add', on_click=add_pool.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
+                            ui.button(icon='edit',on_click=edit_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
+                            ui.button(icon='add', on_click=add_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
 
                     if not c['bodies']:
                         ui.label('No pool on file').classes('text-gray-500')
