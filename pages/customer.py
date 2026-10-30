@@ -112,7 +112,27 @@ def customer(customer_id: int, tab: str = ''):
                             cover = ui.input(label='Cover',value=b['cover']).props('outlined dense').classes('w-full')
                             filter_box = ui.input(label='Filter',value=b['filter']).props('outlined dense').classes('w-full')
                             installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
+                            
+                    #---------- Edit Pool Func ----------
+                    def edit_pool():
+                        b['size'] = size.value.strip()
+                        b['filter'] = filter_box.value.strip()
+                        b['installed'] = installed_date.value.strip()
+                        if b['type'] == 'Pool':
+                            b['wall_liner'] = wall_liner.value.strip()
+                            b['floor'] = floor.value.strip()
+                            b['chlorinator'] = chlorinator.value.strip()
+                        else:
+                            b['shell'] = shell.value.strip()
+                            b['cover'] = cover.value.strip()
+                        edit_pool_dialog.close()
+                        ui.navigate.reload()
 
+                    with ui.row().classes('w-full justify-end'):
+                        ui.button('Cancel',on_click=edit_pool_dialog.close)
+                        ui.button(icon='check', on_click=edit_pool)
+                        
+                        
 
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
@@ -122,7 +142,8 @@ def customer(customer_id: int, tab: str = ''):
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
-                            ui.button(icon='edit',on_click=edit_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
+                            if c['bodies']:  #ensure there is a pool to edit. if customer has no pool then remove the button to edit 
+                                ui.button(icon='edit',on_click=edit_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
                             ui.button(icon='add', on_click=add_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
 
                     if not c['bodies']:
