@@ -21,7 +21,7 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 3. Refreshable Pool card instead of a page reload (deferrable).
 4. Then: "What's off" strip → H phone pass → I demo run-through.
 
-**Tests** (pytest + NiceGUI `user` fixture; pending PR, not yet in `main`): `pip install -r requirements.txt` then `pytest`. GitHub Actions runs them on PRs to main (job `test`); ruleset `protect-main` requires a PR + 1 approval. In tests always `import rules`, never `from rules import test_colors` (pytest would collect it as a test).
+**Tests** (pytest + NiceGUI `user` fixture; in `main` since PR #2): `pip install -r requirements.txt` then `pytest`. GitHub Actions runs them on PRs to main (job `test`); ruleset `protect-main` requires a PR + 1 approval. In tests always `import rules`, never `from rules import test_colors` (pytest would collect it as a test).
 
 ## Done so far
 - **A. Data foundation:** `rules.py` (`BANDS`, `color_for`, `test_colors`), `store.py` sample data + `search_options()`, Contact/Pool cards, Water Tests table, Problem history, open-problem badge, Purchases per customer, empty states, `?tab=problems`.
