@@ -51,37 +51,41 @@ def customer(customer_id: int, tab: str = ''):
         with ui.row().classes('w-full no-wrap gap-6 items-stretch print:flex-col print:gap-3 md:min-h-[calc(100vh-11.5rem)] print:min-h-0'):  # items-stretch: both columns get the same height (the row's)
             with ui.column().classes('w-1/3 print:w-full print:flex-row'):  # the info cards set the row's height
 
+                def open_edit_customer_dialog():
                 #---------- Edit Customer Dialog ----------
-                with ui.dialog() as edit_cust_dialog, ui.card().classes('w-96'):
-                    ui.label('Edit Customer').classes('w-full text-lg font-semibold')
-                    
-                    name = ui.input(label='Name',value=c['name'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense autofocus hide-bottom-space').classes('w-full')  #the lambda: v: bool(v.strip()) forces the employee to enter a name. even if the name is full of spaces
-                    phone = ui.input(label='Phone', value=c['phone'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense hide-bottom-space').classes('w-full')
-                    address = ui.input(label='Address', value=c['address']).props('outlined dense').classes('w-full')
+                    with ui.dialog() as edit_cust_dialog, ui.card().classes('w-96'):
+                        ui.label('Edit Customer').classes('w-full text-lg font-semibold')
+                        
+                        name = ui.input(label='Name',value=c['name'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense autofocus hide-bottom-space').classes('w-full')  #the lambda: v: bool(v.strip()) forces the employee to enter a name. even if the name is full of spaces
+                        phone = ui.input(label='Phone', value=c['phone'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense hide-bottom-space').classes('w-full')
+                        address = ui.input(label='Address', value=c['address']).props('outlined dense').classes('w-full')
+                        
+                        def edit_customer():
+                            if not all ([name.validate(), phone.validate()]):  # validate() runs the check shows the red error under the box, and returns False when it fails. 
+                                return
+                            full_address = f"{address.value}" if address.value else ""  #add the zipcode only if one was typed, otherwise you get a trailing comma.  
 
-                    def edit_customer():
-                        if not all ([name.validate(), phone.validate()]):  # validate() runs the check shows the red error under the box, and returns False when it fails. 
-                            return
-                        full_address = f"{address.value}" if address.value else ""  #add the zipcode only if one was typed, otherwise you get a trailing comma.  
+                            store.customers[customer_id] = {
+                                'name': name.value.strip(), 'phone': phone.value.strip(), 'address': full_address,
+                                'since': c['since'],
+                                'bodies': c['bodies'], 'tests': c['tests'], 'problems': c['problems'], 'purchases': c['purchases'],
+                                'retest': c['retest'],
+                            }
 
-                        store.customers[customer_id] = {
-                            'name': name.value.strip(), 'phone': phone.value.strip(), 'address': full_address,
-                            'since': c['since'],
-                            'bodies': c['bodies'], 'tests': c['tests'], 'problems': c['problems'], 'purchases': c['purchases'],
-                            'retest': c['retest'],
-                        }
+                            edit_cust_dialog.close()
+                            ui.navigate.reload()
+                        with ui.row().classes('w-full justify-end'):  #row for save and cancel buttons 
+                            ui.button('Cancel', on_click=edit_cust_dialog.close).props('flat')
+                            ui.button('Save', icon='check', on_click=edit_customer)
 
-                        edit_cust_dialog.close()
-                        ui.navigate.reload()
-                    with ui.row().classes('w-full justify-end'):  #row for save and cancel buttons 
-                        ui.button('Cancel', on_click=edit_cust_dialog.close).props('flat')
-                        ui.button('Save', icon='check', on_click=edit_customer)
+                        edit_cust_dialog.on('hide', edit_cust_dialog.delete)  # remove the dialog from the page once it closes
+                        edit_cust_dialog.open()
 
                 #---------- Contact Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('gap-0 items-center justify-between w-full'):
                         ui.label('Contact').classes('text-lg font-semibold')
-                        ui.button(icon='edit',on_click=edit_cust_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
+                        ui.button(icon='edit',on_click=open_edit_customer_dialog).props('flat round dense size=sm').classes('-my-1').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
                     ui.label('Phone').classes('text-xs text-gray-500')
