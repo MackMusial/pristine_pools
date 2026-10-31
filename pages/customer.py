@@ -104,8 +104,8 @@ def customer(customer_id: int, tab: str = ''):
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('w-full items-center justify-between'):
-                        if c['bodies']:
-                            ui.label(c['bodies'][0]['type']).classes('text-lg font-semibold')
+                        if len(c['bodies']) > 1:  #if there is more than one pool on file, display the dropdown
+                            search = ui.select(store.search_pools(), value=c['bodies'][0]['type']).props('dense').classes('w-96 text-lg font-semibold')
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):

@@ -386,5 +386,12 @@ def search_options():
         options[cid] = f"{c['name']} · {c['phone']}" 
     return options
 
+def search_pools():
+    pools = {}
+    for cid, c in customers.items():
+        for body in c['bodies']:
+            pools[body['type']] = f"{body['type']}"
+    return pools
+
 if __name__ == '__main__':
     print(search_options())
