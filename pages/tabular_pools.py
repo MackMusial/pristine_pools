@@ -1,7 +1,7 @@
 from nicegui import ui
 from layout import page_layout
 from datetime import date, timedelta
-import store
+import tabular_store as store
 import rules
 
 SUGGESTIONS = [
@@ -99,18 +99,15 @@ def customer(customer_id: int, tab: str = ''):
                             {'name': 'lasttest', 'label': 'Last Test', 'field': 'lasttest', 'align': 'left'},
                             {'name': 'problems', 'label': 'Problems', 'field': 'problems', 'align': 'left'},
                         ]
-                        
+
                         rows = []
                         for pool in c['bodies']:
                             rows.append({
                                 'pool': pool['name'],
                                 'address': pool['address'],
                                 'typesize': f"{pool['type']} / {pool['size']}",
-                                'lasttest': pool['lasttest'].strftime('%m/%d/%Y') if pool['lasttest'] else '',
-                                'problems': ', '.join(pool['problems']) if pool['problems'] else '',
+                                'lasttest': pool['tests'][0]['date'] if pool['tests'] else 'No tests',
+                                'problems': len(pool['problems']),
                             })
 
                         table = ui.table(columns=columns, rows=rows).classes('w-full')
-                                        
-
-                
