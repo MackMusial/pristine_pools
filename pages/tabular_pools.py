@@ -10,7 +10,7 @@ SUGGESTIONS = [
     'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
 ]
 
-@ui.page('/customer/{customer_id}/tabular_pools')
+@ui.page('/customer/tabular/{customer_id}')
 def customer(customer_id: int, tab: str = ''):
     refresh_attention = page_layout()
     if customer_id not in store.customers:
