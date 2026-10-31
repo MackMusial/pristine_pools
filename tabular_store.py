@@ -25,8 +25,11 @@ products = [  # the store's product list (Settings > Products, Log Purchase)
 ]
 
 # Each customer: contact info, purchases, and bodies of water (Pool / Hot tub).
-# Each body has its own 'address' (same as the customer's in this sample data,
-# but it can differ, e.g. a cottage pool). Each body owns its own history:
+# Each body has an 'id' that is unique across ALL customers (use next_body_id()
+# when adding one), so it can become the bodies table's primary key in Phase 2.
+# Each body also has its own 'address' (same as the customer's in this sample data,
+# but it can differ, e.g. a cottage pool), and a 'placement': 'Above ground' or
+# 'In-ground'. Each body owns its own history:
 #   tests:    newest first
 #   problems: newest first; 'fix' is None while the problem is still OPEN
 #   retest:   {'due': date, 'reason': str} or None (one retest per body)
@@ -37,8 +40,9 @@ customers = {
         'address': '4127 Bay Rd, Saginaw, MI 48603', 'since': 'May 2026',
         'bodies': [
             {
-                'name': 'Main Pool', 'address': '4127 Bay Rd, Saginaw, MI 48603',
-                'type': 'Pool', 'size': '24 ft round · 52 in wall', 'shape': 'Round',
+                'id': 1, 'name': 'Main Pool', 'address': '4127 Bay Rd, Saginaw, MI 48603',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '24 ft round · 52 in wall', 'shape': 'Round',
                 'length': 24, 'width': 24, 'wall': 52, 'gallons': 14700,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Sand base',
                 'filter': 'Sand filter · 150 lbs sand', 'chlorinator': 'Floating chlorinator',
@@ -88,8 +92,9 @@ customers = {
         'address': '2210 Tittabawassee Rd, Saginaw, MI 48604', 'since': 'June 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '2210 Tittabawassee Rd, Saginaw, MI 48604',
-                'type': 'Pool', 'size': '18 ft round · 48 in wall', 'shape': 'Round',
+                'id': 2, 'name': 'Pool', 'address': '2210 Tittabawassee Rd, Saginaw, MI 48604',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '18 ft round · 48 in wall', 'shape': 'Round',
                 'length': 18, 'width': 18, 'wall': 48, 'gallons': 7600,
                 'wall_liner': 'Soft-sided · built-in liner', 'floor': 'Ground cloth',
                 'filter': 'Cartridge filter', 'chlorinator': 'Floating chlorinator',
@@ -101,8 +106,9 @@ customers = {
                 'retest': None,
             },
             {
-                'name': 'Hot Tub', 'address': '2210 Tittabawassee Rd, Saginaw, MI 48604',
-                'type': 'Hot tub', 'size': '7 ft square · 6 seats', 'gallons': 400,
+                'id': 3, 'name': 'Hot Tub', 'address': '2210 Tittabawassee Rd, Saginaw, MI 48604',
+                'type': 'Hot tub', 'placement': 'Above ground',
+                'size': '7 ft square · 6 seats', 'gallons': 400,
                 'shell': 'Acrylic', 'filter': '2 cartridge filters', 'cover': 'Hard cover (2025)',
                 'installed': 'Aug 2025 · came with the house', 'changes': [],
                 'tests': [
@@ -122,8 +128,9 @@ customers = {
         'address': '5530 Shattuck Rd, Saginaw, MI 48603', 'since': 'May 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '5530 Shattuck Rd, Saginaw, MI 48603',
-                'type': 'Pool', 'size': '15 x 30 ft oval · 52 in wall', 'shape': 'Oval',
+                'id': 4, 'name': 'Pool', 'address': '5530 Shattuck Rd, Saginaw, MI 48603',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '15 x 30 ft oval · 52 in wall', 'shape': 'Oval',
                 'length': 30, 'width': 15, 'wall': 52, 'gallons': 11500,
                 'wall_liner': 'Hard-sided steel · 20 mil beaded liner', 'floor': 'Foam pad',
                 'filter': 'Sand filter · 200 lbs sand', 'chlorinator': 'Inline chlorinator',
@@ -150,8 +157,9 @@ customers = {
         'address': '890 Midland Rd, Freeland, MI 48623', 'since': 'July 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '890 Midland Rd, Freeland, MI 48623',
-                'type': 'Pool', 'size': '27 ft round · 54 in wall', 'shape': 'Round',
+                'id': 5, 'name': 'Pool', 'address': '890 Midland Rd, Freeland, MI 48623',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '27 ft round · 54 in wall', 'shape': 'Round',
                 'length': 27, 'width': 27, 'wall': 54, 'gallons': 19400,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Sand base',
                 'filter': 'Sand filter · 250 lbs sand', 'chlorinator': 'Inline chlorinator',
@@ -173,8 +181,9 @@ customers = {
         'address': '312 Center Rd, Saginaw, MI 48638', 'since': 'May 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '312 Center Rd, Saginaw, MI 48638',
-                'type': 'Pool', 'size': '21 ft round · 52 in wall', 'shape': 'Round',
+                'id': 6, 'name': 'Pool', 'address': '312 Center Rd, Saginaw, MI 48638',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '21 ft round · 52 in wall', 'shape': 'Round',
                 'length': 21, 'width': 21, 'wall': 52, 'gallons': 11300,
                 'wall_liner': 'Hard-sided resin · 25 mil overlap liner', 'floor': 'Foam pad',
                 'filter': 'Cartridge filter', 'chlorinator': 'Floating chlorinator',
@@ -198,8 +207,9 @@ customers = {
         'address': '7741 Gratiot Rd, Saginaw, MI 48609', 'since': 'June 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '7741 Gratiot Rd, Saginaw, MI 48609',
-                'type': 'Pool', 'size': '24 ft round · 48 in wall', 'shape': 'Round',
+                'id': 7, 'name': 'Pool', 'address': '7741 Gratiot Rd, Saginaw, MI 48609',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '24 ft round · 48 in wall', 'shape': 'Round',
                 'length': 24, 'width': 24, 'wall': 48, 'gallons': 13600,
                 'wall_liner': 'Hard-sided steel · 20 mil beaded liner', 'floor': 'Sand base',
                 'filter': 'Sand filter · 150 lbs sand', 'chlorinator': 'None',
@@ -226,8 +236,9 @@ customers = {
         'address': '1508 Weiss St, Saginaw, MI 48602', 'since': 'October 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '1508 Weiss St, Saginaw, MI 48602',
-                'type': 'Pool', 'size': '15 ft round · 42 in wall', 'shape': 'Round',
+                'id': 8, 'name': 'Pool', 'address': '1508 Weiss St, Saginaw, MI 48602',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '15 ft round · 42 in wall', 'shape': 'Round',
                 'length': 15, 'width': 15, 'wall': 42, 'gallons': 4600,
                 'wall_liner': 'Soft-sided · built-in liner', 'floor': 'Ground cloth',
                 'filter': 'Cartridge filter', 'chlorinator': 'None',
@@ -244,8 +255,9 @@ customers = {
         'address': '622 Pierce Rd, Saginaw, MI 48604', 'since': 'August 2026',
         'bodies': [
             {
-                'name': 'Hot Tub', 'address': '622 Pierce Rd, Saginaw, MI 48604',
-                'type': 'Hot tub', 'size': '8 ft square · 7 seats', 'gallons': 450,
+                'id': 9, 'name': 'Hot Tub', 'address': '622 Pierce Rd, Saginaw, MI 48604',
+                'type': 'Hot tub', 'placement': 'Above ground',
+                'size': '8 ft square · 7 seats', 'gallons': 450,
                 'shell': 'Acrylic', 'filter': '3 cartridge filters', 'cover': 'Hard cover (2024)',
                 'installed': 'Aug 2024 · bought used', 'changes': [],
                 'tests': [
@@ -269,8 +281,9 @@ customers = {
         'address': '3345 McCarty Rd, Saginaw, MI 48603', 'since': 'June 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '3345 McCarty Rd, Saginaw, MI 48603',
-                'type': 'Pool', 'size': '16 ft round · 48 in wall', 'shape': 'Round',
+                'id': 10, 'name': 'Pool', 'address': '3345 McCarty Rd, Saginaw, MI 48603',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '16 ft round · 48 in wall', 'shape': 'Round',
                 'length': 16, 'width': 16, 'wall': 48, 'gallons': 6000,
                 'wall_liner': 'Soft-sided · built-in liner', 'floor': 'Ground cloth',
                 'filter': 'Cartridge filter', 'chlorinator': 'Floating chlorinator',
@@ -296,8 +309,9 @@ customers = {
         'address': '4402 Mackinaw Rd, Saginaw, MI 48603', 'since': 'May 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '4402 Mackinaw Rd, Saginaw, MI 48603',
-                'type': 'Pool', 'size': '30 ft round · 54 in wall', 'shape': 'Round',
+                'id': 11, 'name': 'Pool', 'address': '4402 Mackinaw Rd, Saginaw, MI 48603',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '30 ft round · 54 in wall', 'shape': 'Round',
                 'length': 30, 'width': 30, 'wall': 54, 'gallons': 23900,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Sand base',
                 'filter': 'Sand filter · 300 lbs sand', 'chlorinator': 'Inline chlorinator',
@@ -319,8 +333,9 @@ customers = {
         'address': '918 State St, Saginaw, MI 48602', 'since': 'July 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '918 State St, Saginaw, MI 48602',
-                'type': 'Pool', 'size': '12 x 24 ft oval · 52 in wall', 'shape': 'Oval',
+                'id': 12, 'name': 'Pool', 'address': '918 State St, Saginaw, MI 48602',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '12 x 24 ft oval · 52 in wall', 'shape': 'Oval',
                 'length': 24, 'width': 12, 'wall': 52, 'gallons': 7400,
                 'wall_liner': 'Hard-sided steel · 20 mil beaded liner', 'floor': 'Foam pad',
                 'filter': 'Cartridge filter', 'chlorinator': 'None',
@@ -339,8 +354,9 @@ customers = {
         'address': '2675 Hemmeter Rd, Saginaw, MI 48603', 'since': 'June 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '2675 Hemmeter Rd, Saginaw, MI 48603',
-                'type': 'Pool', 'size': '24 ft round · 52 in wall', 'shape': 'Round',
+                'id': 13, 'name': 'Pool', 'address': '2675 Hemmeter Rd, Saginaw, MI 48603',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '24 ft round · 52 in wall', 'shape': 'Round',
                 'length': 24, 'width': 24, 'wall': 52, 'gallons': 14700,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Sand base',
                 'filter': 'Sand filter · 150 lbs sand', 'chlorinator': 'None',
@@ -364,8 +380,9 @@ customers = {
         'address': '1120 Davis Rd, Saginaw, MI 48604', 'since': 'May 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '1120 Davis Rd, Saginaw, MI 48604',
-                'type': 'Pool', 'size': '21 ft round · 52 in wall', 'shape': 'Round',
+                'id': 14, 'name': 'Pool', 'address': '1120 Davis Rd, Saginaw, MI 48604',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '21 ft round · 52 in wall', 'shape': 'Round',
                 'length': 21, 'width': 21, 'wall': 52, 'gallons': 11300,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Sand base',
                 'filter': 'Cartridge filter', 'chlorinator': 'Inline chlorinator',
@@ -378,8 +395,9 @@ customers = {
                 'retest': None,
             },
             {
-                'name': 'Hot Tub', 'address': '1120 Davis Rd, Saginaw, MI 48604',
-                'type': 'Hot tub', 'size': '6 ft round · 4 seats', 'gallons': 300,
+                'id': 15, 'name': 'Hot Tub', 'address': '1120 Davis Rd, Saginaw, MI 48604',
+                'type': 'Hot tub', 'placement': 'Above ground',
+                'size': '6 ft round · 4 seats', 'gallons': 300,
                 'shell': 'Rotomolded', 'filter': '1 cartridge filter', 'cover': 'Soft cover',
                 'installed': 'Sept 2026 · Pristine Pools', 'changes': [],
                 'tests': [
@@ -399,8 +417,9 @@ customers = {
         'address': '5016 Bay Rd, Saginaw, MI 48604', 'since': 'June 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '5016 Bay Rd, Saginaw, MI 48604',
-                'type': 'Pool', 'size': '18 x 33 ft oval · 54 in wall', 'shape': 'Oval',
+                'id': 16, 'name': 'Pool', 'address': '5016 Bay Rd, Saginaw, MI 48604',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '18 x 33 ft oval · 54 in wall', 'shape': 'Oval',
                 'length': 33, 'width': 18, 'wall': 54, 'gallons': 15800,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Foam pad',
                 'filter': 'Sand filter · 250 lbs sand', 'chlorinator': 'Inline chlorinator',
@@ -429,8 +448,9 @@ customers = {
         'address': '2901 Eastman Ave, Midland, MI 48640', 'since': 'May 2026',
         'bodies': [
             {
-                'name': 'Pool', 'address': '2901 Eastman Ave, Midland, MI 48640',
-                'type': 'Pool', 'size': '28 ft round · 52 in wall', 'shape': 'Round',
+                'id': 17, 'name': 'Pool', 'address': '2901 Eastman Ave, Midland, MI 48640',
+                'type': 'Pool', 'placement': 'Above ground',
+                'size': '28 ft round · 52 in wall', 'shape': 'Round',
                 'length': 28, 'width': 28, 'wall': 52, 'gallons': 20000,
                 'wall_liner': 'Hard-sided steel · 25 mil overlap liner', 'floor': 'Sand base',
                 'filter': 'Sand filter · 250 lbs sand', 'chlorinator': 'Floating chlorinator',
@@ -452,6 +472,10 @@ customers = {
         ],
     },
 }
+
+def next_body_id():
+    # one higher than the biggest body id in use (1 if there are no bodies yet)
+    return max((b['id'] for c in customers.values() for b in c['bodies']), default=0) + 1
 
 def search_options():
     options = {}
