@@ -96,70 +96,70 @@ def customer(customer_id: int, tab: str = ''):
 
                 #---------- Edit Pool Dialog ----------
                 def open_edit_pool(i):    
-                    with ui.dialog() as dialog, ui.card().classes('w-96'):
+                    b = c['bodies'][i]  #i represents the individual pool / hottub the customer has. i will allow us to display more than one pool without hardcoding 
+                    with ui.dialog() as edit_pool_dialog, ui.card().classes('w-96'):
                         ui.label('Edit Pool').classes('font-semibold text-lg w-full')
-                        if c['bodies']:  #make sure there is a pool to edit. without this we get a IndexError: list index out of range error
-                            b = c['bodies'][0]  #TODO: Allow for editing and displaying of more than one pool
-                            if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
-                                shape = ui.toggle(['Round', 'Oval'], value=b['shape'])
-                                length = ui.number(label='Length / diameter (ft)', value=b['length'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # bool(v): blank (None) and 0 both fail
-                                width = ui.number(label='Width (ft)', value=b['width'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full').bind_visibility_from(shape, 'value', value='Oval')  # only shown for oval pools
-                                wall = ui.number(label='Wall height (in)', value=b['wall'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')
-                            else:  # hot tubs: size and gallons come from the manufacturer
-                                size = ui.input(label="Size",value=b['size'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense hide-bottom-space').classes('w-full')
-                            gallons = ui.number(label='Gallons', value=b['gallons'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # pools: filled in by recalc_gallons, but staff can still type over it
+                        if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
+                            shape = ui.toggle(['Round', 'Oval'], value=b['shape'])
+                            length = ui.number(label='Length / diameter (ft)', value=b['length'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # bool(v): blank (None) and 0 both fail
+                            width = ui.number(label='Width (ft)', value=b['width'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full').bind_visibility_from(shape, 'value', value='Oval')  # only shown for oval pools
+                            wall = ui.number(label='Wall height (in)', value=b['wall'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')
+                        else:  # hot tubs: size and gallons come from the manufacturer
+                            size = ui.input(label="Size",value=b['size'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense hide-bottom-space').classes('w-full')
+                        gallons = ui.number(label='Gallons', value=b['gallons'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # pools: filled in by recalc_gallons, but staff can still type over it
 
-                            def recalc_gallons():  # runs whenever shape, length, width, or wall changes
-                                w = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
-                                if length.value and w and wall.value:  # skip while a box is blank
-                                    gallons.set_value(int(round(length.value * w * (wall.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
+                        def recalc_gallons():  # runs whenever shape, length, width, or wall changes
+                            w = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
+                            if length.value and w and wall.value:  # skip while a box is blank
+                                gallons.set_value(int(round(length.value * w * (wall.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
 
-                            if b['type'] == 'Pool':
-                                for box in [shape, length, width, wall]:
-                                    box.on_value_change(recalc_gallons)  # hooked up after gallons exists, so it's never called too early
-                            filter_box = ui.input(label="Filter",value=b['filter']).props('outlined dense').classes('w-full')  #named filter filter_box because filter is a built in python function
-                            installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
-                            if b['type'] == 'Pool':  #if the customer has a pool
-                                wall_liner = ui.input(label="Wall / liner",value=b['wall_liner']).props('outlined dense').classes('w-full')
-                                floor = ui.input(label="Floor",value=b['floor']).props('outlined dense').classes('w-full')
-                                chlorinator = ui.input(label="Chlorinator",value=b['chlorinator']).props('outlined dense').classes('w-full')
-                            else:  #customer has a hottub
-                                shell = ui.input(label='Shell',value=b['shell']).props('outlined dense').classes('w-full')
-                                cover = ui.input(label='Cover',value=b['cover']).props('outlined dense').classes('w-full')
+                        if b['type'] == 'Pool':
+                            for box in [shape, length, width, wall]:
+                                box.on_value_change(recalc_gallons)  # hooked up after gallons exists, so it's never called too early
+                        filter_box = ui.input(label="Filter",value=b['filter']).props('outlined dense').classes('w-full')  #named filter filter_box because filter is a built in python function
+                        installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
+                        if b['type'] == 'Pool':  #if the customer has a pool
+                            wall_liner = ui.input(label="Wall / liner",value=b['wall_liner']).props('outlined dense').classes('w-full')
+                            floor = ui.input(label="Floor",value=b['floor']).props('outlined dense').classes('w-full')
+                            chlorinator = ui.input(label="Chlorinator",value=b['chlorinator']).props('outlined dense').classes('w-full')
+                        else:  #customer has a hottub
+                            shell = ui.input(label='Shell',value=b['shell']).props('outlined dense').classes('w-full')
+                            cover = ui.input(label='Cover',value=b['cover']).props('outlined dense').classes('w-full')
                             
-                    #---------- Edit Pool Func ----------
-                    def edit_pool():
-                        if b['type'] == 'Pool':
-                            boxes = [length, wall, gallons] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
-                        else:
-                            boxes = [size, gallons]
-                        if not all([box.validate() for box in boxes]):  # a list, not a generator, so every box shows its error, not just the first
-                            return
-                        b['filter'] = filter_box.value.strip()
-                        b['installed'] = installed_date.value.strip()
-                        b['gallons'] = int(gallons.value)  # whatever is in the box: calculated or typed over
-                        if b['type'] == 'Pool':
-                            b['wall_liner'] = wall_liner.value.strip()
-                            b['floor'] = floor.value.strip()
-                            b['chlorinator'] = chlorinator.value.strip()
-                            b['shape'] = shape.value
-                            b['length'] = length.value
-                            b['width'] = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
-                            b['wall'] = wall.value
-                            if shape.value == 'Round':
-                                b['size'] = f"{b['length']:g} ft round · {b['wall']:g} in wall"  # :g drops the .0 from ui.number values
+                        #---------- Edit Pool Func ----------
+                        def edit_pool():
+                            if b['type'] == 'Pool':
+                                boxes = [length, wall, gallons] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
                             else:
-                                b['size'] = f"{b['width']:g} x {b['length']:g} ft oval · {b['wall']:g} in wall"
-                        else:
-                            b['shell'] = shell.value.strip()
-                            b['cover'] = cover.value.strip()
-                            b['size'] = size.value.strip()
-                        dialog.close()
-                        # ui.navigate.reload() this reloads the entire screen. All we need to refresh is this card TODO: Add a @ui.refreshable to only refresh what is needed.
+                                boxes = [size, gallons]
+                            if not all([box.validate() for box in boxes]):  # a list, not a generator, so every box shows its error, not just the first
+                                return
+                            b['filter'] = filter_box.value.strip()
+                            b['installed'] = installed_date.value.strip()
+                            b['gallons'] = int(gallons.value)  # whatever is in the box: calculated or typed over
+                            if b['type'] == 'Pool':
+                                b['wall_liner'] = wall_liner.value.strip()
+                                b['floor'] = floor.value.strip()
+                                b['chlorinator'] = chlorinator.value.strip()
+                                b['shape'] = shape.value
+                                b['length'] = length.value
+                                b['width'] = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
+                                b['wall'] = wall.value
+                                if shape.value == 'Round':
+                                    b['size'] = f"{b['length']:g} ft round · {b['wall']:g} in wall"  # :g drops the .0 from ui.number values
+                                else:
+                                    b['size'] = f"{b['width']:g} x {b['length']:g} ft oval · {b['wall']:g} in wall"
+                            else:
+                                b['shell'] = shell.value.strip()
+                                b['cover'] = cover.value.strip()
+                                b['size'] = size.value.strip()
+                            edit_pool_dialog.close()  #Close the dialog after everything is properly saved
+                            ui.navigate.reload()  #TODO: Add a @ui.refreshable to only refresh what is needed. .reload reloads the entire screen which is not needed
 
-                    with ui.row().classes('w-full justify-end'):
-                        ui.button('Cancel',on_click=dialog.close).props('flat')  #TODO Clear all modifications to dialog box after cancel is selected
-                        ui.button('Save',icon='check', on_click=edit_pool)
+                        with ui.row().classes('w-full justify-end'):
+                            ui.button('Cancel',on_click=edit_pool_dialog.close).props('flat')
+                            ui.button('Save',icon='check', on_click=edit_pool)
+                    edit_pool_dialog.open()
                         
                         
 
@@ -172,7 +172,7 @@ def customer(customer_id: int, tab: str = ''):
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
                             if c['bodies']:  #ensure there is a pool to edit. if customer has no pool then remove the button to edit 
-                                ui.button(icon='edit',on_click=edit_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
+                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
                             ui.button(icon='add', on_click=add_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
 
                     if not c['bodies']:

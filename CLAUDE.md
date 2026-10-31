@@ -14,11 +14,13 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 **Phase 1 (Fall 2026):** a GUI that behaves live on fake in-memory data (`store.py`). PostgreSQL + real AI come in Spring 2027.
 
 **In progress, branch `edit_pool_dialog`:** Edit Pool dialog saves: pool Shape toggle + Length/Width/Wall numbers, live `recalc_gallons` via `on_value_change`, Gallons box editable for both types, `validation=` blocks blanks, `size` text rebuilt on save. Add Pool title, `DARK_MODE = False`, Save label done.
+✅ Edit Pool dialog is now built on demand by `open_edit_pool(i)` (✏️ → `lambda: open_edit_pool(0)`), so Cancel discards edits.
 **Next:**
-1. `open_edit_pool()` resets the boxes from `b` with `.set_value` (gallons LAST, since recalc overwrites it), then opens; ✏️ calls it.
-2. Change log for equipment edits.
-3. Refreshable Pool card instead of a page reload (deferrable).
-4. Then: "What's off" strip → H phone pass → I demo run-through.
+1. Multiple bodies: Pool card `ui.toggle` between bodies (only when >1), card body `@ui.refreshable` by index, ✏️ edits the selected body, card title from the selected body. Then Add Pool reuses `open_edit_pool` with blank boxes.
+2. Same Cancel bug in Edit Customer (built once at page load). Also: `refresh_attention()` in `schedule_retest` runs at build time, not in `save()`, so the drawer doesn't update after scheduling.
+3. Change log for equipment edits.
+4. Refreshable Pool card instead of a page reload (deferrable).
+5. Then: "What's off" strip → H phone pass → I demo run-through.
 
 **Tests** (pytest + NiceGUI `user` fixture; pending PR, not yet in `main`): `pip install -r requirements.txt` then `pytest`. GitHub Actions runs them on PRs to main (job `test`); ruleset `protect-main` requires a PR + 1 approval. In tests always `import rules`, never `from rules import test_colors` (pytest would collect it as a test).
 
