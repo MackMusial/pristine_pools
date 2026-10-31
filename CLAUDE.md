@@ -16,11 +16,10 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 **In progress, branch `edit_pool_dialog`:** Edit Pool dialog saves: pool Shape toggle + Length/Width/Wall numbers, live `recalc_gallons` via `on_value_change`, Gallons box editable for both types, `validation=` blocks blanks, `size` text rebuilt on save. Add Pool title, `DARK_MODE = False`, Save label done.
 ✅ Edit Pool dialog is now built on demand by `open_edit_pool(i)` (✏️ → `lambda: open_edit_pool(0)`), so Cancel discards edits.
 **Next:**
-1. Multiple bodies: Pool card `ui.toggle` between bodies (only when >1), card body `@ui.refreshable` by index, ✏️ edits the selected body, card title from the selected body. Then Add Pool reuses `open_edit_pool` with blank boxes.
+1. Multiple bodies (own branch, after `edit_pool_dialog` merges). Steps: 2a card fields → `@ui.refreshable pool_details(i)` (defined before the card, called in its `else:`) → 2b toggle → 2c ✏️ uses selected → 2d title. Pool card `ui.toggle` between bodies (only when >1), card body `@ui.refreshable` by index, ✏️ edits the selected body, card title from the selected body. Then Add Pool reuses `open_edit_pool` with blank boxes.
 2. Same Cancel bug in Edit Customer (built once at page load). Also: `refresh_attention()` in `schedule_retest` runs at build time, not in `save()`, so the drawer doesn't update after scheduling.
-3. Change log for equipment edits.
-4. Refreshable Pool card instead of a page reload (deferrable).
-5. Then: "What's off" strip → H phone pass → I demo run-through.
+3. Refreshable Pool card instead of a page reload (deferrable).
+4. Then: "What's off" strip → H phone pass → I demo run-through.
 
 **Tests** (pytest + NiceGUI `user` fixture; pending PR, not yet in `main`): `pip install -r requirements.txt` then `pytest`. GitHub Actions runs them on PRs to main (job `test`); ruleset `protect-main` requires a PR + 1 approval. In tests always `import rules`, never `from rules import test_colors` (pytest would collect it as a test).
 
@@ -34,11 +33,11 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 - **E (partial):** ✏️ on Contact + ✏️/➕ on Pool card title rows; Edit/Add Pool dialog (in progress above).
 
 ## Remaining plan
-- **E. Edit records:** Contact ✏️ dialog (`.set_text` updates); Pool card `ui.toggle` between bodies; edits overwrite + append a change line ("Oct 24, 2026 · Filter: Sand → Cartridge") shown in `ui.expansion('Change history')`; New Test "For" select when >1 body. No delete (ask Kara: archive vs delete).
+- **E. Edit records:** Contact ✏️ dialog (`.set_text` updates); Pool card `ui.toggle` between bodies; edits just overwrite (no change log, decided 2026-10-31; the client spec lists one, so revisit with Kara); New Test "For" select when >1 body. No delete (ask Kara: archive vs delete).
 - **C. Retest chip** in the Customer title row: "Retest due Oct 23" (red if overdue) / "No retest" → `schedule_retest` + Clear.
 - **H. Phone pass + polish:** `no-caps` on tabs/buttons, tooltip on Print, Log Purchase date → `ui.date` in a menu, `flex-col md:flex-row` on two-column rows, `w-full md:w-1/3`, search `w-full md:w-96`, New Customer icon-only on phones. Run `/impeccable critique` + `adapt` on Customer first (findings only).
 - **I. Demo run-through:** ☰ overdue → search → Customer → retest chip → New Test (flagged) → Problems → Save Fix → Log Purchase → edit phone → add hot tub → Print → New Customer → AI drawer send → Settings. Run `/impeccable audit` + `clarify` + `/code-review` first.
-- **If behind, cut in this order:** + attach → C retest chip → change-history expansion → New Test "For" select → if-time items (tab-panel `pt-0` nit, "Log these products?" after Save Fix, theme color pick).
+- **If behind, cut in this order:** + attach → C retest chip → New Test "For" select → if-time items (tab-panel `pt-0` nit, "Log these products?" after Save Fix, theme color pick).
 - **Backlog (from design critique):** aria-labels, badge red-9, header search `dark` prop, no-match → New Customer, Send posts typed text.
 - **Check every step:** full width, 1920×1080, phone view, F12 Console clean, Customer print still fits 1 page.
 
@@ -68,7 +67,7 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 | CYA | 30–50 | 20–29 / 51–80 | <20 or >80 |
 | Phos (ppb) | ≤100 | 101–300 | >300 |
 
-- **Problems:** staff can save a fix without asking for suggestions; the saved fix is what was *actually done* (Phase 2: record matched/edited/ignored AI suggestion = training data). Bodies of water = Pool or Hot tub; equipment edits keep a change log.
+- **Problems:** staff can save a fix without asking for suggestions; the saved fix is what was *actually done* (Phase 2: record matched/edited/ignored AI suggestion = training data). Bodies of water = Pool or Hot tub; equipment edits overwrite the old values (no change log for now).
 - **Purchases:** Square already rings sales; "Log these products?" shortcut after Save Fix if time; Phase 2 idea: Square CSV import.
 - **Backups** are automatic (nightly to USB); Settings shows status + Restore… only, no Back Up Now.
 - **Printing:** standard Windows print dialog via `window.print()`; we design the handout content only.

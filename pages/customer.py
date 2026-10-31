@@ -98,7 +98,7 @@ def customer(customer_id: int, tab: str = ''):
                 def open_edit_pool(i):    
                     b = c['bodies'][i]  #i represents the individual pool / hottub the customer has. i will allow us to display more than one pool without hardcoding 
                     with ui.dialog() as edit_pool_dialog, ui.card().classes('w-96'):
-                        ui.label('Edit Pool').classes('font-semibold text-lg w-full')
+                        ui.label(f"Edit {b['type']}").classes('font-semibold text-lg w-full')
                         if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
                             shape = ui.toggle(['Round', 'Oval'], value=b['shape'])
                             length = ui.number(label='Length / diameter (ft)', value=b['length'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # bool(v): blank (None) and 0 both fail
@@ -167,13 +167,13 @@ def customer(customer_id: int, tab: str = ''):
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('w-full items-center justify-between'):
                         if c['bodies']:
-                            ui.label(c['bodies'][0]['type']).classes('text-lg font-semibold')
+                            ui.label(c['bodies'][0]['type']).classes('text-lg font-semibold')  #TODO Unhardcode 0 when adding funcationality for multiple pools 
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
                             if c['bodies']:  #ensure there is a pool to edit. if customer has no pool then remove the button to edit 
-                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip('Edit pool')  #onclick is what calls the dialogbox to appear
-                            ui.button(icon='add', on_click=add_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool')
+                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
+                            ui.button(icon='add', on_click=add_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
 
                     if not c['bodies']:
                         ui.label('No pool on file').classes('text-gray-500')
