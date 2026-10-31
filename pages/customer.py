@@ -98,7 +98,7 @@ def customer(customer_id: int, tab: str = ''):
                 with ui.dialog() as edit_pool_dialog, ui.card().classes('w-96'):
                     ui.label('Edit Pool').classes('font-semibold text-lg w-full')
                     if c['bodies']:  #make sure there is a pool to edit. without this we get a IndexError: list index out of range error
-                        b = c['bodies'][0]
+                        b = c['bodies'][0]  #TODO: Allow for editing and displaying of more than one pool
                         if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
                             shape = ui.toggle(['Round', 'Oval'], value=b['shape'])
                             length = ui.number(label='Length / diameter (ft)', value=b['length'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # bool(v): blank (None) and 0 both fail
@@ -157,7 +157,7 @@ def customer(customer_id: int, tab: str = ''):
                         ui.navigate.reload()
 
                     with ui.row().classes('w-full justify-end'):
-                        ui.button('Cancel',on_click=edit_pool_dialog.close).props('flat')
+                        ui.button('Cancel',on_click=edit_pool_dialog.close).props('flat')  #TODO Clear all modifications to dialog box after cancel is selected
                         ui.button('Save',icon='check', on_click=edit_pool)
                         
                         
