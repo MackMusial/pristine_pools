@@ -106,6 +106,7 @@ def customer(customer_id: int, tab: str = ''):
                     with ui.row().classes('w-full items-center justify-between'):
                         if len(c['bodies']) > 1:  #if there is more than one pool on file, display the dropdown
                             search = ui.select(store.search_pools(), value=c['bodies'][0]['type']).props('dense').classes('w-96 text-lg font-semibold')
+                            #TODO: Implement the logic to switch between pools based on the dropdown selection
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
