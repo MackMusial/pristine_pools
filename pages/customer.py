@@ -283,6 +283,7 @@ def customer(customer_id: int, tab: str = ''):
                         with ui.row().classes('w-full justify-end px-5 py-3'):
                             ui.button('Cancel',on_click=edit_pool_dialog.close).props('flat')
                             ui.button('Save',icon='check', on_click=edit_pool)
+                    edit_pool_dialog.on('hide', edit_pool_dialog.delete)
                     edit_pool_dialog.open()
                     
                     
