@@ -94,9 +94,82 @@ def customer(customer_id: int, tab: str = ''):
                     ui.label(c['since'])
 
                 #---------- Add Pool Dialog ----------
-                with ui.dialog() as add_pool_dialog, ui.card().classes('w-96'):
-                    ui.label('Add Pool').classes('font-semibold text-lg w-full')
-                    ...
+                def open_add_pool():    
+                    with ui.dialog() as add_pool_dialog, ui.card().classes('p-0 gap-0 no-wrap').style('width: 640px; max-width: 95vw; max-height: 90vh'):
+                        with ui.column().classes('w-full px-5 pt-5 pb-3 gap-3'):
+                            ui.label('New Pool').classes('font-semibold text-lg w-full')
+                            shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value='Round')
+
+                        with ui.column().classes('w-full px-5 gap-3 overflow-y-auto').style('flex: 1 1 auto; min-height: 0'):
+                            ui.label('Pool').classes('text-xs font-medium text-grey-7 uppercase tracking-wide')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                name = ui.input(label='Pool Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                address = ui.input(label='Pool Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                pool_type = ui.select(label='Type', options=['Above-Ground', 'In-Ground']).props('outlined dense hide-bottom-space').classes('w-full')
+                                floor = ui.select(label='Floor Material', options=['Sand']).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall = ui.select(label='Wall Type', options=['Hard Sided']).props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Dimensions').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                length = ui.number(label='Length (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                width = ui.number(label='Width (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall_height = ui.number(label='Wall Height (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                depth = ui.number(label='Water Depth (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                volume = ui.number(label='Volume (gal)', min=0).props('outlined dense hide-bottom-space readonly').classes('w-full').style('flex: 2')
+
+                            ui.label('Manufacturer').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                manufacturer = ui.input(label='Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
+                                model_no = ui.input(label='Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                serial_no = ui.input(label='Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                warranty_end = ui.input(label='Warranty End').props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Liner').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                liner_manufacturer = ui.input(label='Liner Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_model_no = ui.input(label='Liner Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                liner_serial_no = ui.input(label='Liner Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_size = ui.input(label='Liner Size').props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Filter').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                filter_brand = ui.input(label='Filter Brand').props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_type = ui.select(label='Filter Type', options=['Cartridge', 'Sand', 'DE']).props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_model_no = ui.input(label='Filter Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                cartridge_no = ui.input(label='Replacement Cartridge No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                flow_rate = ui.number(label='Flow Rate (GPM)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_size = ui.number(label='Filter Size (sq ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Chlorinator').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 items-center'):
+                                ui.label('Automatic chlorinator?').classes('text-sm')
+                                auto_chlorinator = ui.radio(['Yes', 'No']).props('inline dense')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                chlorinator_brand = ui.input(label='Chlorinator Brand').props('outlined dense hide-bottom-space').classes('w-full')
+                                chlorinator_model_no = ui.input(label='Chlorinator Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Installation').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                installer_name = ui.input(label='Installer Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                installer_address = ui.input(label='Installer Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                installer_email = ui.input(label='Installer Email').props('outlined dense hide-bottom-space').classes('w-full')
+                                installer_phone = ui.input(label='Installer Phone').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap pb-2'):
+                                purchase_date = ui.input(label='Purchase Date').props('outlined dense hide-bottom-space').classes('w-full')
+                                install_date = ui.input(label='Install Date').props('outlined dense hide-bottom-space').classes('w-full')
+
+                        ui.separator()
+                        with ui.row().classes('w-full justify-end px-5 py-3'):
+                            ui.button('Cancel', on_click=add_pool_dialog.close).props('flat')
+                            ui.button('Save', icon='check')       
+                    add_pool_dialog.on('hide', add_pool_dialog.delete)  # remove the dialog from the page once it closes
+                    add_pool_dialog.open()
 
                 #---------- Edit Pool Dialog ----------
                 def open_edit_pool(i):    
@@ -178,7 +251,7 @@ def customer(customer_id: int, tab: str = ''):
                         with ui.row().classes('gap-0'):
                             if c['bodies']:  #ensure there is a pool to edit. if customer has no pool then remove the button to edit 
                                 ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
-                            ui.button(icon='add', on_click=add_pool_dialog.open).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
+                            ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
 
                     if not c['bodies']:
                         ui.label('No pool on file').classes('text-gray-500')
