@@ -174,46 +174,92 @@ def customer(customer_id: int, tab: str = ''):
                 #---------- Edit Pool Dialog ----------
                 def open_edit_pool(i):    
                     b = c['bodies'][i]  #i represents the individual pool / hottub the customer has. i will allow us to display more than one pool without hardcoding 
-                    with ui.dialog() as edit_pool_dialog, ui.card().classes('w-96'):
-                        ui.label(f"Edit {b['type']}").classes('font-semibold text-lg w-full')
-                        if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
-                            shape = ui.toggle(['Round', 'Oval'], value=b['shape'])
-                            length = ui.number(label='Length / diameter (ft)', value=b['length'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # bool(v): blank (None) and 0 both fail
-                            width = ui.number(label='Width (ft)', value=b['width'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full').bind_visibility_from(shape, 'value', value='Oval')  # only shown for oval pools
-                            wall = ui.number(label='Wall height (in)', value=b['wall'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')
-                        else:  # hot tubs: size and gallons come from the manufacturer
-                            size = ui.input(label="Size",value=b['size'], validation={'Required': lambda v: bool(v.strip())}).props('outlined dense hide-bottom-space').classes('w-full')
-                        gallons = ui.number(label='Gallons', value=b['gallons'], min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')  # pools: filled in by recalc_gallons, but staff can still type over it
+                    with ui.dialog() as edit_pool_dialog, ui.card().classes('p-0 gap-0 no-wrap').style('width: 640px; max-width: 95vw; max-height: 90vh'):
+                        with ui.column().classes('w-full px-5 pt-5 pb-3 gap-3'):
+                            ui.label(f"Edit {b['type']}").classes('font-semibold text-lg w-full')
+                            if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
+                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value='Round')
 
-                        def recalc_gallons():  # runs whenever shape, length, width, or wall changes
+                        with ui.column().classes('w-full px-5 gap-3 overflow-y-auto').style('flex: 1 1 auto; min-height: 0'):
+                            ui.label('Pool').classes('text-xs font-medium text-grey-7 uppercase tracking-wide')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                name = ui.input(label='Pool Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                address = ui.input(label='Pool Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                pool_type = ui.select(label='Type', options=['Above-Ground', 'In-Ground']).props('outlined dense hide-bottom-space').classes('w-full')
+                                floor = ui.select(label='Floor Material', options=['Sand']).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall = ui.select(label='Wall Type', options=['Hard Sided']).props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Dimensions').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                length = ui.number(label='Length (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                width = ui.number(label='Width (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall_height = ui.number(label='Wall Height (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                depth = ui.number(label='Water Depth (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                volume = ui.number(label='Volume (gal)', min=0).props('outlined dense hide-bottom-space readonly').classes('w-full').style('flex: 2')
+
+                            ui.label('Manufacturer').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                manufacturer = ui.input(label='Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
+                                model_no = ui.input(label='Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                serial_no = ui.input(label='Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                warranty_end = ui.input(label='Warranty End').props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Liner').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                liner_manufacturer = ui.input(label='Liner Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_model_no = ui.input(label='Liner Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                liner_serial_no = ui.input(label='Liner Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_size = ui.input(label='Liner Size').props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Filter').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                filter_brand = ui.input(label='Filter Brand').props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_type = ui.select(label='Filter Type', options=['Cartridge', 'Sand', 'DE']).props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_model_no = ui.input(label='Filter Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                cartridge_no = ui.input(label='Replacement Cartridge No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                flow_rate = ui.number(label='Flow Rate (GPM)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_size = ui.number(label='Filter Size (sq ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Chlorinator').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 items-center'):
+                                ui.label('Automatic chlorinator?').classes('text-sm')
+                                auto_chlorinator = ui.radio(['Yes', 'No']).props('inline dense')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                chlorinator_brand = ui.input(label='Chlorinator Brand').props('outlined dense hide-bottom-space').classes('w-full')
+                                chlorinator_model_no = ui.input(label='Chlorinator Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+
+                            ui.label('Installation').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                installer_name = ui.input(label='Installer Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                installer_address = ui.input(label='Installer Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                            with ui.row().classes('w-full gap-3 no-wrap'):
+                                installer_email = ui.input(label='Installer Email').props('outlined dense hide-bottom-space').classes('w-full')
+                                installer_phone = ui.input(label='Installer Phone').props('outlined dense hide-bottom-space').classes('w-full')
+                            with ui.row().classes('w-full gap-3 no-wrap pb-2'):
+                                purchase_date = ui.input(label='Purchase Date').props('outlined dense hide-bottom-space').classes('w-full')
+                                install_date = ui.input(label='Install Date').props('outlined dense hide-bottom-space').classes('w-full')
+
+                        def recalc_volume():  # runs whenever shape, length, width, or wall changes
                             w = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
                             if length.value and w and wall.value:  # skip while a box is blank
-                                gallons.set_value(int(round(length.value * w * (wall.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
+                                volume.set_value(int(round(length.value * w * (wall.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
 
-                        if b['type'] == 'Pool':
-                            for box in [shape, length, width, wall]:
-                                box.on_value_change(recalc_gallons)  # hooked up after gallons exists, so it's never called too early
-                        filter_box = ui.input(label="Filter",value=b['filter']).props('outlined dense').classes('w-full')  #named filter filter_box because filter is a built in python function
-                        installed_date = ui.input(label='Installed',value=b['installed']).props('outlined dense').classes('w-full')
-                        if b['type'] == 'Pool':  #if the customer has a pool
-                            wall_liner = ui.input(label="Wall / liner",value=b['wall_liner']).props('outlined dense').classes('w-full')
-                            floor = ui.input(label="Floor",value=b['floor']).props('outlined dense').classes('w-full')
-                            chlorinator = ui.input(label="Chlorinator",value=b['chlorinator']).props('outlined dense').classes('w-full')
-                        else:  #customer has a hottub
-                            shell = ui.input(label='Shell',value=b['shell']).props('outlined dense').classes('w-full')
-                            cover = ui.input(label='Cover',value=b['cover']).props('outlined dense').classes('w-full')
-                            
                         #---------- Edit Pool Func ----------
                         def edit_pool():
                             if b['type'] == 'Pool':
-                                boxes = [length, wall, gallons] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
+                                boxes = [length, wall, volume] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
                             else:
-                                boxes = [size, gallons]
+                                boxes = [size, volume]
                             if not all([box.validate() for box in boxes]):  # a list, not a generator, so every box shows its error, not just the first
                                 return
                             b['filter'] = filter_box.value.strip()
                             b['installed'] = installed_date.value.strip()
-                            b['gallons'] = int(gallons.value)  # whatever is in the box: calculated or typed over
+                            b['gallons'] = int(volume.value)  # whatever is in the box: calculated or typed over
                             if b['type'] == 'Pool':
                                 b['wall_liner'] = wall_liner.value.strip()
                                 b['floor'] = floor.value.strip()
@@ -232,13 +278,14 @@ def customer(customer_id: int, tab: str = ''):
                                 b['size'] = size.value.strip()
                             edit_pool_dialog.close()  #Close the dialog after everything is properly saved
                             ui.navigate.reload()  #TODO: Add a @ui.refreshable to only refresh what is needed. .reload reloads the entire screen which is not needed
-
-                        with ui.row().classes('w-full justify-end'):
+                    
+                        ui.separator()      
+                        with ui.row().classes('w-full justify-end px-5 py-3'):
                             ui.button('Cancel',on_click=edit_pool_dialog.close).props('flat')
                             ui.button('Save',icon='check', on_click=edit_pool)
                     edit_pool_dialog.open()
-                        
-                        
+                    
+                    
 
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
