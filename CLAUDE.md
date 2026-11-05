@@ -23,6 +23,11 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 
 **Tests** (pytest + NiceGUI `user` fixture; in `main` since PR #2): `pip install -r requirements.txt` then `pytest`. GitHub Actions runs them on PRs to main (job `test`); ruleset `protect-main` requires a PR + 1 approval. In tests always `import rules`, never `from rules import test_colors` (pytest would collect it as a test).
 
+**In progress (2026-11-04), branch `refactor_edit_pool_dialog`:** Edit Pool now uses Max's layout and loads every field; all 14 sample pools have the new keys (`floor_options`, `wall_type_options` in `store.py`). PR #7 (drawer fix + status notes) still needs a review.
+- **Left in `open_edit_pool`:** fix `'Rectagle'` typo → hide ✏️ for hot tubs + hot tub TODO → `on_value_change` loop + Rectangle factor (7.5) + `Required` on Length/Width/Wall Height/Volume → `edit_pool`: Width required unless Round, delete old box lines + hot tub branches, `fields` dict + loop, rebuild `wall_liner`/`filter`/`chlorinator`/`installed` for the card → click through → tests (✏️ opens, Save updates) → PR, noting hot tub editing is off.
+- **Tell Max:** Add Pool reuses this form, don't connect his Save until then, his dropdown needs the hot tub check on ✏️, Volume stays editable.
+- **Later:** merge Add + Edit into one form, hot tub form, card shows new fields, remove old text keys (hot tubs still use `filter` + `installed`).
+
 ## Done so far
 - **A. Data foundation:** `rules.py` (`BANDS`, `color_for`, `test_colors`), `store.py` sample data + `search_options()`, Contact/Pool cards, Water Tests table, Problem history, open-problem badge, Purchases per customer, empty states, `?tab=problems`.
 - **0c–0f. ☰ Needs-attention drawer + retests:** left drawer with red count badge, Retests due + Open problems (live via `@ui.refreshable`), `schedule_retest(days, reason)` dialog, New Test `save_test()` (colors, retest rule, keyboard-first), Save Fix.

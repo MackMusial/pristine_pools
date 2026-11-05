@@ -192,12 +192,12 @@ def customer(customer_id: int, tab: str = ''):
 
                             ui.label('Dimensions').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                length = ui.number(value=b['length'], label='Length (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
-                                width = ui.number(value=b['width'],label='Width (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
-                                wall_height = ui.number(value=b['wall'],label='Wall Height (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                length = ui.number(value=b['length'], label='Length (ft)', min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')
+                                width = ui.number(value=b['width'],label='Width (ft)', min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall_height = ui.number(value=b['wall'],label='Wall Height (in)', min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full')
                             with ui.row().classes('w-full gap-3 no-wrap'):
                                 depth = ui.number(value=b['depth'],label='Water Depth (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
-                                volume = ui.number(value=b['gallons'],label='Volume (gal)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                                volume = ui.number(value=b['gallons'],label='Volume (gal)', min=0, validation={'Required': lambda v: bool(v)}).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
 
 
                             ui.label('Manufacturer').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
@@ -257,10 +257,6 @@ def customer(customer_id: int, tab: str = ''):
                         #---------- Edit Pool Func ----------
                         def edit_pool():
                             if b['type'] == 'Pool':
-                                boxes = [length, wall_height, volume] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
-                            else:
-                                boxes = [size, volume]
-                            if not all([box.validate() for box in boxes]):  # a list, not a generator, so every box shows its error, not just the first
                                 return
                             b['filter'] = filter_box.value.strip()
                             b['installed'] = installed_date.value.strip()
