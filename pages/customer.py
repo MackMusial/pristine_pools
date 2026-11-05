@@ -94,7 +94,8 @@ def customer(customer_id: int, tab: str = ''):
                     ui.label(c['since'])
 
                 #---------- Add Pool Dialog ----------
-                def open_add_pool():    
+                #TODO: Merge Add and Edit into one form (blank for Add, filled for Edit) so a new field is only added once. Volume stays editable
+                def open_add_pool():  
                     with ui.dialog() as add_pool_dialog, ui.card().classes('p-0 gap-0 no-wrap').style('width: 640px; max-width: 95vw; max-height: 90vh'):
                         with ui.column().classes('w-full px-5 pt-5 pb-3 gap-3'):
                             ui.label('New Pool').classes('font-semibold text-lg w-full')
@@ -167,7 +168,8 @@ def customer(customer_id: int, tab: str = ''):
                         ui.separator()
                         with ui.row().classes('w-full justify-end px-5 py-3'):
                             ui.button('Cancel', on_click=add_pool_dialog.close).props('flat')
-                            ui.button('Save', icon='check')       
+                             #TODO: Save isn't connected yet. Wait for the shared form so it isn't built twice
+                            ui.button('Save', icon='check')
                     add_pool_dialog.on('hide', add_pool_dialog.delete)  # remove the dialog from the page once it closes
                     add_pool_dialog.open()
 
@@ -264,7 +266,7 @@ def customer(customer_id: int, tab: str = ''):
                             if b['type'] == 'Pool':
                                 fields = {
                                     'name': name,
-                                    'address': address,
+                                    'address': address, 
                                     'pool_type': pool_type,
                                     'wall_type': wall_type,
                                     'depth': depth,
@@ -295,7 +297,8 @@ def customer(customer_id: int, tab: str = ''):
                                 for key, box in fields.items():
                                     b[key] = box.value
 
-                                b['wall_liner'] = f"{wall_type.value} · {liner_manufacturer.value} liner"
+                                b['wall_liner'] = f"{wall_type.value} · {liner_manufacturer.value} liner"  #TODO: Remove wall_liner, chlorinator and these rebuilt strings once the card reads the new fields. Saving drops detail like '150 lbs sand'. Hot tubs still use filter + installed
+
                                 b['filter'] = f"{filter_brand.value} {filter_type.value} filter"
                                 b['chlorinator'] = chlorinator_brand.value or 'None'
                                 b['installed'] = f"{install_date.value} · {installer_name.value}"
@@ -321,6 +324,7 @@ def customer(customer_id: int, tab: str = ''):
                     edit_pool_dialog.open()
                     
                     
+                #TODO: Show the most useful fields on the card (filter type + replacement cartridge no., warranty end). Ask Kara what staff look up. Serials and installer contact stay in the dialog
 
                 #---------- Pool Card ----------
                 with ui.card().classes('w-full gap-1 print:flex-1'):
@@ -329,6 +333,7 @@ def customer(customer_id: int, tab: str = ''):
                             search = ui.select(store.search_pools(), value=c['bodies'][0]['type']).props('dense').classes('w-96 text-lg font-semibold')
                             #TODO: Implement the logic to switch between pools based on the dropdown selection
                         else: 
+                            #TODO: Title says 'Pool' even when the only body is a hot tub (Dave). Use the body's type
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
                             if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
