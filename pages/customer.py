@@ -85,7 +85,7 @@ def customer(customer_id: int, tab: str = ''):
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('gap-0 items-center justify-between w-full'):
                         ui.label('Contact').classes('text-lg font-semibold')
-                        ui.button(icon='edit',on_click=open_edit_customer_dialog).props('flat round dense size=sm').classes('-my-1').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
+                        ui.button(icon='edit',on_click=open_edit_customer_dialog).props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
                     ui.label('Phone').classes('text-xs text-gray-500')
@@ -250,8 +250,8 @@ def customer(customer_id: int, tab: str = ''):
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
                             if c['bodies']:  #ensure there is a pool to edit. if customer has no pool then remove the button to edit 
-                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
-                            ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
+                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
+                            ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip('Add pool or hottub')
 
                     if not c['bodies']:
                         ui.label('No pool on file').classes('text-gray-500')
