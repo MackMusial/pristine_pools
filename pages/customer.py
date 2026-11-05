@@ -297,7 +297,7 @@ def customer(customer_id: int, tab: str = ''):
 
                                 b['wall_liner'] = f"{wall_type.value} · {liner_manufacturer.value} liner"
                                 b['filter'] = f"{filter_brand.value} {filter_type.value} filter"
-                                b['chlorinator'] = chlorinator_brand.value if auto_chlorinator.value == 'Yes' else 'None'
+                                b['chlorinator'] = chlorinator_brand.value or 'None'
                                 b['installed'] = f"{install_date.value} · {installer_name.value}"
                                 b['floor'] = floor.value
                                 b['shape'] = shape.value
