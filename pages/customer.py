@@ -246,10 +246,14 @@ def customer(customer_id: int, tab: str = ''):
                                 install_date = ui.input(value=b['install_date'],label='Install Date').props('outlined dense hide-bottom-space').classes('w-full')
 
                         def recalc_volume():  # runs whenever shape, length, width, or wall changes
+                            factor = 7.5 if shape.value == 'Rectangle' else 5.9
                             w = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
                             if length.value and w and wall_height.value:  # skip while a box is blank
-                                volume.set_value(int(round(length.value * w * (wall_height.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
-
+                                volume.set_value(int(round(length.value * w * (wall_height.value / 12) * factor, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
+                        
+                        for box in [shape, length, width, wall_height]:
+                            box.on_value_change(recalc_volume)  # after volume exists, so it's never called too early
+                                
                         #---------- Edit Pool Func ----------
                         def edit_pool():
                             if b['type'] == 'Pool':
@@ -271,7 +275,7 @@ def customer(customer_id: int, tab: str = ''):
                                 b['wall'] = wall_height.value
                                 if shape.value == 'Round':
                                     b['size'] = f"{b['length']:g} ft round · {b['wall']:g} in wall"  # :g drops the .0 from ui.number values
-                                elif shape.value == 'Rectagle':
+                                elif shape.value == 'Rectangle':
                                     b['size'] = f"{b['width']:g} x {b['length']:g} ft rectangle · {b['wall']:g} in wall"
                                 else:
                                     b['size'] = f"{b['width']:g} x {b['length']:g} ft oval · {b['wall']:g} in wall"
@@ -300,7 +304,7 @@ def customer(customer_id: int, tab: str = ''):
                         else: 
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
-                            if c['bodies']:  #ensure there is a pool to edit. if customer has no pool then remove the button to edit 
+                            if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
                                 ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
                             ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
 
