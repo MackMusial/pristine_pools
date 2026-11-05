@@ -252,19 +252,54 @@ def customer(customer_id: int, tab: str = ''):
                                 volume.set_value(int(round(length.value * w * (wall_height.value / 12) * factor, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
                         
                         for box in [shape, length, width, wall_height]:
-                            box.on_value_change(recalc_volume)  # after volume exists, so it's never called too early
+                            box.on_value_change(recalc_volume)  # after volume exists, so it's never called too early ... This is what calls the funcation that recalcs the volume
                                 
                         #---------- Edit Pool Func ----------
                         def edit_pool():
-                            if b['type'] == 'Pool':
+                            boxes = [length, wall_height, volume] + ([width] if shape.value != 'Round' else [])
+                            if not all([box.validate() for box in boxes]):
                                 return
-                            b['filter'] = filter_box.value.strip()
-                            b['installed'] = installed_date.value.strip()
+                            
                             b['gallons'] = int(volume.value)  # whatever is in the box: calculated or typed over
                             if b['type'] == 'Pool':
-                                b['wall_liner'] = wall_liner.value.strip()
+                                fields = {
+                                    'name': name,
+                                    'address': address,
+                                    'pool_type': pool_type,
+                                    'wall_type': wall_type,
+                                    'depth': depth,
+                                    'manufacturer': manufacturer,
+                                    'model_no': model_no,
+                                    'serial_no': serial_no,
+                                    'warranty_end': warranty_end,
+                                    'liner_manufacturer': liner_manufacturer,
+                                    'liner_model_no': liner_model_no,
+                                    'liner_serial_no': liner_serial_no,
+                                    'liner_size': liner_size,
+                                    'filter_brand': filter_brand,
+                                    'filter_type': filter_type,
+                                    'filter_model_no': filter_model_no,
+                                    'cartridge_no': cartridge_no,
+                                    'flow_rate': flow_rate,
+                                    'filter_size': filter_size,
+                                    'auto_chlorinator': auto_chlorinator,
+                                    'chlorinator_brand': chlorinator_brand,
+                                    'chlorinator_model_no': chlorinator_model_no,
+                                    'installer_name': installer_name,
+                                    'installer_address': installer_address,
+                                    'installer_email': installer_email,
+                                    'installer_phone': installer_phone,
+                                    'purchase_date': purchase_date,
+                                    'install_date': install_date,
+                                }
+                                for key, box in fields.items():
+                                    b[key] = box.value
+
+                                b['wall_liner'] = f"{wall_type.value} · {liner_manufacturer.value} liner"
+                                b['filter'] = f"{filter_brand.value} {filter_type.value} filter"
+                                b['chlorinator'] = chlorinator_brand.value if auto_chlorinator.value == 'Yes' else 'None'
+                                b['installed'] = f"{install_date.value} · {installer_name.value}"
                                 b['floor'] = floor.value
-                                b['chlorinator'] = chlorinator.value.strip()
                                 b['shape'] = shape.value
                                 b['length'] = length.value
                                 b['width'] = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
@@ -275,10 +310,6 @@ def customer(customer_id: int, tab: str = ''):
                                     b['size'] = f"{b['width']:g} x {b['length']:g} ft rectangle · {b['wall']:g} in wall"
                                 else:
                                     b['size'] = f"{b['width']:g} x {b['length']:g} ft oval · {b['wall']:g} in wall"
-                            else:
-                                b['shell'] = shell.value.strip()
-                                b['cover'] = cover.value.strip()
-                                b['size'] = size.value.strip()
                             edit_pool_dialog.close()  #Close the dialog after everything is properly saved
                             ui.navigate.reload()  #TODO: Add a @ui.refreshable to only refresh what is needed. .reload reloads the entire screen which is not needed
                     
