@@ -316,7 +316,7 @@ def customer(customer_id: int, tab: str = ''):
                         ui.separator()      
                         with ui.row().classes('w-full justify-end px-5 py-3'):
                             ui.button('Cancel',on_click=edit_pool_dialog.close).props('flat')
-                            ui.button('Save',icon='check', on_click=edit_pool)
+                            ui.button('Save',icon='check', on_click=edit_pool).mark('save-pool')
                     edit_pool_dialog.on('hide', edit_pool_dialog.delete)
                     edit_pool_dialog.open()
                     
@@ -332,7 +332,7 @@ def customer(customer_id: int, tab: str = ''):
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
                             if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
-                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
+                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).mark('edit-pool').props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
                             ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
 
                     if not c['bodies']:
