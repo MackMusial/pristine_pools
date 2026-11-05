@@ -178,81 +178,82 @@ def customer(customer_id: int, tab: str = ''):
                         with ui.column().classes('w-full px-5 pt-5 pb-3 gap-3'):
                             ui.label(f"Edit {b['type']}").classes('font-semibold text-lg w-full')
                             if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
-                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value='Round')
+                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value=b['shape'])
 
                         with ui.column().classes('w-full px-5 gap-3 overflow-y-auto').style('flex: 1 1 auto; min-height: 0'):
                             ui.label('Pool').classes('text-xs font-medium text-grey-7 uppercase tracking-wide')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                name = ui.input(label='Pool Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
-                                address = ui.input(label='Pool Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                                name = ui.input(value=b['name'],label='Pool Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                address = ui.input(value=b['address'],label='Pool Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                pool_type = ui.select(label='Type', options=['Above-Ground', 'In-Ground']).props('outlined dense hide-bottom-space').classes('w-full')
-                                floor = ui.select(label='Floor Material', options=['Sand']).props('outlined dense hide-bottom-space').classes('w-full')
-                                wall = ui.select(label='Wall Type', options=['Hard Sided']).props('outlined dense hide-bottom-space').classes('w-full')
+                                pool_type = ui.select(value=b['pool_type'],label='Type', options=['Above-Ground', 'In-Ground']).props('outlined dense hide-bottom-space').classes('w-full')
+                                floor = ui.select(value=b['floor'],label='Floor Material', options=store.floor_options).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall_type = ui.select(value=b['wall_type'],label='Wall Type', options=store.wall_type_options).props('outlined dense hide-bottom-space').classes('w-full')
 
                             ui.label('Dimensions').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                length = ui.number(label='Length (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
-                                width = ui.number(label='Width (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
-                                wall_height = ui.number(label='Wall Height (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                length = ui.number(value=b['length'], label='Length (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                width = ui.number(value=b['width'],label='Width (ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                wall_height = ui.number(value=b['wall'],label='Wall Height (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                depth = ui.number(label='Water Depth (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
-                                volume = ui.number(label='Volume (gal)', min=0).props('outlined dense hide-bottom-space readonly').classes('w-full').style('flex: 2')
+                                depth = ui.number(value=b['depth'],label='Water Depth (in)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                volume = ui.number(value=b['gallons'],label='Volume (gal)', min=0).props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+
 
                             ui.label('Manufacturer').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                manufacturer = ui.input(label='Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
-                                model_no = ui.input(label='Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                manufacturer = ui.input(value=b['manufacturer'],label='Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
+                                model_no = ui.input(value=b['model_no'],label='Model No.').props('outlined dense hide-bottom-space').classes('w-full')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                serial_no = ui.input(label='Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
-                                warranty_end = ui.input(label='Warranty End').props('outlined dense hide-bottom-space').classes('w-full')
+                                serial_no = ui.input(value=b['serial_no'],label='Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                warranty_end = ui.input(value=b['warranty_end'],label='Warranty End').props('outlined dense hide-bottom-space').classes('w-full')
 
                             ui.label('Liner').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                liner_manufacturer = ui.input(label='Liner Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
-                                liner_model_no = ui.input(label='Liner Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_manufacturer = ui.input(value=b['liner_manufacturer'],label='Liner Manufacturer').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_model_no = ui.input(value=b['liner_model_no'],label='Liner Model No.').props('outlined dense hide-bottom-space').classes('w-full')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                liner_serial_no = ui.input(label='Liner Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
-                                liner_size = ui.input(label='Liner Size').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_serial_no = ui.input(value=b['liner_serial_no'],label='Liner Serial No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                liner_size = ui.input(value=b['liner_size'],label='Liner Size').props('outlined dense hide-bottom-space').classes('w-full')
 
                             ui.label('Filter').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                filter_brand = ui.input(label='Filter Brand').props('outlined dense hide-bottom-space').classes('w-full')
-                                filter_type = ui.select(label='Filter Type', options=['Cartridge', 'Sand', 'DE']).props('outlined dense hide-bottom-space').classes('w-full')
-                                filter_model_no = ui.input(label='Filter Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_brand = ui.input(value=b['filter_brand'],label='Filter Brand').props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_type = ui.select(value=b['filter_type'],label='Filter Type', options=['Cartridge', 'Sand', 'DE']).props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_model_no = ui.input(value=b['filter_model_no'],label='Filter Model No.').props('outlined dense hide-bottom-space').classes('w-full')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                cartridge_no = ui.input(label='Replacement Cartridge No.').props('outlined dense hide-bottom-space').classes('w-full')
-                                flow_rate = ui.number(label='Flow Rate (GPM)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
-                                filter_size = ui.number(label='Filter Size (sq ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                cartridge_no = ui.input(value=b['cartridge_no'],label='Replacement Cartridge No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                flow_rate = ui.number(value=b['flow_rate'],label='Flow Rate (GPM)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
+                                filter_size = ui.number(value=b['filter_size'],label='Filter Size (sq ft)', min=0).props('outlined dense hide-bottom-space').classes('w-full')
 
                             ui.label('Chlorinator').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 items-center'):
                                 ui.label('Automatic chlorinator?').classes('text-sm')
-                                auto_chlorinator = ui.radio(['Yes', 'No']).props('inline dense')
+                                auto_chlorinator = ui.radio(['Yes', 'No'],value=b['auto_chlorinator']).props('inline dense')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                chlorinator_brand = ui.input(label='Chlorinator Brand').props('outlined dense hide-bottom-space').classes('w-full')
-                                chlorinator_model_no = ui.input(label='Chlorinator Model No.').props('outlined dense hide-bottom-space').classes('w-full')
+                                chlorinator_brand = ui.input(value=b['chlorinator_brand'],label='Chlorinator Brand').props('outlined dense hide-bottom-space').classes('w-full')
+                                chlorinator_model_no = ui.input(value=b['chlorinator_model_no'],label='Chlorinator Model No.').props('outlined dense hide-bottom-space').classes('w-full')
 
                             ui.label('Installation').classes('text-xs font-medium text-grey-7 uppercase tracking-wide mt-2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                installer_name = ui.input(label='Installer Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
-                                installer_address = ui.input(label='Installer Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
+                                installer_name = ui.input(value=b['installer_name'],label='Installer Name').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 1')
+                                installer_address = ui.input(value=b['installer_address'],label='Installer Address').props('outlined dense hide-bottom-space').classes('w-full').style('flex: 2')
                             with ui.row().classes('w-full gap-3 no-wrap'):
-                                installer_email = ui.input(label='Installer Email').props('outlined dense hide-bottom-space').classes('w-full')
-                                installer_phone = ui.input(label='Installer Phone').props('outlined dense hide-bottom-space').classes('w-full')
+                                installer_email = ui.input(value=b['installer_email'],label='Installer Email').props('outlined dense hide-bottom-space').classes('w-full')
+                                installer_phone = ui.input(value=b['installer_phone'],label='Installer Phone').props('outlined dense hide-bottom-space').classes('w-full')
                             with ui.row().classes('w-full gap-3 no-wrap pb-2'):
-                                purchase_date = ui.input(label='Purchase Date').props('outlined dense hide-bottom-space').classes('w-full')
-                                install_date = ui.input(label='Install Date').props('outlined dense hide-bottom-space').classes('w-full')
+                                purchase_date = ui.input(value=b['purchase_date'],label='Purchase Date').props('outlined dense hide-bottom-space').classes('w-full')
+                                install_date = ui.input(value=b['install_date'],label='Install Date').props('outlined dense hide-bottom-space').classes('w-full')
 
                         def recalc_volume():  # runs whenever shape, length, width, or wall changes
                             w = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
-                            if length.value and w and wall.value:  # skip while a box is blank
-                                volume.set_value(int(round(length.value * w * (wall.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
+                            if length.value and w and wall_height.value:  # skip while a box is blank
+                                volume.set_value(int(round(length.value * w * (wall_height.value / 12) * 5.9, -2)))  # ft × ft × depth in ft × 5.9, to the nearest 100
 
                         #---------- Edit Pool Func ----------
                         def edit_pool():
                             if b['type'] == 'Pool':
-                                boxes = [length, wall, volume] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
+                                boxes = [length, wall_height, volume] + ([width] if shape.value == 'Oval' else [])  # width is hidden (and ignored) for round pools
                             else:
                                 boxes = [size, volume]
                             if not all([box.validate() for box in boxes]):  # a list, not a generator, so every box shows its error, not just the first
@@ -262,14 +263,16 @@ def customer(customer_id: int, tab: str = ''):
                             b['gallons'] = int(volume.value)  # whatever is in the box: calculated or typed over
                             if b['type'] == 'Pool':
                                 b['wall_liner'] = wall_liner.value.strip()
-                                b['floor'] = floor.value.strip()
+                                b['floor'] = floor.value
                                 b['chlorinator'] = chlorinator.value.strip()
                                 b['shape'] = shape.value
                                 b['length'] = length.value
                                 b['width'] = length.value if shape.value == 'Round' else width.value  # round pool: width = diameter
-                                b['wall'] = wall.value
+                                b['wall'] = wall_height.value
                                 if shape.value == 'Round':
                                     b['size'] = f"{b['length']:g} ft round · {b['wall']:g} in wall"  # :g drops the .0 from ui.number values
+                                elif shape.value == 'Rectagle':
+                                    b['size'] = f"{b['width']:g} x {b['length']:g} ft rectangle · {b['wall']:g} in wall"
                                 else:
                                     b['size'] = f"{b['width']:g} x {b['length']:g} ft oval · {b['wall']:g} in wall"
                             else:

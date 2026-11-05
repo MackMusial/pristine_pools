@@ -68,6 +68,7 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 | Phos (ppb) | ≤100 | 101–300 | >300 |
 
 - **Problems:** staff can save a fix without asking for suggestions; the saved fix is what was *actually done* (Phase 2: record matched/edited/ignored AI suggestion = training data). Bodies of water = Pool or Hot tub; equipment edits overwrite the old values (no change log for now).
+- **Pool form** (decided 2026-11-04): one shared form for Add + Edit, matching Max's Add Pool for pools: same boxes and options (In-Ground, Rectangle, Water Depth). Pool gallons are calculated from wall height, and staff can type over the result. **Hot tub editing is deferred** (✏️ hidden for hot tubs, TODO in `open_edit_pool`); later they show Size, typed Gallons, Shell, Cover, Manufacturer, Filter, Installation.
 - **Purchases:** Square already rings sales; "Log these products?" shortcut after Save Fix if time; Phase 2 idea: Square CSV import.
 - **Backups** are automatic (nightly to USB); Settings shows status + Restore… only, no Back Up Now.
 - **Printing:** standard Windows print dialog via `window.print()`; we design the handout content only.
