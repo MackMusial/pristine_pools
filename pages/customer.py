@@ -85,7 +85,7 @@ def customer(customer_id: int, tab: str = ''):
                 with ui.card().classes('w-full gap-1 print:flex-1'):
                     with ui.row().classes('gap-0 items-center justify-between w-full'):
                         ui.label('Contact').classes('text-lg font-semibold')
-                        ui.button(icon='edit',on_click=open_edit_customer_dialog).props('flat round dense size=sm').classes('-my-1').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
+                        ui.button(icon='edit',on_click=open_edit_customer_dialog).props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip('Edit customer')  # size=sm + -my-1: the button doesn't make the title row taller
                     ui.label('Address').classes('text-xs text-gray-500')
                     ui.label(c['address'])
                     ui.label('Phone').classes('text-xs text-gray-500')
