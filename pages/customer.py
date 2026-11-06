@@ -33,11 +33,11 @@ def customer(customer_id: int, tab: str = ''):
                 
                 This will be used for updating the left drawer's customers retest dates'''
                 c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}  #save the retest date and reason to be display in the left drawer
+                refresh_attention()
                 dialog.close()  #close the dialog box 
             with ui.row().classes('w-full justify-end'):
                 ui.button('Skip', on_click=dialog.close).props('flat')
                 ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
-            refresh_attention()
         dialog.open()
 
     # ---------- Title row ----------
