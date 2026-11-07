@@ -1,6 +1,6 @@
 from nicegui import ui
 from layout import page_layout
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import store
 import rules
 
@@ -180,7 +180,7 @@ def customer(customer_id: int, tab: str = ''):
                         with ui.column().classes('w-full px-5 pt-5 pb-3 gap-3'):
                             ui.label(f"Edit {b['type']}").classes('font-semibold text-lg w-full')
                             if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
-                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value=b['shape'])
+                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value=b['shape']).mark('pool-shape')  #TODO: 
 
                         with ui.column().classes('w-full px-5 gap-3 overflow-y-auto').style('flex: 1 1 auto; min-height: 0'):
                             ui.label('Pool').classes('text-xs font-medium text-grey-7 uppercase tracking-wide')
@@ -364,7 +364,10 @@ def customer(customer_id: int, tab: str = ''):
                         ui.label(b['installed'])
 
             #----------  Water Tests ----------
-
+            def test_date(t): 
+                '''Returns a datetime.date object from the test's date string'''
+                return datetime.strptime(t['date'], '%b %d, %Y').date()  #convert the test's date string into a date object so it can be sorted 
+            
             with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab).classes('p-1'):
@@ -402,7 +405,20 @@ def customer(customer_id: int, tab: str = ''):
                             with ui.row().classes('w-full justify-end'):
                                 ui.button('Cancel', on_click=test_dialog.close).props('flat')
                                 ui.button('Save', icon='check',on_click=save_test)  #don't put () because that will cause the func to fire as initalization time. we only want the func to fire up when the button is clicked
-                                    
+
+                        no_tests_msg = {30: 'No tests in the last 30 days',
+                                        90: 'No tests in the last 90 days',
+                                        180: 'No tests in the last 180 days',
+                                        365: 'No tests in the last year',
+                                        0: 'No tests yet'} 
+
+                        def filter_tests(e):
+                            days = e.value
+                            cutoff = store.TODAY - timedelta(days=days)
+                            table.rows = [{**t, **rules.test_colors(t)} for t in c['tests']
+                                          if days == 0 or test_date(t) >= cutoff]  #if days == 0, show all tests. otherwise only show tests that are newer than the cutoff  
+                            table.props(f'no-data-label="{no_tests_msg[days]}"')
+
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
                             with ui.row().classes('w-full items-center justify-between'):
@@ -410,6 +426,8 @@ def customer(customer_id: int, tab: str = ''):
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
+                                    ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
+
                         columns = [
                             {'name': 'date', 'label': 'Date',     'field': 'date', 'align': 'left'},
                             {'name': 'fc',   'label': 'FC',       'field': 'fc',   'align': 'center'},
@@ -421,7 +439,7 @@ def customer(customer_id: int, tab: str = ''):
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
                         rows = [{**t, **rules.test_colors(t)} for t in c['tests']] #** ** merges two dicts into a new one. 
-                        table = ui.table(columns=columns, rows=rows).classes('w-full')
+                        table = ui.table(columns=columns, rows=rows).classes('w-full').props('no-data-label="No tests yet"')
                         #---------- Colored cells ----------
                         # 'body-cell' slot = a custom template used for EVERY cell in the table body
                         # the template is Vue (the browser's template language), not Python, so comments can't go inside the string.

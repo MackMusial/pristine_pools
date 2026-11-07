@@ -9,7 +9,7 @@ THEMES = {
     'ocean': {'primary': '#0f172a', 'secondary': '#22d3ee', 'accent': '#a78bfa'},
 } 
 CURRENT_THEME = 'pool'  # hardcoded: only one theme will be chosen in the end
-DARK_MODE = False  # DEV ONLY: set to False for light mode True for dark mode
+DARK_MODE = True  # DEV ONLY: set to False for light mode True for dark mode
 
 def needs_attention():
     cust = []

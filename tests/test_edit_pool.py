@@ -65,7 +65,7 @@ async def test_save_keeps_a_typed_over_volume(user: User):
 
 async def test_rectangle_saves_its_size_and_gallons(user: User):
     await open_dialog(user, 'Nick McArdle')
-    next(iter(user.find(kind=ui.toggle).elements)).value = 'Rectangle'
+    next(iter(user.find(marker='pool-shape').elements)).value = 'Rectangle'
     box(user, 'Width (ft)').value = 12
     user.find(marker='save-pool').click()
     assert nicks_pool()['size'].startswith('12 x 24 ft rectangle')
