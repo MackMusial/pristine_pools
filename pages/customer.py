@@ -180,7 +180,7 @@ def customer(customer_id: int, tab: str = ''):
                         with ui.column().classes('w-full px-5 pt-5 pb-3 gap-3'):
                             ui.label(f"Edit {b['type']}").classes('font-semibold text-lg w-full')
                             if b['type'] == 'Pool':  # pools: size comes from numbers so gallons can be calculated
-                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value=b['shape'])
+                                shape = ui.toggle(['Round', 'Oval', 'Rectangle'], value=b['shape']).mark('pool-shape')  #TODO: 
 
                         with ui.column().classes('w-full px-5 gap-3 overflow-y-auto').style('flex: 1 1 auto; min-height: 0'):
                             ui.label('Pool').classes('text-xs font-medium text-grey-7 uppercase tracking-wide')
