@@ -445,6 +445,45 @@ def customer(customer_id: int, tab: str = ''):
                             </q-td>
                         ''')
 
+                        #---------- Water Test Chart Dialog ----------
+                        COLORS = {'green': '#2e9e44', 'orange': '#f59e0b', 'red': '#d32f2f'}  #hex colors are fine here because this is a Python string, not the Vue template
+
+                        def show_chart(test):
+                            '''Opens a dialog with a lab-style line for each reading: red = out, green = good, flag = this test's value'''
+                            labels = {col['field']: col['label'] for col in columns}  #reuse the table's column names ('fc' -> 'FC')
+                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw]'):
+                                ui.label(f"Water test · {test['date']}").classes('text-lg font-semibold')
+                                for field, (red_below, green_from, green_to, red_above) in rules.BANDS.items():
+                                    value = test.get(field)
+                                    if value is None:  #reading wasn't taken
+                                        continue
+                                    pad = (red_above - red_below) * 0.25  #show a bit of red past each red line
+                                    low = max(0, red_below - pad)
+                                    high = red_above + pad
+                                    def pct(x):
+                                        return max(0, min(100, (x - low) / (high - low) * 100))  #position on the line as a %, clamped to the edges
+                                    flag = COLORS[rules.color_for(field, value)]  #flag matches the badge color
+
+                                    with ui.row().classes('w-full items-center no-wrap gap-4'):
+                                        ui.label(labels[field]).classes('w-24 font-medium')
+                                        with ui.element('div').classes('relative flex-1 mx-4').style('height: 52px'):
+                                            ui.element('div').classes('absolute left-0 right-0').style(f'top: 26px; height: 4px; background: {COLORS["red"]}')  #red = the whole line
+                                            ui.element('div').classes('absolute').style(  #green = the good range
+                                                f'top: 26px; height: 4px; background: {COLORS["green"]}; left: {pct(green_from)}%; width: {pct(green_to) - pct(green_from)}%')
+                                            for edge in (green_from, green_to):  #numbers under each end of the green
+                                                ui.label(f'{edge:g}').classes('absolute text-xs').style(f'top: 31px; left: {pct(edge)}%; transform: translateX(-50%)')
+                                            with ui.column().classes('absolute items-center gap-0').style(f'top: 0; left: {pct(value)}%; transform: translateX(-50%)'):  #the flag
+                                                ui.label(f'{value:g}').classes('text-white font-bold text-xs').style(f'background: {flag}; padding: 1px 8px; border-radius: 3px; line-height: 18px')
+                                                ui.element('div').style(  #little triangle under the flag pointing at the line
+                                                    f'width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid {flag}')
+                                with ui.row().classes('w-full justify-end mt-2'):
+                                    ui.button('Close', on_click=chart_dialog.close).props('flat')
+                            chart_dialog.on('hide', chart_dialog.delete)  #remove the dialog from the page once it closes
+                            chart_dialog.open()
+
+                        table.on('rowClick', lambda e: show_chart(e.args[1]))  #e.args[1] is the row that was clicked
+                        table.classes('cursor-pointer')  #pointer cursor so staff know rows are clickable
+                        
                     #---------- Problems ----------
                     with ui.tab_panel(problems_tab).classes('p-1'):
 
