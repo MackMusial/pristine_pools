@@ -408,6 +408,7 @@ def customer(customer_id: int, tab: str = ''):
 
                         no_tests_msg = {30: 'No tests in the last 30 days',
                                         90: 'No tests in the last 90 days',
+                                        180: 'No tests in the last 180 days',
                                         365: 'No tests in the last year',
                                         0: 'No tests yet'} 
 
@@ -416,6 +417,7 @@ def customer(customer_id: int, tab: str = ''):
                             cutoff = store.TODAY - timedelta(days=days)
                             table.rows = [{**t, **rules.test_colors(t)} for t in c['tests']
                                           if days == 0 or test_date(t) >= cutoff]  #if days == 0, show all tests. otherwise only show tests that are newer than the cutoff  
+                            table.props(f'no-data-label="{no_tests_msg[days]}"')
 
                         #---------- Latest Test Card ----------
                         with ui.card().classes('w-full'):  #latest test card
@@ -437,7 +439,7 @@ def customer(customer_id: int, tab: str = ''):
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
                         rows = [{**t, **rules.test_colors(t)} for t in c['tests']] #** ** merges two dicts into a new one. 
-                        table = ui.table(columns=columns, rows=rows).classes('w-full')
+                        table = ui.table(columns=columns, rows=rows).classes('w-full').props('no-data-label="No tests yet"')
                         #---------- Colored cells ----------
                         # 'body-cell' slot = a custom template used for EVERY cell in the table body
                         # the template is Vue (the browser's template language), not Python, so comments can't go inside the string.
