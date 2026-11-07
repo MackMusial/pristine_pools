@@ -150,8 +150,7 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
             logo.on('click', lambda:ui.navigate.to('/'))  # navigate to Home
 
         # ---------- Customer Search ----------
-
-        search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/{e.value}') if e.value else None).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
+        search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/tabular/{e.value}') if e.value and len(store.customers.get(e.value, {}).get('bodies', [])) > 1 else ui.navigate.to(f'/customer/{e.value}')).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
         search.set_visibility(show_search)  # hidden, not removed: save_customer still updates its options
