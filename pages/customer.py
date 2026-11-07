@@ -337,8 +337,8 @@ def customer(customer_id: int, tab: str = ''):
                             ui.label('Pool').classes('text-lg font-semibold')
                         with ui.row().classes('gap-0'):
                             if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
-                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).mark('edit-pool').props('flat round dense size=sm').classes('-my-1').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
-                            ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub')
+                                ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).mark('edit-pool').props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
+                            ui.button(icon='add', on_click=open_add_pool).props('flat round dense size=sm').classes('-my-1').tooltip('Add pool or hottub').classes('print:hidden')
 
                     if not c['bodies']:
                         ui.label('No pool on file').classes('text-gray-500')
