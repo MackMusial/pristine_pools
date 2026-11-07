@@ -446,11 +446,10 @@ def customer(customer_id: int, tab: str = ''):
                         ''')
 
                         #---------- Water Test Chart Dialog ----------
-                        COLORS = {'green': '#2e9e44', 'orange': '#f59e0b', 'red': '#d32f2f'}  #hex colors are fine here because this is a Python string, not the Vue template
+                        COLORS = {'green': '#2e9e44', 'orange': '#f59e0b', 'red': '#d32f2f'} 
 
                         def show_chart(test):
-                            '''Opens a dialog with a lab-style line for each reading: red = out, green = good, flag = this test's value'''
-                            labels = {col['field']: col['label'] for col in columns}  #reuse the table's column names ('fc' -> 'FC')
+                            labels = {col['field']: col['label'] for col in columns}
                             with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw]'):
                                 ui.label(f"Water test · {test['date']}").classes('text-lg font-semibold')
                                 for field, (red_below, green_from, green_to, red_above) in rules.BANDS.items():
@@ -481,8 +480,8 @@ def customer(customer_id: int, tab: str = ''):
                             chart_dialog.on('hide', chart_dialog.delete)  #remove the dialog from the page once it closes
                             chart_dialog.open()
 
-                        table.on('rowClick', lambda e: show_chart(e.args[1]))  #e.args[1] is the row that was clicked
-                        table.classes('cursor-pointer')  #pointer cursor so staff know rows are clickable
+                        table.on('rowClick', lambda e: show_chart(e.args[1])) 
+                        table.classes('cursor-pointer')
                         
                     #---------- Problems ----------
                     with ui.tab_panel(problems_tab).classes('p-1'):
