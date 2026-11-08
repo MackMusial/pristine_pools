@@ -367,6 +367,9 @@ def customer(customer_id: int, tab: str = ''):
             def test_date(t): 
                 '''Returns a datetime.date object from the test's date string'''
                 return datetime.strptime(t['date'], '%b %d, %Y').date()  #convert the test's date string into a date object so it can be sorted 
+
+            def table_row(t):
+                return{**t, **rules.test_colors(t), **rules.reading_arrows(t)}
             
             with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
@@ -384,7 +387,7 @@ def customer(customer_id: int, tab: str = ''):
                                     return
                                 test = {'date': f"{store.TODAY:%b} {store.TODAY.day}, {store.TODAY.year}", 'body': 0, **reading}
                                 c['tests'].insert(0, test)
-                                table.rows.insert(0, {**test, **rules.test_colors(test)})      
+                                table.rows.insert(0,table_row(test))      
                                 table.update()
                                 latest.set_text(f"Latest test · {test['date']}")
                                 for box in inputs.values():  #clear the input box's 
@@ -415,7 +418,7 @@ def customer(customer_id: int, tab: str = ''):
                         def filter_tests(e):
                             days = e.value
                             cutoff = store.TODAY - timedelta(days=days)
-                            table.rows = [{**t, **rules.test_colors(t)} for t in c['tests']
+                            table.rows = [{table_row(t)} for t in c['tests']
                                           if days == 0 or test_date(t) >= cutoff]  #if days == 0, show all tests. otherwise only show tests that are newer than the cutoff  
                             table.props(f'no-data-label="{no_tests_msg[days]}"')
 

@@ -23,6 +23,21 @@ def test_colors(row):
         colors['tc_color'] = 'orange'
     return colors
 
+def reading_arrows(row):
+    arrows = {}
+    for field, (red_below, green_from, green_to, red_above) in BANDS.items():
+        value = row.get(field)
+        if value is None:
+            continue
+        if value < green_from:
+            arrows[f'{field}_arrow'] = '↓'
+        elif value > green_to:
+            arrows[f'{field}_arrow'] = '↑'
+    if test_colors(row).get('tc_color') == 'orange' and 'tc_arrow' not in arrows:
+        arrows['tc_arrow'] = '↑'
+    return arrows
+            
+
 if __name__ == '__main__':
     print(test_colors({'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450}))
     print(test_colors({'fc': 1.8, 'tc': 2.3, 'ph': 7.5, 'ta': 100, 'ch': 250, 'cya': 40, 'phos': 50}))

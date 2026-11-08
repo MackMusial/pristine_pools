@@ -84,3 +84,6 @@ def test_combined_chlorine_never_hides_red():
 
 def test_combined_chlorine_skipped_without_fc():
     assert rules.test_colors({'tc': 2.5})['tc_color'] == 'green'
+
+def test_tc_orange_from_combined_chlorine_gets_up_arrow():
+    assert rules.reading_arrows({'fc': 1.0, 'tc': 2.0})['tc_arrow'] == '↑'
