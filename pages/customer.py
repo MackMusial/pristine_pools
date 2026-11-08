@@ -432,11 +432,19 @@ def customer(customer_id: int, tab: str = ''):
                                     ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
                       
                         # ---------- Legend ----------
-                        with ui.row().classes('items-center gap-3 test-sm'):
-                            ui.icon('arrow_upward', size='14px')
-                            ui.label('high ')
-                            ui.icon('arrow_downward', size='14px')
-                            ui.label('low')
+                        with ui.row().classes('items-center gap-4 text-sm text-gray-8'):
+                            ui.label('Plain number = in range')
+                            with ui.row().classes('items-center gap-1'):
+                                ui.badge('Watch', color='amber-7', text_color='black')
+                                ui.label('slightly off')
+                            with ui.row().classes('items-center gap-1'):
+                                ui.badge('Act', color='red-9', text_color='white')
+                                ui.label('far off')
+                            with ui.row().classes('items-center gap-1'):
+                                ui.icon('arrow_upward', size='14px')
+                                ui.label('high')
+                                ui.icon('arrow_downward', size='14px')
+                                ui.label('low')
 
                         # ---------- Table ----------
                         columns = [
