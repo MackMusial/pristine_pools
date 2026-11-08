@@ -418,7 +418,7 @@ def customer(customer_id: int, tab: str = ''):
                         def filter_tests(e):
                             days = e.value
                             cutoff = store.TODAY - timedelta(days=days)
-                            table.rows = [{table_row(t)} for t in c['tests']
+                            table.rows = [table_row(t) for t in c['tests']
                                           if days == 0 or test_date(t) >= cutoff]  #if days == 0, show all tests. otherwise only show tests that are newer than the cutoff  
                             table.props(f'no-data-label="{no_tests_msg[days]}"')
 
@@ -430,7 +430,15 @@ def customer(customer_id: int, tab: str = ''):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
                                     ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
+                      
+                        # ---------- Legend ----------
+                        with ui.row().classes('items-center gap-3 test-sm'):
+                            ui.icon('arrow_upward', size='14px')
+                            ui.label('high ')
+                            ui.icon('arrow_downward', size='14px')
+                            ui.label('low')
 
+                        # ---------- Table ----------
                         columns = [
                             {'name': 'date', 'label': 'Date',     'field': 'date', 'align': 'left'},
                             {'name': 'fc',   'label': 'FC',       'field': 'fc',   'align': 'center'},
@@ -441,7 +449,7 @@ def customer(customer_id: int, tab: str = ''):
                             {'name': 'cya',  'label': 'CYA',      'field': 'cya',  'align': 'center'},
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
-                        rows = [{**t, **rules.test_colors(t)} for t in c['tests']] #** ** merges two dicts into a new one. 
+                        rows = [table_row(t) for t in c['tests']] #** ** merges two dicts into a new one. 
                         table = ui.table(columns=columns, rows=rows).classes('w-full').props('no-data-label="No tests yet"')
                         #---------- Colored cells ----------
                         # 'body-cell' slot = a custom template used for EVERY cell in the table body
@@ -457,10 +465,13 @@ def customer(customer_id: int, tab: str = ''):
                         # phase 2: rules.py adds the _color keys by comparing each reading to the ranges in Settings
                         table.add_slot('body-cell', r'''
                             <q-td :props="props">
-                                <q-badge v-if="props.row[props.col.field + '_color']"
-                                        :color="props.row[props.col.field + '_color'] + '-9'"
-                                        :text-color="props.row[props.col.field + '_color'] === 'orange' ? 'black' : 'white'">
-                                    {{ props.value }}  
+                                <q-badge v-if="['orange', 'red'].includes(props.row[props.col.field + '_color'])"
+                                        :color="props.row[props.col.field + '_color'] === 'red' ? 'red-9' : 'amber-7'"
+                                        :text-color="props.row[props.col.field + '_color'] === 'red' ? 'white' : 'black'">
+                                    {{ props.value }}
+                                    <q-icon v-if="props.row[props.col.field + '_arrow']"
+                                            :name="props.row[props.col.field + '_arrow'] === '↑' ? 'arrow_upward' : 'arrow_downward'"
+                                            size="14px" class="q-ml-xs" />
                                 </q-badge>
                                 <span v-else>{{ props.value }}</span>
                             </q-td>
