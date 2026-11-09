@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from nicegui import event, ui
+from nicegui import events, ui
 from nicegui.testing import User
 import store
 
@@ -11,14 +11,14 @@ async def open_test_popup(user):
     await user.open(f'/customer/{customer_id("Nick McArdle")}')
     table, listener = next(
         (t, l) for t in user.find(kind=ui.table).elements 
-        for l in t._event_listeners if l.type == 'rowClick'
+        for l in t._event_listeners.values() if l.type == 'rowClick'
     )
     args = events.GenericEventArguments(sender=table, client=table.client, args=[{}, table.rows[0], 0])
-    events.handle_event(listener, args)  #same as clicking the first row of the table, which opens the test popup
+    events.handle_event(listener.handler, args)  #same as clicking the first row of the table, which opens the test popup
 
-async def test_table_column_is_not_collapsed_when_printing(user, User):
+async def test_table_column_is_not_collapsed_when_printing(user: User):
     await open_test_popup(user)
-    await user.should_see('water test · ')
+    await user.should_see('Water test · ')
     assert any('single-page-print' in card.classes for card in user.find(kind=ui.card).elements)
     assert any(button.text == 'Print' for button in user.find(kind=ui.button).elements)
 
