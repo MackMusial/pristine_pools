@@ -59,7 +59,7 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 - **No page scrolling on desktop**; scrolling inside a card/column is fine. No stretched white-space filler. Target 1920×1080; laptop ~1536×740.
 - **Light mode** for the client (`DARK_MODE = False` in `layout.py` for demos/printing). Themes `pool`/`aqua`/`ocean` in `THEMES`; color pick deferred to Kara.
 - **No `ui.notify` toasts** as placeholders.
-- **Readings colored in the table** (green OK / orange watch / red act) as solid `-9` shade badges on every reading (orange gets black text) for WCAG contrast. `rules.py` keeps the plain color words. Placeholder bands (Kara's real ranges TBD; hot tubs use pool bands for now):
+- **Readings colored in the table** as solid badges on every reading, labeled in the legend above it (In range `green-9` / Borderline `amber-7` with black text / Out of range `red-9`) for WCAG contrast; off-range readings get a ↑/↓ arrow (`rules.reading_arrows`). `rules.py` keeps the plain color words. Placeholder bands (Kara's real ranges TBD; hot tubs use pool bands for now):
 
 | Reading | green | orange | red |
 |---|---|---|---|
