@@ -144,10 +144,9 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
                 badge()
             # ---------- Logo (Home link) ----------
 
-            with ui.row().classes('items-center gap-2 cursor-pointer') as logo:  # icon + title act as one clickable Home link
+            with ui.row().classes('items-center gap-2') as logo:  # icon + title act as one clickable Home link
                 ui.icon('pool')
                 ui.label('Pristine Pools').classes('text-2xl font-extrabold tracking-wide')
-            logo.on('click', lambda:ui.navigate.to('/'))  # navigate to Home
 
         # ---------- Customer Search ----------
         search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/tabular/{e.value}') if e.value and len(store.customers.get(e.value, {}).get('bodies', [])) > 1 else ui.navigate.to(f'/customer/{e.value}')).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
