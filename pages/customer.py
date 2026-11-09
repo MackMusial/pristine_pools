@@ -40,10 +40,26 @@ def customer(customer_id: int, tab: str = ''):
                 ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
         dialog.open()
 
+    #---------- Retest Chip Func ----------
+    @ui.refreshable
+    def retest_chip():
+        '''Displays a chip on the customer page that shows the retest date and reason if one is scheduled. 
+        
+        If the retest is overdue, the chip is red. If no retest is scheduled, the chip is grey.'''
+        r = c['retest']
+        if r is None:
+            ui.chip('No retest',icon='event', color='grey-3', text_color='black').classes('print:hidden')
+        elif r['due'] < store.TODAY:
+            ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white').classes('print:hidden')
+        else:
+            ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black').classes('print:hidden')
+
     # ---------- Title row ----------
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
-            ui.label(c['name']).classes('text-2xl font-bold')
+            with ui.row().classes('items-center gap-3'):
+                ui.label(c['name']).classes('text-2xl font-bold')
+                retest_chip()
             with ui.tabs().props('inline-label dense no-caps').classes('print:hidden') as tabs:
                 test_tab = ui.tab('Water Tests', icon='science')
                 problems_tab = ui.tab('Problems', icon='report_problem')
