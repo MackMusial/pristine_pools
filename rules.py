@@ -9,6 +9,7 @@ BANDS = {  # red below, green from, green to, red above
 }
 
 def color_for(field, value):
+    ''' Return the color for a given reading. The color is determined by the BANDS for that field. If the value is below the red_below or above the red_above, the color is red. If the value is within the green_from and green_to, the color is green. Otherwise, the color is orange.'''
     red_below, green_from, green_to, red_above = BANDS[field]
     if value < red_below or value > red_above:
         return 'red'
@@ -17,11 +18,28 @@ def color_for(field, value):
     return 'orange'
 
 def test_colors(row):
+    ''' Return a dict of colors for each reading in the row. Colors are only returned for readings that are present in the row. If a reading is missing, no color is returned for that reading.'''
     colors =  {f'{field}_color': color_for(field, row[field]) for field in BANDS if row.get(field) is not None}
     
     if 'tc_color' in colors and row.get('fc') is not None and round(row['tc'] - row['fc'], 1) >= 0.5 and colors['tc_color'] == 'green':
         colors['tc_color'] = 'orange'
     return colors
+
+def reading_arrows(row):
+    ''' Return a dict of arrows for each reading in the row. Arrows are only returned for readings that are outside the green band. If a reading is within the green band, no arrow is returned for that reading.'''
+    arrows = {}
+    for field, (red_below, green_from, green_to, red_above) in BANDS.items():
+        value = row.get(field)
+        if value is None:
+            continue
+        if value < green_from:
+            arrows[f'{field}_arrow'] = '↓'
+        elif value > green_to:
+            arrows[f'{field}_arrow'] = '↑'
+    if test_colors(row).get('tc_color') == 'orange' and 'tc_arrow' not in arrows:
+        arrows['tc_arrow'] = '↑'
+    return arrows
+            
 
 if __name__ == '__main__':
     print(test_colors({'fc': 0.5, 'tc': 0.7, 'ph': 7.9, 'ta': 100, 'ch': 180, 'cya': 40, 'phos': 450}))

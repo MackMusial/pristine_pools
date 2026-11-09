@@ -367,6 +367,9 @@ def customer(customer_id: int, tab: str = ''):
             def test_date(t): 
                 '''Returns a datetime.date object from the test's date string'''
                 return datetime.strptime(t['date'], '%b %d, %Y').date()  #convert the test's date string into a date object so it can be sorted 
+
+            def table_row(t):
+                return{**t, **rules.test_colors(t), **rules.reading_arrows(t)}
             
             with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0 print:[contain:none]'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
@@ -384,7 +387,7 @@ def customer(customer_id: int, tab: str = ''):
                                     return
                                 test = {'date': f"{store.TODAY:%b} {store.TODAY.day}, {store.TODAY.year}", 'body': 0, **reading}
                                 c['tests'].insert(0, test)
-                                table.rows.insert(0, {**test, **rules.test_colors(test)})      
+                                table.rows.insert(0,table_row(test))      
                                 table.update()
                                 latest.set_text(f"Latest test · {test['date']}")
                                 for box in inputs.values():  #clear the input box's 
@@ -415,7 +418,7 @@ def customer(customer_id: int, tab: str = ''):
                         def filter_tests(e):
                             days = e.value
                             cutoff = store.TODAY - timedelta(days=days)
-                            table.rows = [{**t, **rules.test_colors(t)} for t in c['tests']
+                            table.rows = [table_row(t) for t in c['tests']
                                           if days == 0 or test_date(t) >= cutoff]  #if days == 0, show all tests. otherwise only show tests that are newer than the cutoff  
                             table.props(f'no-data-label="{no_tests_msg[days]}"')
 
@@ -427,7 +430,18 @@ def customer(customer_id: int, tab: str = ''):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
                                     ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
+                      
+                        # ---------- Legend ----------
+                        with ui.row().classes('items-center gap-2 text-sm text-gray-8'):
+                            ui.badge('In range',color='green-9',text_color='white')
+                            ui.badge('Borderline', color='amber-7', text_color='black')
+                            ui.badge('Out of range', color='red-9', text_color='white')
+                            ui.icon('arrow_upward', size='14px')
+                            ui.label('high')
+                            ui.icon('arrow_downward', size='14px')
+                            ui.label('low')
 
+                        # ---------- Table ----------
                         columns = [
                             {'name': 'date', 'label': 'Date',     'field': 'date', 'align': 'left'},
                             {'name': 'fc',   'label': 'FC',       'field': 'fc',   'align': 'center'},
@@ -438,7 +452,7 @@ def customer(customer_id: int, tab: str = ''):
                             {'name': 'cya',  'label': 'CYA',      'field': 'cya',  'align': 'center'},
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
-                        rows = [{**t, **rules.test_colors(t)} for t in c['tests']] #** ** merges two dicts into a new one. 
+                        rows = [table_row(t) for t in c['tests']] #** ** merges two dicts into a new one. 
                         table = ui.table(columns=columns, rows=rows).classes('w-full').props('no-data-label="No tests yet"')
                         #---------- Colored cells ----------
                         # 'body-cell' slot = a custom template used for EVERY cell in the table body
@@ -450,15 +464,20 @@ def customer(customer_id: int, tab: str = ''):
                         # :color="..."           -> the ':' means evaluate it, so the badge color comes from the row data
                         # {{ props.value }}      -> the cell's number
                         # </q-badge>             -> closing tag: slash first, same name as the opening tag
-                        # <span v-else>          -> no color key = just show the plain number
+                        # <span v-else>          -> no color key = date or blank reading
                         # phase 2: rules.py adds the _color keys by comparing each reading to the ranges in Settings
                         table.add_slot('body-cell', r'''
                             <q-td :props="props">
-                                <q-badge v-if="props.row[props.col.field + '_color']"
-                                        :color="props.row[props.col.field + '_color'] + '-9'"
-                                        :text-color="props.row[props.col.field + '_color'] === 'orange' ? 'black' : 'white'">
-                                    {{ props.value }}  
+                                <q-badge v-if="['orange', 'red'].includes(props.row[props.col.field + '_color'])"
+                                        :color="props.row[props.col.field + '_color'] === 'red' ? 'red-9' : 'amber-7'"
+                                        :text-color="props.row[props.col.field + '_color'] === 'red' ? 'white' : 'black'">
+                                    {{ props.value }}
+                                    <q-icon v-if="props.row[props.col.field + '_arrow']"
+                                            :name="props.row[props.col.field + '_arrow'] === '↑' ? 'arrow_upward' : 'arrow_downward'"
+                                            size="14px" class="q-ml-xs" />
                                 </q-badge>
+                                <q-badge  v-else-if="props.row[props.col.field + '_color'] === 'green'" 
+                                color="green-9" text-color="white">{{ props.value }}</q-badge>
                                 <span v-else>{{ props.value }}</span>
                             </q-td>
                         ''')
