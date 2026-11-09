@@ -10,9 +10,13 @@ def customer_id(name):
     return next(cid for cid, c in store.customers.items() if c['name'] == name)
 
 
-async def test_home_page(user: User):
+async def test_start_opens_first_customer(user: User):
+    '''Ensure if last_customer_id is None
+    
+    return the min customer'''
+    store.last_customer_id = None
     await user.open('/')
-    await user.should_see('Find a customer')
+    await user.should_see(store.customers[min(store.customers)]['name'])
 
 
 async def test_settings_page(user: User):

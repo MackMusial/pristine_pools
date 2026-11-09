@@ -29,7 +29,7 @@ A customer brings a water sample to the counter. Staff find the customer, enter 
 - **B. New Customer** dialog (Name + Phone required; Address + Zip saved as `"addr, zip"`) → `store.customers` → search options → navigate.
 - **D. Log Purchase** saves (`save_purchase`).
 - **F. Settings:** Products + Add Product, Backup (status + Restore… only), Water-test ranges table from `rules.BANDS`.
-- **G. AI right drawer** opened by a ✨ fab (`ui.page_sticky` + `z-50`), canned replies; `/` is a "Find a customer" landing.
+- **G. AI right drawer** opened by a ✨ fab (`ui.page_sticky` + `z-50`), canned replies.
 - **E (partial):** Edit Customer and Edit Pool dialogs save and are built on demand, so Cancel discards edits; ➕ on the Pool card title row.
 
 ## Remaining plan
@@ -42,14 +42,14 @@ A customer brings a water sample to the counter. Staff find the customer, enter 
 - **Check every step:** full width, 1920×1080, F12 Console clean, Customer print still fits 1 page.
 
 ## What's built
-- **Files:** `main.py` (imports pages, `ui.run()`), `layout.py` (`page_layout()`: theme, ☰ left drawer, header with logo→Home, center `ui.select` customer search, New Customer + ⚙ buttons, ✨ AI right drawer, print CSS; returns `refresh_attention`), `pages/home.py` (`/` landing), `pages/customer.py`, `pages/settings.py`, `store.py`, `rules.py`. `models.py` empty until Phase 2.
+- **Files:** `main.py` (imports pages, `ui.run()`), `layout.py` (`page_layout()`: theme, ☰ left drawer, header with logo, center `ui.select` customer search, New Customer + ⚙ buttons, ✨ AI right drawer, print CSS; returns `refresh_attention`), `pages/customer.py` (also `/`: redirects to `store.last_customer_id`, else the lowest ID), `pages/settings.py`, `store.py`, `rules.py`. `models.py` empty until Phase 2.
 - **`store.py`:** `TODAY`; `products` (15: name/brand/size); `customers` (16) with name/phone/address/since/bodies/tests/problems/purchases/retest. Display dates are strings; `retest['due']` is a real `date` relative to `TODAY` (overdue: Nick, Jake; today: Marcelino, Mike; tomorrow: Jessica). Open problems: Dave (hot tub foam), Chris (algae), Ryan (liner stains). Hot tubs: Manish + Linda (2nd body), Dave (only body; fields `shell`/`cover`). Empty: Emily (no tests), Megan (no bodies). `test['body']` = index into `bodies`. Pools have `shape` ('Round'/'Oval'/'Rectangle'), `length`, `width` (ft; round → width = length), `wall` (in); gallons = `length × width × wall/12 × factor` (5.9 round/oval, 7.5 rectangle), rounded to 100. Hot tubs keep typed gallons. `search_options()` → `{id: 'Name · phone'}`.
 - **Customer** (`/customer/{customer_id}`): tabs in the title row; left column `w-1/3` Contact + Pool cards (natural height; title buttons `size=sm` + `-my-1`), right tabs column `md:[contain:size] md:overflow-y-auto`. **Water Tests:** latest-test card (Print + New Test), table colored via a `body-cell` slot reading `<field>_color` keys. **Problems:** Log a Problem + Fix card (suggestions radio → editable "Fix applied"; Save Fix), history scrolls inside. **Purchases:** table + Log Purchase dialog. **Print:** `window.print()`, header/tabs `print:hidden`, fits 1 page.
 
 ## UI rules & standing decisions
 - **Counter workflow:** customer walks in with a sample → search → Customer screen → test → flags → problem / AI help → print. Keyboard-first, smart defaults (today's date), quick adds in `ui.dialog`s. Staff use it; customers never do.
-- **Screens:** Customer is the main screen; Settings stays a full page (wide tables, rare admin work); `/` is a simple find-a-customer landing; AI chat is a right drawer available everywhere.
-- **AI drawer stays super simple** (greeting, subtitle, chat input; no chips, no chat history). No dashboard cards/tiles on Home: every action starts with a customer, so search *is* the shortcut. "Needs attention" lives in the ☰ drawer.
+- **Screens:** Customer is the main screen; Settings stays a full page (wide tables, rare admin work); no Home screen (Dr. James: an extra click, decided 2026-11-09), so `/` opens the last customer viewed (in memory for now; Phase 2 needs one per machine); AI chat is a right drawer available everywhere.
+- **AI drawer stays super simple** (greeting, subtitle, chat input; no chips, no chat history). No dashboard cards/tiles: every action starts with a customer, so search *is* the shortcut. "Needs attention" lives in the ☰ drawer.
 - **☰ badge** counts retests due today or overdue + open problems. Future retests list with their date but don't count.
 - **Retest rules:** one retest per customer (`c['retest']` or None); any saved test clears it; red → +2 days, orange only → +7. A problem is open while `fix is None`.
 - **Dates** without zero pad: `f"{d:%b} {d.day}, {d.year}"` → `Oct 5, 2026`.
