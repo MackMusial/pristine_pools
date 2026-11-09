@@ -1,17 +1,14 @@
 # Pristine Pools — Record-Keeping & Water-Testing System
 
-SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competing against 2 other groups. Target completion: **April 2027**.
+A record-keeping and water-testing system for Pristine Pools, a new above-ground pool store. Built as an SVSU CSIS capstone (CIS 422) run by Dr. Scott James, with a target completion of April 2027.
 
-> **Shared file:** this is the team's single source of truth, committed so context carries across everyone's machines. Keep it about the project (status, decisions, rules); personal preferences go in your own gitignored `CLAUDE.local.md`. **Claude keeps it current without being asked** (mark steps done, update status, record decisions) and keeps it **short**: replace finished history with one-line summaries instead of appending. **Claude commits or pushes only when explicitly asked.**
+## The client
+Pristine Pools sells hard-sided and soft-sided above-ground pools, chemicals, and equipment. The owner, Kara Nominay, is non-technical and budget-conscious, so the system has to just work. All client contact goes through Dr. James.
 
-## Working with Claude
-- Check the files before claiming what's done (people work on different machines and branches).
-- Decisions go in the question popup (AskUserQuestion), not buried in a reply.
-- One concept/step at a time; small commits, one git branch per step (`git switch -c <step>` → commit → push → PR to `main`).
-- Claude may write sample/placeholder data (realistic pool-store data, 555-01xx phones) and docs.
+Square handles pricing, sales, and inventory. This system sits alongside it and links purchases to each customer's pool and water-test history.
 
-## ▶ Current status (2026-11-02)
-**Phase 1 (Fall 2026):** a GUI that behaves live on fake in-memory data (`store.py`). PostgreSQL + real AI come in Spring 2027.
+## How it's used
+A customer brings a water sample to the counter. Staff find the customer, enter the test, see which readings are out of range, get help diagnosing any problem, and print a report. Staff use the system while talking to the customer, so it's designed for speed. Newer employees may lack diagnosis experience, which is why it includes AI suggestions.
 
 **Next:**
 1. **Multiple bodies (Max, branch `multiple_pools_dropdown`):** the branch is an unfinished start; merge `main` first (`pages/customer.py` conflicts). Known issues: `search_pools()` isn't per customer and collapses bodies of the same type; a customer with one hot tub gets the title "Pool". Plan steps: 2a card fields → `@ui.refreshable pool_details(i)` (defined before the card, called in its `else:`) → 2b dropdown → 2c ✏️ uses selected (`open_edit_pool(i)`) → 2d title. The selector is a dropdown (Max is building it, no ETA yet). Then Add Pool reuses `open_edit_pool` with blank boxes.
@@ -104,33 +101,17 @@ SVSU CSIS capstone (CIS 422), run by **Dr. Scott James**. Team project, competin
 
 ## Subsystems (shared database)
 1. **Customers:** name, address, phone.
-2. **Pools & equipment** (several bodies of water per customer, Pool or Hot tub; change log): install dates, shape, size, manufacturer, model/serial, wall/liner, floor, filter, chlorinator, installer; **calculates gallons**.
-3. **Chemical purchases:** product list; per-customer purchases (date, manufacturer, product, qty, volume).
-4. **Water testing:** results + dates, **flag out-of-range values**, print a report, history per pool.
-5. **Problems + AI suggestions:** problem + date, suggestions, the chosen fix (history of what was tried).
-6. **Maintenance/Settings:** lookup lists, edit test ranges, backup/restore.
+2. **Pools and equipment:** several bodies of water per customer, with equipment details and calculated gallons.
+3. **Chemical purchases:** a product list and purchases per customer.
+4. **Water testing:** results and dates, out-of-range flags, printed reports, history per pool.
+5. **Problems and AI suggestions:** each problem, the suggestions, and the fix that was applied.
+6. **Settings:** lookup lists, test ranges, backup and restore.
 
 ## Constraints
-- Windows, 2–3 machines on one LAN, 1–2 concurrent users.
-- **AI must be self-trained/fine-tuned, local, free to run.** No hosted APIs. Must be real AI (no rules-based expert system); no off-the-shelf CRM.
-- Limited ML experience: favor learnable, well-documented approaches.
-- Biggest risks: **training data**, and the client PC's hardware.
+- Runs on Windows, on 2–3 machines on one LAN, with 1–2 concurrent users.
+- Everything stays local, with no internet dependency.
+- The AI must be real (not a rules-based expert system), self-trained or fine-tuned, local, and free to run.
 
-## Architecture
-- Feasibility study compares: (1) Node.js/Express web, (2) C# .NET desktop, (3) **NiceGUI + local Llama via Ollama + PostgreSQL (current lean, not locked in; confirm before assuming)**. Nine objectives: language/platform, desktop vs web, storage/backup, UI + printed report, local AI at no cost, hardware (Appendix M), requirements + tests, failure/recovery, schedule to April 2027.
-- **PostgreSQL** (not SQLite: multi-machine writes; not MongoDB: relational, numeric data; not cloud: internet dependency + cost). Everything local.
-- **Host:** one desktop runs PostgreSQL + Ollama; clients find it by **computer name**, not IP.
-- **Backup:** nightly `pg_dump` (Task Scheduler) to a USB drive; maybe streaming replication. If the DB is unreachable, show a calm message; **no silent auto-restore**.
-- **AI:** train on a powerful machine (full fine-tune or LoRA), quantize to 4-bit, run CPU-only via one Ollama on the host. Target ~3B (~2–4 GB RAM); 7–8B possible with 16 GB. Training data = expert-verified problem/solution pairs. Ship the app first, then layer in the model.
-
-## Open questions
-- Client PC specs (local model feasibility). Whether past problem/solution records exist. Streaming replication vs nightly dumps. Login/roles for Maintenance. Customer data protection. Final stack confirmation.
-
-## Spec gaps to confirm with Kara (via Dr. James)
-- **Hot tubs:** does she service them? Which fields matter? Separate ranges / bromine? Delete vs archive old customers and pools?
-- Pool shapes beyond round/oval? Depth entry? Multiple pools per customer?
-- Liner info for soft-sided? "Filtering volume" = GPM or sized volume?
-- Chemicals: store purchases vs service usage? Price/inventory or history only?
-- Water testing: machine export (e.g. LaMotte WaterLink) or typed? Chlorine vs bromine? Dosing on the report? Printed, PDF, or email?
-- AI: common problems + usual fixes? Use test history + equipment or just the description? Who picks the applied suggestion?
-- Missing must-haves (scheduling, invoicing, reminders)? Opening timeline?
+## Phases
+- **Fall 2026:** a working GUI on in-memory sample data, built with NiceGUI.
+- **Spring 2027:** PostgreSQL storage and a local AI model served through Ollama.

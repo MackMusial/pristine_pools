@@ -371,7 +371,7 @@ def customer(customer_id: int, tab: str = ''):
             def table_row(t):
                 return{**t, **rules.test_colors(t), **rules.reading_arrows(t)}
             
-            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
+            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0 print:[contain:none]'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab).classes('p-1'):
 
@@ -487,7 +487,7 @@ def customer(customer_id: int, tab: str = ''):
 
                         def show_chart(test):
                             labels = {col['field']: col['label'] for col in columns}
-                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw]'):
+                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw] single-page-print'):
                                 ui.label(f"Water test · {test['date']}").classes('text-lg font-semibold')
                                 for field, (red_below, green_from, green_to, red_above) in rules.BANDS.items():
                                     value = test.get(field)
@@ -514,6 +514,8 @@ def customer(customer_id: int, tab: str = ''):
                                                     f'width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid {flag}')
                                 with ui.row().classes('w-full justify-end mt-2'):
                                     ui.button('Close', on_click=chart_dialog.close).props('flat')
+                                    ui.button('Print', icon='print',on_click=lambda: ui.run_javascript('window.print()'))  #Print button
+
                             chart_dialog.on('hide', chart_dialog.delete)  #remove the dialog from the page once it closes
                             chart_dialog.open()
 
