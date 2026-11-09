@@ -1,3 +1,4 @@
+from fastapi.responses import RedirectResponse
 from nicegui import ui
 from layout import page_layout
 from datetime import date, timedelta, datetime
@@ -9,7 +10,10 @@ SUGGESTIONS = [
     'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
     'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
 ]
-
+@ui.page('/')
+def start():
+    cid = store.last_customer_id if store.last_customer_id is not None else min(store.customers)  #select the last customer viewed. else select the first customer in the datebase
+    return RedirectResponse(f'/customer/{cid}')
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int, tab: str = ''):
     refresh_attention = page_layout()
@@ -19,6 +23,7 @@ def customer(customer_id: int, tab: str = ''):
             ui.label('Customer does not exist').classes('text-gray-500 text-lg')
         return  #handle if an employee tries to find an employee that does not exist. This simply displays that no customer exists and the return stops anything else from loading
     c = store.customers[customer_id]
+    store.last_customer_id = customer_id
 
     # ---------- schedule_retest func ----------
     def schedule_retest(days, reason):
