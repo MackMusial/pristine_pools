@@ -464,7 +464,7 @@ def customer(customer_id: int, tab: str = ''):
                         # :color="..."           -> the ':' means evaluate it, so the badge color comes from the row data
                         # {{ props.value }}      -> the cell's number
                         # </q-badge>             -> closing tag: slash first, same name as the opening tag
-                        # <span v-else>          -> no color key = just show the plain number
+                        # <span v-else>          -> no color key = date or blank reading
                         # phase 2: rules.py adds the _color keys by comparing each reading to the ranges in Settings
                         table.add_slot('body-cell', r'''
                             <q-td :props="props">
