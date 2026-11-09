@@ -19,7 +19,6 @@ async def test_start_opens_first_customer(user: User):
     await user.should_see(store.customers[min(store.customers)]['name'])
 
 
-
 async def test_settings_page(user: User):
     await user.open('/settings')
     await user.should_see('Settings')

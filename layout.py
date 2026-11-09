@@ -28,7 +28,7 @@ def needs_attention():
             open_list.append((cid, c, open_p))
     return due, open_list
 
-def page_layout(show_search=True):  # Home passes False because it has its own big search
+def page_layout():
     ui.dark_mode(DARK_MODE)
     ui.add_css('.body--dark { background: #121212 !important; }')  # dark page background (only applies when DARK_MODE is on)
     ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
@@ -144,15 +144,14 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
                 badge()
             # ---------- Logo (Home link) ----------
 
-            with ui.row().classes('items-center gap-2') as logo:  # icon + title act as one clickable Home link
+            with ui.row().classes('items-center gap-2'):
                 ui.icon('pool')
                 ui.label('Pristine Pools').classes('text-2xl font-extrabold tracking-wide')
 
         # ---------- Customer Search ----------
-        search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/tabular/{e.value}') if e.value and len(store.customers.get(e.value, {}).get('bodies', [])) > 1 else ui.navigate.to(f'/customer/{e.value}')).props('dense dark standout popup-content-class="customer-menu"').classes('w-96')
+        search = ui.select(store.search_options(),with_input=True,label='Find customer',on_change=lambda e: ui.navigate.to(f'/customer/tabular/{e.value}') if e.value and len(store.customers.get(e.value, {}).get('bodies', [])) > 1 else ui.navigate.to(f'/customer/{e.value}')).props('dense dark standout popup-content-class="customer-menu" autofocus').classes('w-96')
         with search.add_slot('prepend'):
             ui.icon('search')
-        search.set_visibility(show_search)  # hidden, not removed: save_customer still updates its options
 
         # ---------- Action Buttons ----------
 

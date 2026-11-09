@@ -10,6 +10,7 @@ SUGGESTIONS = [
     'Shock tonight with 3 lbs of cal-hypo (73%), then brush the walls and floor. Run the filter 24 hours straight.',
     'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
 ]
+
 @ui.page('/')
 def start():
     cid = store.last_customer_id if store.last_customer_id is not None else min(store.customers)  #select the last customer viewed. else select the first customer in the datebase
