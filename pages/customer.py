@@ -34,6 +34,7 @@ def customer(customer_id: int, tab: str = ''):
                 This will be used for updating the left drawer's customers retest dates'''
                 c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}  #save the retest date and reason to be display in the left drawer
                 refresh_attention()
+                retest_chip.refresh()  #refresh the retest chip to show the new date and color
                 dialog.close()  #close the dialog box 
             with ui.row().classes('w-full justify-end'):
                 ui.button('Skip', on_click=dialog.close).props('flat')
@@ -43,12 +44,12 @@ def customer(customer_id: int, tab: str = ''):
     #---------- Retest Chip Func ----------
     @ui.refreshable
     def retest_chip():
-        '''Displays a chip on the customer page that shows the retest date and reason if one is scheduled. 
+        '''Displays a chip on the customer page that shows the retest date if one is scheduled. 
         
         If the retest is overdue, the chip is red. If no retest is scheduled, the chip is grey.'''
         r = c['retest']
         if r is None:
-            ui.chip('No retest',icon='event', color='grey-3', text_color='black').classes('print:hidden')
+            return
         elif r['due'] < store.TODAY:
             ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white').classes('print:hidden')
         else:
@@ -413,6 +414,7 @@ def customer(customer_id: int, tab: str = ''):
                                 elif 'orange' in colors:  #if there is any chemicals that are slightly off
                                     schedule_retest(7, 'Orange reading')
                                 refresh_attention()
+                                retest_chip.refresh()  #refresh the retest card to show the new retest date if one was scheduled
 
                             with ui.grid(columns=2).classes('w-full gap-3'):
                                 for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
