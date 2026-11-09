@@ -17,6 +17,10 @@ async def open_test_popup(user):
     events.handle_event(listener.handler, args)  #same as clicking the first row of the table, which opens the test popup
 
 async def test_table_column_is_not_collapsed_when_printing(user: User):
+    await user.open(f'/customer/{customer_id("Nick McArdle")}')
+    assert any('print:[contain:none]' in column.classes for column in user.find(kind=ui.column).elements)
+
+async def test_popup_can_be_printed_on_its_own(user: User):
     await open_test_popup(user)
     await user.should_see('Water test · ')
     assert any('single-page-print' in card.classes for card in user.find(kind=ui.card).elements)
