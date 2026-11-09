@@ -35,6 +35,7 @@ def page_layout(show_search=True):  # Home passes False because it has its own b
     ui.add_css('@media print {body:has(.single-page-print) #app{display:none;}}')  #hides the rest of the page when printing a single-page-print dialog
     ui.add_css('@media print {body:has(.single-page-print) .q-dialog, body:has(.single-page-print) .q-dialog__inner {position: static}}')  #makes the dialog print on top of the page, not cut off
     ui.add_css('@layer quasar_importants { @media print { body:has(.single-page-print) {position: static !important;}}}')  #makes the dialog print on top of the page, not cut off
+    ui.add_css('@media print {.q-page, .q-layout {min-height: 0 !important;}}')  #makes the dialog print on top of the page, not cut off
     ui.add_css('.customer-menu { max-height: 200px !important; }')
     ui.query('body').classes('bg-slate-100 print:bg-white')
     ui.colors(**THEMES[CURRENT_THEME])

@@ -368,7 +368,7 @@ def customer(customer_id: int, tab: str = ''):
                 '''Returns a datetime.date object from the test's date string'''
                 return datetime.strptime(t['date'], '%b %d, %Y').date()  #convert the test's date string into a date object so it can be sorted 
             
-            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
+            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0 print:[contain:none]'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab).classes('p-1'):
 
