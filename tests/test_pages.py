@@ -41,3 +41,9 @@ async def test_unknown_customer(user: User):
 async def test_customer_without_a_pool(user: User):
     await user.open(f'/customer/{customer_id("Megan Fischer")}')
     await user.should_see('No pool on file')
+
+
+async def test_pool_card_title_uses_body_type(user: User):
+    await user.open(f'/customer/{customer_id("Dave Thompson")}')
+    await user.should_see(marker='pool-title', content='Hot tub')
+

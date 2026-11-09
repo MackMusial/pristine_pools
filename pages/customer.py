@@ -333,8 +333,7 @@ def customer(customer_id: int, tab: str = ''):
                             search = ui.select(store.search_pools(), value=c['bodies'][0]['type']).props('dense').classes('w-96 text-lg font-semibold')
                             #TODO: Implement the logic to switch between pools based on the dropdown selection
                         else: 
-                            #TODO: Title says 'Pool' even when the only body is a hot tub (Dave). Use the body's type
-                            ui.label('Pool').classes('text-lg font-semibold')
+                            ui.label(c['bodies'][0]['type'] if c['bodies'] else 'Pool').classes('text-lg font-semibold').mark('pool-title')   
                         with ui.row().classes('gap-0'):
                             if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
                                 ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).mark('edit-pool').props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
