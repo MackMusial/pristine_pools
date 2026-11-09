@@ -432,19 +432,14 @@ def customer(customer_id: int, tab: str = ''):
                                     ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
                       
                         # ---------- Legend ----------
-                        with ui.row().classes('items-center gap-4 text-sm text-gray-8'):
-                            ui.label('Plain number = in range')
-                            with ui.row().classes('items-center gap-1'):
-                                ui.badge('Watch', color='amber-7', text_color='black')
-                                ui.label('slightly off')
-                            with ui.row().classes('items-center gap-1'):
-                                ui.badge('Act', color='red-9', text_color='white')
-                                ui.label('far off')
-                            with ui.row().classes('items-center gap-1'):
-                                ui.icon('arrow_upward', size='14px')
-                                ui.label('high')
-                                ui.icon('arrow_downward', size='14px')
-                                ui.label('low')
+                        with ui.row().classes('items-center gap-2 text-sm text-gray-8'):
+                            ui.badge('In range',color='green-9',text_color='white')
+                            ui.badge('Borderline', color='amber-7', text_color='black')
+                            ui.badge('Out of range', color='red-9', text_color='white')
+                            ui.icon('arrow_upward', size='14px')
+                            ui.label('high')
+                            ui.icon('arrow_downward', size='14px')
+                            ui.label('low')
 
                         # ---------- Table ----------
                         columns = [
@@ -481,6 +476,8 @@ def customer(customer_id: int, tab: str = ''):
                                             :name="props.row[props.col.field + '_arrow'] === '↑' ? 'arrow_upward' : 'arrow_downward'"
                                             size="14px" class="q-ml-xs" />
                                 </q-badge>
+                                <q-badge  v-else-if="props.row[props.col.field + '_color'] === 'green'" 
+                                color="green-9" text-color="white">{{ props.value }}</q-badge>
                                 <span v-else>{{ props.value }}</span>
                             </q-td>
                         ''')
