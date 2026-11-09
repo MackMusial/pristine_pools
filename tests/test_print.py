@@ -1,4 +1,4 @@
-from unitest.mock import patch
+from unittest.mock import patch
 
 from nicegui import event, ui
 from nicegui.testing import User
