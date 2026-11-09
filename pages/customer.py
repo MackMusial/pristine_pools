@@ -429,7 +429,7 @@ def customer(customer_id: int, tab: str = ''):
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
-                                    ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
+                                    ui.select({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('outlined dense rounded').classes('w-32')
                       
                         # ---------- Legend ----------
                         with ui.row().classes('items-center gap-2 text-sm text-gray-8'):
