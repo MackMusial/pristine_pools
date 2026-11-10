@@ -31,13 +31,13 @@ A customer brings a water sample to the counter. Staff find the customer, enter 
 - **F. Settings:** Products + Add Product, Backup (status + Restore… only), Water-test ranges table from `rules.BANDS`.
 - **G. AI right drawer** opened by a ✨ fab (`ui.page_sticky` + `z-50`), canned replies.
 - **E (partial):** Edit Customer and Edit Pool dialogs save and are built on demand, so Cancel discards edits; ➕ on the Pool card title row.
+- **C. Retest chip** in the Customer title row (`@ui.refreshable retest_chip`): "Retest due Oct 23" (red if overdue), hidden when there's no retest (so retests are only created from a flagged New Test). Click reschedules; hover shows ✕ → confirm dialog → clears.
 
 ## Remaining plan
 - **E. Edit records:** Pool card selector between bodies (Next #1); edits just overwrite (no change log, decided 2026-10-31; the client spec lists one, so revisit with Kara); New Test "For" select when >1 body. No delete (ask Kara: archive vs delete).
-- **C. Retest chip** in the Customer title row: "Retest due Oct 23" (red if overdue) / "No retest" → `schedule_retest` + Clear.
 - **H. Polish:** `no-caps` on tabs/buttons, tooltip on Print, Log Purchase date → `ui.date` in a menu. Run `/impeccable critique` on Customer first (findings only).
 - **I. Demo run-through:** ☰ overdue → search → Customer → retest chip → New Test (flagged) → Problems → Save Fix → Log Purchase → edit phone → add hot tub → Print → New Customer → AI drawer send → Settings. Run `/impeccable audit` + `clarify` + `/code-review` first.
-- **If behind, cut in this order:** + attach → C retest chip → New Test "For" select → if-time items (tab-panel `pt-0` nit, "Log these products?" after Save Fix, theme color pick).
+- **If behind, cut in this order:** + attach → New Test "For" select → if-time items (tab-panel `pt-0` nit, "Log these products?" after Save Fix, theme color pick).
 - **Backlog (from design critique):** aria-labels, badge red-9, header search `dark` prop, no-match → New Customer, Send posts typed text.
 - **Check every step:** full width, 1920×1080, F12 Console clean, Customer print still fits 1 page.
 
