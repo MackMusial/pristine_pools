@@ -40,16 +40,54 @@ def customer(customer_id: int, tab: str = ''):
                 This will be used for updating the left drawer's customers retest dates'''
                 c['retest'] = {'due': date.fromisoformat(picker.value), 'reason': reason}  #save the retest date and reason to be display in the left drawer
                 refresh_attention()
+                retest_chip.refresh()  #refresh the retest chip to show the new date and color
                 dialog.close()  #close the dialog box 
             with ui.row().classes('w-full justify-end'):
                 ui.button('Skip', on_click=dialog.close).props('flat')
                 ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
         dialog.open()
 
+    def reschedule():
+        schedule_retest(7, c['retest']['reason'])
+
+    def clear_retest():
+        c['retest'] = None
+        refresh_attention()
+        retest_chip.refresh()
+
+    def confirm_clear():
+        with ui.dialog() as dialog, ui.card():
+            ui.label('Cancel this retest?').classes('text-lg font-semibold')
+            def confirmed():
+                clear_retest()
+                dialog.close()
+            with ui.row().classes('w-full justify-end'):
+                ui.button('Keep', on_click=dialog.close).props('flat')
+                ui.button('Cancel retest', color='red-9', on_click=confirmed).mark('confirm-clear')
+        dialog.open()
+
+    #---------- Retest Chip Func ----------
+    @ui.refreshable
+    def retest_chip():
+        '''Displays a chip on the customer page that shows the retest date if one is scheduled. 
+        
+        If the retest is overdue, the chip is red.'''
+        r = c['retest']
+        if r is None:
+            return
+        with ui.row().classes('group items-center gap-1'):
+            if r['due'] < store.TODAY:
+                ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white', on_click=reschedule).classes('print:hidden').mark('retest-chip')
+            else:
+                ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black', on_click=reschedule).classes('print:hidden').mark('retest-chip')
+            ui.button(icon='close', on_click=confirm_clear).mark('clear-retest').props('flat round dense size=sm aria-label="Cancel retest"').classes('print:hidden opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity').tooltip('Cancel retest')
+
     # ---------- Title row ----------
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
         with ui.row().classes('w-full items-center justify-between'):
-            ui.label(c['name']).classes('text-2xl font-bold')
+            with ui.row().classes('items-center gap-3'):
+                ui.label(c['name']).classes('text-2xl font-bold')
+                retest_chip()
             with ui.tabs().props('inline-label dense no-caps').classes('print:hidden') as tabs:
                 test_tab = ui.tab('Water Tests', icon='science')
                 problems_tab = ui.tab('Problems', icon='report_problem')
@@ -405,6 +443,7 @@ def customer(customer_id: int, tab: str = ''):
                                 elif 'orange' in colors:  #if there is any chemicals that are slightly off
                                     schedule_retest(7, 'Orange reading')
                                 refresh_attention()
+                                retest_chip.refresh()  #refresh the retest chip to show the new retest date if one was scheduled
 
                             with ui.grid(columns=2).classes('w-full gap-3'):
                                 for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
@@ -434,7 +473,7 @@ def customer(customer_id: int, tab: str = ''):
                                 with ui.row().classes('items-center gap-2 print:hidden'):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
-                                    ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
+                                    ui.select({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('outlined dense rounded').classes('w-32')
                       
                         # ---------- Legend ----------
                         with ui.row().classes('items-center gap-2 text-sm text-gray-8'):
