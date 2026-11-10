@@ -557,8 +557,8 @@ def customer(customer_id: int, tab: str = ''):
                                                 ui.element('div').style(  #little triangle under the flag pointing at the line
                                                     f'width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid {flag}')
                                 with ui.row().classes('w-full justify-end mt-2'):
-                                    ui.button('Close', on_click=chart_dialog.close).props('flat')
-                                    ui.button('Print', icon='print',on_click=lambda: ui.run_javascript('window.print()'))  #Print button
+                                    ui.button('Close', on_click=chart_dialog.close).props('flat').classes('print:hidden')
+                                    ui.button('Print', icon='print',on_click=lambda: ui.run_javascript('window.print()')).classes('print:hidden')  #Print button
 
                             chart_dialog.on('hide', chart_dialog.delete)  #remove the dialog from the page once it closes
                             chart_dialog.open()
