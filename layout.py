@@ -34,6 +34,7 @@ def page_layout():
     ui.add_css('@media print { * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }')  #allows colors when printing
     ui.add_css('@media print {body:has(.single-page-print) #app{display:none;}}')  #hides the rest of the page when printing a single-page-print dialog
     ui.add_css('@media print {body:has(.single-page-print) .q-dialog, body:has(.single-page-print) .q-dialog__inner {position: static}}')  #makes the dialog print on top of the page, not cut off
+    ui.add_css('@media print {body:has(.single-page-print) .q-dialog__backdrop {display: none;}}')  #removes the grey behind the dialog when printing
     ui.add_css('@layer quasar_importants { @media print { body:has(.single-page-print) {position: static !important;}}}')  #makes the dialog print on top of the page, not cut off
     ui.add_css('@media print {.q-page, .q-layout {min-height: 0 !important;}}')  #makes the dialog print on top of the page, not cut off
     ui.add_css('.customer-menu { max-height: 200px !important; }')

@@ -34,6 +34,7 @@ async def test_print_css_is_still_in_place(user: User):
         'body:has(.single-page-print) #app',  # hides the normal page behind the popup
         'body:has(.single-page-print) .q-dialog,',  # unpins the popup's outer layer
         'body:has(.single-page-print) .q-dialog__inner',  # unpins the popup's inner layer
+        'body:has(.single-page-print) .q-dialog__backdrop',  # removes the grey behind the popup
         '@layer quasar_importants',  # needed to unpin the body
         '.q-page, .q-layout',  # stops the blank second page
     ]:
