@@ -1,3 +1,4 @@
+from fastapi.responses import RedirectResponse
 from nicegui import ui
 from layout import page_layout
 from datetime import date, timedelta, datetime
@@ -10,6 +11,10 @@ SUGGESTIONS = [
     'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
 ]
 
+@ui.page('/')
+def start():
+    cid = store.last_customer_id if store.last_customer_id is not None else min(store.customers)  #select the last customer viewed. else select the first customer in the datebase
+    return RedirectResponse(f'/customer/{cid}')
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int, tab: str = ''):
     refresh_attention = page_layout()
@@ -19,6 +24,7 @@ def customer(customer_id: int, tab: str = ''):
             ui.label('Customer does not exist').classes('text-gray-500 text-lg')
         return  #handle if an employee tries to find an employee that does not exist. This simply displays that no customer exists and the return stops anything else from loading
     c = store.customers[customer_id]
+    store.last_customer_id = customer_id
 
     # ---------- schedule_retest func ----------
     def schedule_retest(days, reason):
@@ -333,8 +339,7 @@ def customer(customer_id: int, tab: str = ''):
                             search = ui.select(store.search_pools(), value=c['bodies'][0]['type']).props('dense').classes('w-96 text-lg font-semibold')
                             #TODO: Implement the logic to switch between pools based on the dropdown selection
                         else: 
-                            #TODO: Title says 'Pool' even when the only body is a hot tub (Dave). Use the body's type
-                            ui.label('Pool').classes('text-lg font-semibold')
+                            ui.label(c['bodies'][0]['type'] if c['bodies'] else 'Pool').classes('text-lg font-semibold').mark('pool-title')   
                         with ui.row().classes('gap-0'):
                             if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
                                 ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).mark('edit-pool').props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
@@ -371,7 +376,7 @@ def customer(customer_id: int, tab: str = ''):
             def table_row(t):
                 return{**t, **rules.test_colors(t), **rules.reading_arrows(t)}
             
-            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
+            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0 print:[contain:none]'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab).classes('p-1'):
 
@@ -487,7 +492,7 @@ def customer(customer_id: int, tab: str = ''):
 
                         def show_chart(test):
                             labels = {col['field']: col['label'] for col in columns}
-                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw]'):
+                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw] single-page-print'):
                                 ui.label(f"Water test · {test['date']}").classes('text-lg font-semibold')
                                 for field, (red_below, green_from, green_to, red_above) in rules.BANDS.items():
                                     value = test.get(field)
@@ -514,6 +519,8 @@ def customer(customer_id: int, tab: str = ''):
                                                     f'width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid {flag}')
                                 with ui.row().classes('w-full justify-end mt-2'):
                                     ui.button('Close', on_click=chart_dialog.close).props('flat')
+                                    ui.button('Print', icon='print',on_click=lambda: ui.run_javascript('window.print()'))  #Print button
+
                             chart_dialog.on('hide', chart_dialog.delete)  #remove the dialog from the page once it closes
                             chart_dialog.open()
 

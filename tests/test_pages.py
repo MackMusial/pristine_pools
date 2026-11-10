@@ -10,9 +10,13 @@ def customer_id(name):
     return next(cid for cid, c in store.customers.items() if c['name'] == name)
 
 
-async def test_home_page(user: User):
+async def test_start_opens_first_customer(user: User):
+    '''Ensure if last_customer_id is None
+    
+    return the min customer'''
+    store.last_customer_id = None
     await user.open('/')
-    await user.should_see('Find a customer')
+    await user.should_see(store.customers[min(store.customers)]['name'])
 
 
 async def test_settings_page(user: User):
@@ -41,3 +45,9 @@ async def test_unknown_customer(user: User):
 async def test_customer_without_a_pool(user: User):
     await user.open(f'/customer/{customer_id("Megan Fischer")}')
     await user.should_see('No pool on file')
+
+
+async def test_pool_card_title_uses_body_type(user: User):
+    await user.open(f'/customer/{customer_id("Dave Thompson")}')
+    await user.should_see(marker='pool-title', content='Hot tub')
+
