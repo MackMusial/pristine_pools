@@ -75,11 +75,11 @@ def customer(customer_id: int, tab: str = ''):
         r = c['retest']
         if r is None:
             return
-        with ui.row().classes('group items-center gap-1'):
+        with ui.row().classes('group items-center gap-1 print:hidden'):
             if r['due'] < store.TODAY:
-                ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white', on_click=reschedule).classes('print:hidden').mark('retest-chip')
+                ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white', on_click=reschedule).mark('retest-chip')
             else:
-                ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black', on_click=reschedule).classes('print:hidden').mark('retest-chip')
+                ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black', on_click=reschedule).mark('retest-chip')
             ui.button(icon='close', on_click=confirm_clear).mark('clear-retest').props('flat round dense size=sm aria-label="Cancel retest"').classes('print:hidden opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity').tooltip('Cancel retest')
 
     # ---------- Title row ----------
