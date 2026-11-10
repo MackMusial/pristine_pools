@@ -42,7 +42,7 @@ def page_layout():
     ui.colors(**THEMES[CURRENT_THEME])
 
     #---------- Left Drawer ----------
-    drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')
+    drawer = ui.left_drawer(value=False).props('overlay bordered').classes('print:hidden')  #print:hidden hides the drawer from the print screen
     @ui.refreshable
     def drawer_content():
         due, open_list = needs_attention()
@@ -138,7 +138,7 @@ def page_layout():
     # ---------- Header ----------
     with ui.header().classes('items-center justify-between print:hidden'):  # spreads the three groups across the header. Print:hidden hides the header from the print screen 
         with ui.row().classes('items-center'):
-            with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white aria-label="Needs attention"'):
+            with ui.button(icon='menu',on_click=drawer.toggle).props('flat color=white aria-label="Needs attention"').tooltip('Needs attention'):
                 @ui.refreshable
                 def badge():
                     due, open_list = needs_attention()  #get fresh data
