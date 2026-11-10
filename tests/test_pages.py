@@ -49,5 +49,8 @@ async def test_clear_retest_removes_the_chip(user: User, monkeypatch):
     await user.open(f'/customer/{cid}')
     await user.should_see(marker='retest-chip')
     user.find(marker='clear-retest').click()
+    await user.should_see(marker='confirm-clear')
+    user.find(marker='confirm-clear').click()
     await user.should_not_see(marker='retest-chip')
+
 

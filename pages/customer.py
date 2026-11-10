@@ -49,6 +49,17 @@ def customer(customer_id: int, tab: str = ''):
         refresh_attention()
         retest_chip.refresh()
 
+    def confirm_clear():
+        with ui.dialog() as dialog, ui.card():
+            ui.label('Cancel this retest?').classes('text-lg font-semibold')
+            def confirmed():
+                clear_retest()
+                dialog.close()
+            with ui.row().classes('w-full justify-end'):
+                ui.button('Keep', on_click=dialog.close).props('flat')
+                ui.button('Cancel retest', color='red-9', on_click=confirmed).mark('confirm-clear')
+        dialog.open()
+
     #---------- Retest Chip Func ----------
     @ui.refreshable
     def retest_chip():
@@ -63,7 +74,7 @@ def customer(customer_id: int, tab: str = ''):
                 ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white', on_click=reschedule).classes('print:hidden').mark('retest-chip')
             else:
                 ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black', on_click=reschedule).classes('print:hidden').mark('retest-chip')
-            ui.button(icon='close', on_click=clear_retest).mark('clear-retest').props('flat round dense size=sm aria-label="Clear retest"').classes('print:hidden opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity').tooltip('Cancel retest')
+            ui.button(icon='close', on_click=confirm_clear).mark('clear-retest').props('flat round dense size=sm aria-label="Cancel retest"').classes('print:hidden opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity').tooltip('Cancel retest')
 
     # ---------- Title row ----------
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
@@ -424,7 +435,7 @@ def customer(customer_id: int, tab: str = ''):
                                 elif 'orange' in colors:  #if there is any chemicals that are slightly off
                                     schedule_retest(7, 'Orange reading')
                                 refresh_attention()
-                                retest_chip.refresh()  #refresh the retest card to show the new retest date if one was scheduled
+                                retest_chip.refresh()  #refresh the retest chip to show the new retest date if one was scheduled
 
                             with ui.grid(columns=2).classes('w-full gap-3'):
                                 for key, label in [('fc', 'FC'), ('tc', 'TC'), ('ph', 'pH'), ('ta', 'Alk'), ('ch', 'Hardness'), ('cya', 'CYA'), ('phos', 'Phosphates'),]:
