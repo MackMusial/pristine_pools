@@ -1,3 +1,4 @@
+from fastapi.responses import RedirectResponse
 from nicegui import ui
 from layout import page_layout
 from datetime import date, timedelta, datetime
@@ -10,6 +11,10 @@ SUGGESTIONS = [
     'Add a dose of algaecide after shocking, then backwash the sand filter once the water clears. Retest in 2 days.',
 ]
 
+@ui.page('/')
+def start():
+    cid = store.last_customer_id if store.last_customer_id is not None else min(store.customers)  #select the last customer viewed. else select the first customer in the datebase
+    return RedirectResponse(f'/customer/{cid}')
 @ui.page('/customer/{customer_id}')
 def customer(customer_id: int, tab: str = ''):
     refresh_attention = page_layout()
@@ -19,6 +24,7 @@ def customer(customer_id: int, tab: str = ''):
             ui.label('Customer does not exist').classes('text-gray-500 text-lg')
         return  #handle if an employee tries to find an employee that does not exist. This simply displays that no customer exists and the return stops anything else from loading
     c = store.customers[customer_id]
+    store.last_customer_id = customer_id
 
     # ---------- schedule_retest func ----------
     def schedule_retest(days, reason):
@@ -371,8 +377,7 @@ def customer(customer_id: int, tab: str = ''):
                             search = ui.select(store.search_pools(), value=c['bodies'][0]['type']).props('dense').classes('w-96 text-lg font-semibold')
                             #TODO: Implement the logic to switch between pools based on the dropdown selection
                         else: 
-                            #TODO: Title says 'Pool' even when the only body is a hot tub (Dave). Use the body's type
-                            ui.label('Pool').classes('text-lg font-semibold')
+                            ui.label(c['bodies'][0]['type'] if c['bodies'] else 'Pool').classes('text-lg font-semibold').mark('pool-title')   
                         with ui.row().classes('gap-0'):
                             if c['bodies'] and c['bodies'][0]['type'] == 'Pool': #TODO and c['bodies'][0]['type'] == 'Pool' this is being used so edit button is removed for hottubs because that code is not written
                                 ui.button(icon='edit',on_click=lambda: open_edit_pool(0)).mark('edit-pool').props('flat round dense size=sm').classes('-my-1 print:hidden').tooltip(f"Edit {c['bodies'][0]['type']}")  #TODO Unhardcode 0 when adding funcationality for multiple pools. onclick is what calls the dialogbox to appear
@@ -405,8 +410,11 @@ def customer(customer_id: int, tab: str = ''):
             def test_date(t): 
                 '''Returns a datetime.date object from the test's date string'''
                 return datetime.strptime(t['date'], '%b %d, %Y').date()  #convert the test's date string into a date object so it can be sorted 
+
+            def table_row(t):
+                return{**t, **rules.test_colors(t), **rules.reading_arrows(t)}
             
-            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
+            with ui.column().classes('flex-1 md:[contain:size] md:overflow-y-auto gap-0 print:[contain:none]'):  # contain:size: this column's content doesn't make the row taller, so it matches the info cards and scrolls inside
                 with ui.tab_panels(tabs, value=problems_tab if tab == 'problems' else test_tab).classes('w-full flex-1 bg-transparent'):  # flex-1: the white panel fills down to the bottom of the info cards
                     with ui.tab_panel(test_tab).classes('p-1'):
 
@@ -422,7 +430,7 @@ def customer(customer_id: int, tab: str = ''):
                                     return
                                 test = {'date': f"{store.TODAY:%b} {store.TODAY.day}, {store.TODAY.year}", 'body': 0, **reading}
                                 c['tests'].insert(0, test)
-                                table.rows.insert(0, {**test, **rules.test_colors(test)})      
+                                table.rows.insert(0,table_row(test))      
                                 table.update()
                                 latest.set_text(f"Latest test · {test['date']}")
                                 for box in inputs.values():  #clear the input box's 
@@ -454,7 +462,7 @@ def customer(customer_id: int, tab: str = ''):
                         def filter_tests(e):
                             days = e.value
                             cutoff = store.TODAY - timedelta(days=days)
-                            table.rows = [{**t, **rules.test_colors(t)} for t in c['tests']
+                            table.rows = [table_row(t) for t in c['tests']
                                           if days == 0 or test_date(t) >= cutoff]  #if days == 0, show all tests. otherwise only show tests that are newer than the cutoff  
                             table.props(f'no-data-label="{no_tests_msg[days]}"')
 
@@ -466,7 +474,18 @@ def customer(customer_id: int, tab: str = ''):
                                     ui.button(icon='print',on_click=lambda: ui.run_javascript('window.print()')).props('flat round')  #Print button
                                     ui.button('New Test',icon='add',on_click=test_dialog.open)
                                     ui.toggle({30: '30 days', 90: '90 days', 180: '180 days', 365: '1 year', 0: 'All'}, value=0, on_change=filter_tests).props('dense no-caps')
+                      
+                        # ---------- Legend ----------
+                        with ui.row().classes('items-center gap-2 text-sm text-gray-8'):
+                            ui.badge('In range',color='green-9',text_color='white')
+                            ui.badge('Borderline', color='amber-7', text_color='black')
+                            ui.badge('Out of range', color='red-9', text_color='white')
+                            ui.icon('arrow_upward', size='14px')
+                            ui.label('high')
+                            ui.icon('arrow_downward', size='14px')
+                            ui.label('low')
 
+                        # ---------- Table ----------
                         columns = [
                             {'name': 'date', 'label': 'Date',     'field': 'date', 'align': 'left'},
                             {'name': 'fc',   'label': 'FC',       'field': 'fc',   'align': 'center'},
@@ -477,7 +496,7 @@ def customer(customer_id: int, tab: str = ''):
                             {'name': 'cya',  'label': 'CYA',      'field': 'cya',  'align': 'center'},
                             {'name': 'phos', 'label': 'Phos',     'field': 'phos', 'align': 'center'},
                         ]
-                        rows = [{**t, **rules.test_colors(t)} for t in c['tests']] #** ** merges two dicts into a new one. 
+                        rows = [table_row(t) for t in c['tests']] #** ** merges two dicts into a new one. 
                         table = ui.table(columns=columns, rows=rows).classes('w-full').props('no-data-label="No tests yet"')
                         #---------- Colored cells ----------
                         # 'body-cell' slot = a custom template used for EVERY cell in the table body
@@ -489,15 +508,20 @@ def customer(customer_id: int, tab: str = ''):
                         # :color="..."           -> the ':' means evaluate it, so the badge color comes from the row data
                         # {{ props.value }}      -> the cell's number
                         # </q-badge>             -> closing tag: slash first, same name as the opening tag
-                        # <span v-else>          -> no color key = just show the plain number
+                        # <span v-else>          -> no color key = date or blank reading
                         # phase 2: rules.py adds the _color keys by comparing each reading to the ranges in Settings
                         table.add_slot('body-cell', r'''
                             <q-td :props="props">
-                                <q-badge v-if="props.row[props.col.field + '_color']"
-                                        :color="props.row[props.col.field + '_color'] + '-9'"
-                                        :text-color="props.row[props.col.field + '_color'] === 'orange' ? 'black' : 'white'">
-                                    {{ props.value }}  
+                                <q-badge v-if="['orange', 'red'].includes(props.row[props.col.field + '_color'])"
+                                        :color="props.row[props.col.field + '_color'] === 'red' ? 'red-9' : 'amber-7'"
+                                        :text-color="props.row[props.col.field + '_color'] === 'red' ? 'white' : 'black'">
+                                    {{ props.value }}
+                                    <q-icon v-if="props.row[props.col.field + '_arrow']"
+                                            :name="props.row[props.col.field + '_arrow'] === '↑' ? 'arrow_upward' : 'arrow_downward'"
+                                            size="14px" class="q-ml-xs" />
                                 </q-badge>
+                                <q-badge  v-else-if="props.row[props.col.field + '_color'] === 'green'" 
+                                color="green-9" text-color="white">{{ props.value }}</q-badge>
                                 <span v-else>{{ props.value }}</span>
                             </q-td>
                         ''')
@@ -507,7 +531,7 @@ def customer(customer_id: int, tab: str = ''):
 
                         def show_chart(test):
                             labels = {col['field']: col['label'] for col in columns}
-                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw]'):
+                            with ui.dialog() as chart_dialog, ui.card().classes('w-[36rem] max-w-[95vw] single-page-print'):
                                 ui.label(f"Water test · {test['date']}").classes('text-lg font-semibold')
                                 for field, (red_below, green_from, green_to, red_above) in rules.BANDS.items():
                                     value = test.get(field)
@@ -534,6 +558,8 @@ def customer(customer_id: int, tab: str = ''):
                                                     f'width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid {flag}')
                                 with ui.row().classes('w-full justify-end mt-2'):
                                     ui.button('Close', on_click=chart_dialog.close).props('flat')
+                                    ui.button('Print', icon='print',on_click=lambda: ui.run_javascript('window.print()'))  #Print button
+
                             chart_dialog.on('hide', chart_dialog.delete)  #remove the dialog from the page once it closes
                             chart_dialog.open()
 

@@ -31,6 +31,7 @@ wall_type_options = ['Hard Sided', 'Soft Sided']
 # tests['body'] = index into that customer's 'bodies' list.
 # problems: 'fix' is None while the problem is still OPEN.
 # retest: {'due': date, 'reason': str} or None (one retest per customer).
+last_customer_id = None
 customers = {
     1: {
         'name': 'Nick McArdle', 'phone': '(989) 555-0142',
