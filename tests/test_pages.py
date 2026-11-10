@@ -41,3 +41,13 @@ async def test_unknown_customer(user: User):
 async def test_customer_without_a_pool(user: User):
     await user.open(f'/customer/{customer_id("Megan Fischer")}')
     await user.should_see('No pool on file')
+
+
+async def test_clear_retest_removes_the_chip(user: User, monkeypatch):
+    cid = customer_id('Nick McArdle')
+    monkeypatch.setitem(store.customers[cid], 'retest', store.customers[cid]['retest'])
+    await user.open(f'/customer/{cid}')
+    await user.should_see(marker='retest-chip')
+    user.find(marker='clear-retest').click()
+    await user.should_not_see(marker='retest-chip')
+

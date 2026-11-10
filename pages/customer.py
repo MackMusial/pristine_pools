@@ -41,19 +41,29 @@ def customer(customer_id: int, tab: str = ''):
                 ui.button('Schedule',on_click=save)  #save with no () lets save run when the button is clicked not when the page is being built. 
         dialog.open()
 
+    def reschedule():
+        schedule_retest(7, c['retest']['reason'])
+
+    def clear_retest():
+        c['retest'] = None
+        refresh_attention()
+        retest_chip.refresh()
+
     #---------- Retest Chip Func ----------
     @ui.refreshable
     def retest_chip():
         '''Displays a chip on the customer page that shows the retest date if one is scheduled. 
         
-        If the retest is overdue, the chip is red. If no retest is scheduled, the chip is grey.'''
+        If the retest is overdue, the chip is red.'''
         r = c['retest']
         if r is None:
             return
-        elif r['due'] < store.TODAY:
-            ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white').classes('print:hidden')
-        else:
-            ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black').classes('print:hidden')
+        with ui.row().classes('group items-center gap-1'):
+            if r['due'] < store.TODAY:
+                ui.chip(f"Retest overdue: {r['due']:%b} {r['due'].day}", icon='event', color='red-9', text_color='white', on_click=reschedule).classes('print:hidden').mark('retest-chip')
+            else:
+                ui.chip(f"Retest due {r['due']:%b} {r['due'].day}",icon='event', color='grey-3', text_color='black', on_click=reschedule).classes('print:hidden').mark('retest-chip')
+            ui.button(icon='close', on_click=clear_retest).mark('clear-retest').props('flat round dense size=sm aria-label="Clear retest"').classes('print:hidden opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity').tooltip('Cancel retest')
 
     # ---------- Title row ----------
     with ui.column().classes('w-full max-w-screen-2xl mx-auto px-6 py-3 gap-4 print:p-0'):  # centered page column with padding (py-3 / gap-4 keep it short enough that the page doesn't scroll)
